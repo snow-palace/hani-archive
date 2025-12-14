@@ -3179,35 +3179,51 @@
         if(d.color.includes('gradient')) { bigName.style.background = d.color; bigName.style.webkitBackgroundClip = 'text'; bigName.style.webkitTextFillColor = 'transparent'; } else { bigName.style.color = d.color; bigName.style.background = 'none'; bigName.style.webkitTextFillColor = 'initial'; }
 // ... 上面是 bigName 的代码 ...
 
-        /* === [修复] 战斗立绘动画逻辑：断电重启法 === */
+/* === [终极优化] 战斗立绘：防残影 + 预加载 + 防错位 === */
         const battleImg = document.getElementById('m-battle-img');
         
-        if (d.battleArt) { 
-            // 1. 先换图
-            battleImg.src = d.battleArt; 
-            battleImg.style.display = 'block'; 
-            
-            // 2. 【核心步骤】先“断电”！
-            // 强制移除过渡效果，防止它慢慢变回去
-            battleImg.style.transition = 'none';
-            
-            // 3. “瞬移”回起跑线
-            // 瞬间变透明，瞬间移到右边 50px 的位置
-            battleImg.style.opacity = 0; 
-            battleImg.style.transform = 'translateX(50px)'; 
-            
-            // 4. 给浏览器一点喘息时间 (10ms 足够让它意识到位置变了)
-            setTimeout(() => { 
-                // 5. “通电”！加上流畅的动画曲线
-                // 这里的 cubic-bezier 是一个带一点点回弹的曲线，比 ease-out 更生动
-                battleImg.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
-                
-                // 6. 跑向终点
-                battleImg.style.opacity = 1; 
-                battleImg.style.transform = 'translateX(0)'; 
-            }, 20); 
+        // 1. 【核心】立刻“销毁”上一张图
+        // 无论下一张有没有图，先把当前的图藏起来 + 清空链接
+        // 这样就绝对不会出现“上一个人的脸”了
+        battleImg.style.transition = 'none'; // 关掉动画，防止瞬移
+        battleImg.style.opacity = 0;         // 立刻隐身
+        battleImg.src = '';                  // 清空数据，防止浏览器缓存显示旧图
+        
+        // 2. 记录当前我们要看的人是谁 (防错位机制)
+        // 把这个 key 记在一个属性上。等图片下载好了，我们要核对一下“现在要看的人”还是不是“当时下载的人”
+        // 如果用户切得飞快 (A -> B -> C)，A 的图下载好时，用户已经在看 C 了，这时 A 的图就必须丢弃
+        battleImg.dataset.waitingFor = key;
 
+        if (d.battleArt) { 
+            // 3. 【核心】创建一个“隐形下载器”在后台干活
+            const preloader = new Image();
+            preloader.src = d.battleArt;
+            
+            // 4. 监听：等下载完了再显示
+            preloader.onload = () => {
+                // 安全检查：如果下载好的时候，用户已经切到别人那里去了，就啥也不做
+                if (battleImg.dataset.waitingFor !== key) return;
+
+                // 只有确认是当前人物，才把图片填进去
+                battleImg.src = d.battleArt;
+                battleImg.style.display = 'block';
+
+                // 5. 播放进场动画
+                // 先把位置挪到右边 (准备冲刺)
+                battleImg.style.transform = 'translateX(50px)';
+                
+                // 给浏览器一帧的时间去渲染“挪到右边”这个动作
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        // 然后开启“通电”，冲出来
+                        battleImg.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                        battleImg.style.opacity = 1; 
+                        battleImg.style.transform = 'translateX(0)'; 
+                    });
+                });
+            };
         } else { 
+            // 如果这个人没有立绘，就保持隐藏
             battleImg.style.display = 'none'; 
         }
 
@@ -3218,6 +3234,7 @@
         const setLogo = (imgId, textId, src) => { const img = document.getElementById(imgId); const txt = document.getElementById(textId); if(src) { img.src = src; img.style.display = 'block'; if(txt) txt.style.display = 'none'; } else { img.style.display = 'none'; if(txt) txt.style.display = 'block'; } };
         setLogo('m-school-logo', 'm-school-text', d.schoolLogo); setLogo('m-society-logo', 'm-society-text', d.societyLogo);
         /* === [优化] 左侧立绘：预加载 + 无缝切换 === */
+
         // 1. 获取图片标签本身，而不是外面的盒子
         const pImg = document.getElementById('m-portrait');
         const pText = document.getElementById('m-portrait-text');
