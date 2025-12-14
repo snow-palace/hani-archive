@@ -1529,7 +1529,7 @@
                 circle at center, 
                 rgba(255, 255, 255, 0.7) 0%, 
                 rgba(255, 255, 255, 0.2) 40%, 
-                transparent 60%
+                transparent 70%
             );
             
             /* 2. 把光斑放大，保证移动时能覆盖全身 */
@@ -2798,7 +2798,7 @@
             schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
             attr1: '', attr2: '', 
             bio: '性格活泼的商人，和棉发是死党。' },
-        'stone': { name:'石头', nickname:'石头', real:'袁春阳', gender:'男', age:'17', 
+        'stone': { name:'石头', nickname:'石头', real:'袁君阳', gender:'男', age:'17', 
             school:'江口铁道第三中学', join:'S2 (AA2010)', society:'冷凝塔', job:'盾卫', color:'#FFD700', 
             hp:155, patk:110, pdef:125, matk:55, mdef:110, isKing: true, chairs:['yellow'], 
             cardImage: CardImages.STONE, 
@@ -3151,17 +3151,32 @@
         });
     }
 
-    const charModal = document.getElementById('char-modal');
+const charModal = document.getElementById('char-modal');
+    
     function openCharModal(key) {
-        // 【新增】只要一打开，就告诉导航系统“现在到这个人了”
+        // 1. 告诉导航系统当前是谁
         updateCurrentIndex(key); 
 
+        // 2. 获取数据
         const d = charData[key];
-        // ... 后面的代码不用动 ...        document.getElementById('m-name').innerText = d.name + (d.real !== '-' ? ' (' + d.real + ')' : '');
-        document.getElementById('m-gender').innerText = d.gender; document.getElementById('m-age').innerText = d.age; document.getElementById('m-school').innerText = d.school; document.getElementById('m-join').innerText = d.join; document.getElementById('m-society').innerText = d.society; document.getElementById('m-job').innerText = d.job;
-        // 在 openCharModal 函数里
+        
+        // 3. 【核心修复】这里必须分行写，绝对不能放在注释后面！
+        // 填充名字 (如果有真名，就显示 "外号 (真名)")
+        document.getElementById('m-name').innerText = d.name + (d.real !== '-' ? ' (' + d.real + ')' : '');
+        
+        // 4. 填充其他基础信息
+        document.getElementById('m-gender').innerText = d.gender; 
+        document.getElementById('m-age').innerText = d.age; 
+        document.getElementById('m-school').innerText = d.school; 
+        document.getElementById('m-join').innerText = d.join; 
+        document.getElementById('m-society').innerText = d.society; 
+        document.getElementById('m-job').innerText = d.job;
+
+        // ... (下面的大名字、立绘、属性图代码继续保持不变) ...
+        
         /* === [修复] 破窗大名字逻辑 === */
         const bigName = document.getElementById('m-big-name');
+        // ...
         const showName = d.nickname || d.name; 
         
         // 1. 设置文字内容
