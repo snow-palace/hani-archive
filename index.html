@@ -996,7 +996,7 @@ html, body {
             left: 0; 
             width: 100%; 
             height: 100%;
-            background: rgba(32, 32, 32, 0.9); 
+            background: rgba(70, 70, 70, 0.7); 
             backdrop-filter: blur(5px);
             z-index: 9999; 
             
@@ -2102,41 +2102,37 @@ html, body {
         text-align: left !important;
     }
 
-/* === [修改点 2] 战斗立绘：手机端横向撑满 === */
-    .broken-portrait-container {
-        position: fixed;
-        bottom: 0 !important; 
-        left: 0 !important; /* 强制从最左边开始 */
-        right: 0 !important; /* 强制到最右边结束 */
-        top: auto !important;
-        
-        /* 容器宽度占满屏幕 */
-        width: 100vw !important;
-        height: auto !important; /* 高度随内容撑开 */
-        
-        /* 允许溢出一点点，防止阴影被切 */
-        overflow: visible !important;
-        
-        z-index: 1005 !important;
-        opacity: 1 !important; 
-        
-        /* 内容对齐：底部居中 */
-        display: flex !important;
-        align-items: flex-end !important;
-        justify-content: center !important;
-    }
+/* === [修改] 1. 战斗立绘：搬到右上角 === */
+.broken-portrait-container {
+    /* 以前是 bottom:0, left:0... 现在改为： */
+    position: fixed !important;
+    top: 0 !important;           /* 顶端对齐 */
+    right: 0 !important;         /* 右侧对齐 */
+    bottom: auto !important;     /* 底部松绑 */
+    left: auto !important;       /* 左侧松绑 */
+    
+    width: 100vw !important;      /* 宽度不用占满，留点空间给名字 */
+    height: 60vh !important;     /* 高度限制在上半屏 */
+    
+    /* 内部对齐：靠上、靠右 */
+    display: flex !important;
+    align-items: flex-start !important; 
+    justify-content: flex-end !important;
+    
+    z-index: 1005 !important;
+}
 
 .broken-portrait-img {
-        /* 核心：宽度 100%，撑满手机横向 */
-        width: 100% !important;
-        height: auto !important; /* 高度自动计算，保持比例 */
-        
-        max-width: none !important;
-        max-height: 60vh !important; /* 限制一下最大高度，别把脸都顶出屏幕了 */
-        
-        margin: 0 !important;
-        object-fit: cover; /* 保证填满 */
-    }
+    width: auto !important;      /* 自动宽度 */
+    height: 100% !important;     /* 撑满容器高度 */
+    max-width: 100% !important;
+    max-height: none !important;
+    
+    margin: 0 !important;
+    /* 锚点设为右上，保证脸露出来 */
+    object-fit: contain; 
+    object-position: top right !important; 
+}
 
 
     /* === 3. [终极修复] 大外号：手机端简化渲染模式 === */
@@ -4451,49 +4447,65 @@ const charModal = document.getElementById('char-modal');
     // 5. 启动
     renderBqCards();
 
-    // =========================================
-    // [终极修正 V2] 浮窗缩放系统 (Translate + Scale)
-    // =========================================
-    function fitModalToMobile() {
-        const modalWin = document.querySelector('.char-modal-window');
-        if (!modalWin) return;
+// =========================================
+// [修改版] 浮窗定位：沉底靠左 + 留出按钮空间
+// =========================================
+function fitModalToMobile() {
+    const modalWin = document.querySelector('.char-modal-window');
+    if (!modalWin) return;
 
-        const screenW = window.innerWidth;
-        const screenH = window.innerHeight; // 获取屏幕高度
-        const baseWidth = 960; 
+    const screenW = window.innerWidth;
+    const screenH = window.innerHeight;
+    const baseWidth = 960; 
+    
+// === 1. 电脑端 ( > 1000px ) ===
+    // 必须严格还原 CSS 里的 left: 5% 设定
+    if (screenW > 1000) {
+        modalWin.style.transformOrigin = 'center center';
         
-        // 1. 电脑端：恢复默认 (居中)
-        if (screenW > 1000) {
-            modalWin.style.transformOrigin = 'center center';
-            modalWin.style.transform = 'translateY(-50%) scale(0.9)';
-            modalWin.style.left = '50%';
-            modalWin.style.top = '50%';
-            return;
-        }
-
-        // 2. 手机端：全权接管
-        // A. 计算缩放比例 (两边留 20px 缝隙)
-        const targetScale = (screenW - 20) / baseWidth;
+        // 【核心修复】还原回 5%，而不是 50%
+        modalWin.style.left = '5%'; 
+        modalWin.style.top = '50%';
         
-        // B. 计算水平偏移量 (让缩放后的物体居中)
-        // (屏幕宽 - 物体缩放后的宽) / 2
-        const xOffset = (screenW - (baseWidth * targetScale)) / 2;
+        // 还原 CSS 里的垂直居中 + 0.9倍缩放
+        modalWin.style.transform = 'translateY(-50%) scale(0.9)';
         
-        // C. 计算垂直偏移量 (您希望它在屏幕上方，比如 10%)
-        const yOffset = screenH * 0.1;
-
-        // D. 【核心】应用变换
-        // 这一句命令包含了：钉死在(0,0) -> 移到(x, y) -> 缩放(scale)
-        // 顺序很重要：先位移，再缩放？不对，transform执行顺序很玄学
-        // 对于 top-left 基点：直接 translate 就行，因为它是在基点坐标系上移动
-        modalWin.style.transformOrigin = 'top left';
-        modalWin.style.transform = `translate(${xOffset}px, ${yOffset}px) scale(${targetScale})`;
-        
-        // E. 清理 CSS 遗留 (双重保险)
-        modalWin.style.left = '0';
-        modalWin.style.top = '0';
+        // 清理手机端可能留下的边距样式
         modalWin.style.margin = '0';
+        return;
     }
+
+    // 2. 手机端：左下角对齐
+    
+    // A. 计算缩放比例 (保持两边留隙)
+    // 稍微改小一点系数 (比如 -30)，让弹窗更迷你一点，给上面留空间
+    const targetScale = (screenW - 30) / baseWidth;
+    
+    // B. 计算水平位置 (xOffset)：靠左，留 15px 缝隙
+    const xOffset = 15;
+    
+    // C. 计算垂直位置 (yOffset)：沉底
+    // 公式：屏幕高度 - (弹窗真实高度) - (底部预留给按钮的空间)
+    // 您的按钮 bottom 是 -150px，所以我们要留至少 160px 的空间防止按钮被切
+    const modalBaseHeight = 640;
+    const buttonSpace = 160; // 【关键】给底部挂着的按钮留出的安全距离
+    
+    // 计算最终 Y 坐标
+    let yOffset = screenH - (modalBaseHeight * targetScale) - buttonSpace;
+
+    // 防止太靠上 (如果屏幕特别矮，就顶格显示)
+    if (yOffset < 60) yOffset = 60; 
+
+    // D. 应用变换
+    // 设定基点为【左上角】，这样 translate 的计算最直观
+    modalWin.style.transformOrigin = 'top left';
+    modalWin.style.transform = `translate(${xOffset}px, ${yOffset}px) scale(${targetScale})`;
+    
+    // E. 归零基础坐标
+    modalWin.style.left = '0';
+    modalWin.style.top = '0';
+    modalWin.style.margin = '0';
+}
 
     // 监听：由以下情况触发缩放计算
     // A. 窗口大小改变时 (旋转屏幕)
