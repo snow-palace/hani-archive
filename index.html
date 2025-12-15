@@ -1724,7 +1724,7 @@
         top: auto !important;     
         
         /* 挂在浮窗屁股下面 */
-        bottom: -90px !important; 
+        bottom: -110px !important; 
         
         left: 50% !important;
         transform: translateX(-50%) !important;
@@ -1760,8 +1760,14 @@
 
 
     /* [新增] 手机端页面容器：减少两侧留白 */
-    .archive-container {
-        padding: 15px !important; /* 从 40px 减小到 15px */
+.archive-container {
+        /* 顺序是：上 右 下 左 
+           上: 40px (保持电脑端的呼吸感，解决往上窜的问题)
+           右/左: 15px (保持手机端的宽敞感，不挤压卡片)
+           下: 15px
+        */
+        padding: 40px 15px 15px 15px !important; 
+        
         width: 100% !important;
         max-width: 100% !important;
     }
