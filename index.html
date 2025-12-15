@@ -4003,13 +4003,13 @@ const charModal = document.getElementById('char-modal');
         // ==============================================================
         
         // 1. 旋转极限 (您设定的 8 度)
-        const rotationLimit = 8; 
+        const rotationLimit = 10; 
 
         // 2. [新增] 反光灵敏度系数
         // 解释：这个数字决定了"一度倾斜对应多少反光位移"
         // 建议值：15 ~ 25。
         // 如果觉得反光跑得太慢，把 20 改成 30；如果觉得太快，改成 10。
-        const shineFactor = 7; 
+        const shineFactor = 10; 
 
         // 3. 自动计算反光范围 (绑定逻辑！)
         // 这样：旋转角度越小，反光跑得越短；旋转角度越大，反光跑得越远。
@@ -4018,8 +4018,8 @@ const charModal = document.getElementById('char-modal');
         // ==============================================================
 
         // 计算卡牌倾斜
-        const tiltX = yPos * rotationLimit; 
-        const tiltY = xPos * -rotationLimit; 
+        const tiltX = yPos * -rotationLimit; 
+        const tiltY = xPos * rotationLimit; 
         
         // 应用 3D 变换
         tiltCard.style.transform = `perspective(2000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
@@ -4041,38 +4041,51 @@ const charModal = document.getElementById('char-modal');
     // [新增] 移动端 3D 触摸支持 (不影响电脑端)
     // ==============================================================
 
-    // 1. 触摸移动监听 (Touch Move)
-    document.addEventListener('touchmove', function(e) {
-        // 如果卡牌弹窗没开，啥也不干，让用户正常滚页面
-        if (!bqcModal.classList.contains('active')) return;
+// ==============================================================
+    // [修正版] 移动端 3D 触摸 (高灵敏度 + 范围锁定)
+    // ==============================================================
 
-        // 【关键】阻止浏览器默认的滚动行为！
-        // 这样你的手指滑动才会被当成"拖拽卡牌"，而不是"滚动网页"
+    // 1. 触摸移动监听
+    document.addEventListener('touchmove', function(e) {
+        if (!bqcModal.classList.contains('active')) return;
         if(e.cancelable) e.preventDefault();
 
         const shineLayer = document.getElementById('bqcShine');
-        const tiltCard = document.getElementById('bqcTiltCard'); // 重新获取一下，保险
+        const tiltCard = document.getElementById('bqcTiltCard');
         
         const width = window.innerWidth;
         const height = window.innerHeight;
-        
-        // 获取第一个手指的坐标 (Touch 0)
         const touch = e.touches[0];
         
-        // 计算逻辑和电脑端完全一样
-        const xPos = (touch.clientX / width) - 0.5;
-        const yPos = (touch.clientY / height) - 0.5;
+        // === [核心修改 1] 定义灵敏度倍数 ===
+        // 数值越大，手指稍微动一下，卡牌转得越快
+        // 建议 2.5 ~ 3.0，意味着手指只要划过屏幕的 1/3 就能拉满效果
+        const sensitivity = 2.8; 
 
-        // 参数配置 (建议手机上稍微灵敏一点，因为手指挡屏幕)
-        const rotationLimit = 12; // 手机上角度大一点看着爽
-        const shineFactor = 7; 
-        const shineRange = rotationLimit * shineFactor; 
+        // === [核心修改 2] 计算并放大坐标 ===
+        // (坐标 - 中心点) * 灵敏度
+        let xPos = ((touch.clientX / width) - 0.5) * sensitivity;
+        let yPos = ((touch.clientY / height) - 0.5) * sensitivity;
 
-        // 计算角度
-        const tiltX = yPos * rotationLimit; 
-        const tiltY = xPos * -rotationLimit; 
+        // === [核心修改 3] 锁定最大值 (Clamp) ===
+        // 因为乘了灵敏度，数值可能会变成 1.5 或 2.0（翻过头了）
+        // 我们强制把它锁死在 -0.5 到 0.5 之间 (对应最大角度)
+        // 这样给人的感觉是：轻轻一划就到底，再划也不会穿模
+        xPos = Math.max(-0.55, Math.min(0.55, xPos));
+        yPos = Math.max(-0.55, Math.min(0.55, yPos));
+
+        // === [核心修改 4] 增大最大角度 ===
+        // 手机屏幕小，角度大一点才显得有冲击力 (建议 15~20)
+        const rotationLimit = 18; 
         
-        // 应用 3D 变换
+        // 反光跟随速度
+        const shineRange = rotationLimit * 5; 
+
+        // 计算最终角度
+        const tiltX = yPos * -rotationLimit;      // 上下转
+        const tiltY = xPos * rotationLimit;     // 左右转
+        
+        // 应用变换
         tiltCard.style.transform = `perspective(2000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
 
         // 计算反光
@@ -4081,32 +4094,27 @@ const charModal = document.getElementById('char-modal');
 
         if(shineLayer) {
             shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%`;
+            // 距离中心越远，光越亮
             const dist = Math.hypot(xPos, yPos); 
-            shineLayer.style.opacity = Math.min(dist * 1.5, 0.6);
+            shineLayer.style.opacity = Math.min(dist * 2.0, 0.7); // 光也可以调亮一点
         }
 
-    }, { passive: false }); // 【必须写】passive: false 允许我们使用 preventDefault 阻止滚动
+    }, { passive: false });
 
-
-    // 2. 触摸结束监听 (Touch End)
-    // 手指离开屏幕时，卡牌自动回正 (电脑上不需要这个，因为鼠标会移出屏幕)
+    // 2. 触摸结束监听 (保持不变，直接复制之前的即可)
     document.addEventListener('touchend', function(e) {
         if (!bqcModal.classList.contains('active')) return;
-
         const tiltCard = document.getElementById('bqcTiltCard');
         const shineLayer = document.getElementById('bqcShine');
 
-        // 平滑复位到 0 度
-        tiltCard.style.transition = 'transform 0.5s ease-out'; // 加个临时动画让它慢点回正
+        tiltCard.style.transition = 'transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)'; // 加上缓动曲线更丝滑
         tiltCard.style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg) scale(1)`;
         
-        // 反光消失
         if(shineLayer) {
             shineLayer.style.transition = 'opacity 0.5s ease';
             shineLayer.style.opacity = 0;
         }
 
-        // 0.5秒后把临时动画去掉，防止下次拖拽有延迟感
         setTimeout(() => {
             tiltCard.style.transition = ''; 
             if(shineLayer) shineLayer.style.transition = '';
