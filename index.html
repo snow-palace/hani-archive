@@ -6,6 +6,17 @@
     <title>不公正的哈尼 - 最终完整全景档案</title>
     <style>
         :root {
+
+        /* =========================================
+        [核心修复] iOS 滚动锁定补丁
+        ========================================= */
+        html {
+        height: 100%;
+        width: 100%;
+        overflow: hidden; /* 这一句是关键，锁死 iOS 的橡皮筋效果 */
+        position: fixed;  /* 双重保险，防止页面整体被拖动 */
+    }
+
             /* ================= 全局变量 ================= */
             /* 布局 */
             --sidebar-width: 0px;
@@ -49,9 +60,17 @@
         * { box-sizing: border-box; }
 
         body {
-            margin: 0; background-color: #7e7e7e; color: #eee;
-            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
-            height: 100vh; display: flex; overflow: hidden;
+        margin: 0; 
+        background-color: #7e7e7e; 
+        color: #eee;
+        font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+        
+        /* 配合 html 的锁定 */
+        height: 100%; 
+        width: 100%;
+        overflow: hidden; 
+        display: flex; 
+        position: static; /* body 保持静止 */
         }
 
 /* ================= 1. [重构] 顶部导航栏 ================= */
@@ -1414,14 +1433,19 @@
        PART 6: 斑丘卡牌系统 (最终修正版)
        ========================================= */
     
-    /* 1. 主容器：完全解放，允许全宽 */
+/* [修复] 卡牌页容器：增加顶部安全距离 */
     .bqc-main-container {
-        width: 100%;
-        height: auto;
+        width: 100% !important;
+        height: auto !important;
         background-color: transparent !important;
-        padding: 0;       /* 解除内边距限制 */
-        max-width: none;  /* 解除宽度限制 */
-        margin: 0;
+        max-width: none !important;
+        margin: 0 !important;
+        
+        /* === 【关键修改】 === */
+        /* 上 右 下 左 */
+        /* 给顶部加 20px 或 40px 的内边距，让内容沉下来 */
+        /* 这样第一个标题栏就不会紧贴着导航栏了 */
+        padding: 20px 0 60px 0 !important; 
     }
 
     /* 2. 标题栏：横贯全屏 */
