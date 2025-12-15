@@ -576,18 +576,69 @@ html, body {
             backdrop-filter: blur(3px);
             z-index: 3000; display: none; align-items: center; justify-content: center;
         }
-        .modal-window {
-            width: 800px; height: 550px; background: #1a1a1a; border: 1px solid #666;
-            display: grid; grid-template-columns: 350px 1fr; border-radius: 6px; overflow: hidden;
-            box-shadow: 0 30px 80px rgba(0,0,0,1); position: relative;
-        }
-        .m-stripe { position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: #fff; z-index: 5; }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 32px; cursor: pointer; color: #888; z-index: 10; line-height: 1; }
-        .close-btn:hover { color: #fff; }
-        
-        .m-left { background: #000; display: flex; align-items: center; justify-content: center; border-right: 1px solid #333; padding: 30px; }
-        .img-box { width: 100%; aspect-ratio: 1/1; background: #111; border: 1px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; flex-direction: column; }
-        
+/* =========================================
+   [修改] 时间线详情浮窗：纯文字居中版
+   ========================================= */
+
+/* 1. 布局改为单列，去掉原来的 350px 图片列 */
+.modal-window {
+    grid-template-columns: 1fr !important;
+    /* 保持原宽度 800px 不变 */
+    border: 4px solid #666;
+}
+
+/* 2. 彻底隐藏左侧图片容器 */
+.m-left {
+    display: none !important;
+}
+
+/* 3. 改造右侧容器：让它占满整个卡片 */
+.m-right {
+    width: 100%;
+    height: 100%;
+    padding: 40px 60px; /* 增加左右留白，显得更精致 */
+    
+    /* 开启 Flex 布局方便居中 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 水平居中核心 */
+}
+
+/* 4. 时间与标题：强制居中 */
+.m-time {
+    text-align: center !important;
+    width: 100%;
+    
+    /* 强化中间分割线：让它看起来更像一条分界线 */
+    border-bottom: 2px solid #444 !important; 
+    margin-bottom: 25px !important;
+}
+
+.m-title {
+    text-align: center !important;
+    width: 100%;
+    margin-bottom: 30px !important; /* 标题和正文拉开距离 */
+}
+
+/* 5. 主文内容：上下左右绝对居中 */
+.m-desc {
+    /* 占满剩余的所有垂直空间 */
+    flex-grow: 1;
+    width: 100%;
+    
+    /* 文字排版：居中 */
+    text-align: center !important;
+    
+    /* 垂直居中核心组合 */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important; /* 上下居中 */
+    align-items: center !important;     /* 左右居中 */
+    
+    /* 字体微调：稍微大一点点，更有质感 */
+    font-size: 16px !important;
+    padding: 0 20px; /* 防止文字贴边 */
+}
 /* === [修复] 浮窗右侧文字区 === */
     .m-right { 
         padding: 40px 30px; 
@@ -729,7 +780,7 @@ html, body {
         }
         .society-logo {
             width: 80px; height: 80px;
-            background: #000; border: 0px dashed #55555500;
+            background: #00000000; border: 0px dashed #55555500;
             display: flex; align-items: center; justify-content: center;
             color: #555; font-size: 10px; flex-shrink: 0;
         }
@@ -1459,57 +1510,174 @@ html, body {
        PART 6: 斑丘卡牌系统 (最终修正版)
        ========================================= */
     
-/* [修复] 卡牌页容器：增加顶部安全距离 */
-    .bqc-main-container {
-        width: 100% !important;
-        height: auto !important;
-        background-color: transparent !important;
-        max-width: none !important;
-        margin: 0 !important;
-        
-        /* === 【关键修改】 === */
-        /* 上 右 下 左 */
-        /* 给顶部加 20px 或 40px 的内边距，让内容沉下来 */
-        /* 这样第一个标题栏就不会紧贴着导航栏了 */
-        padding: 20px 0 60px 0 !important; 
+/* =========================================
+   [修改] 标题栏通用样式 (卡牌 & 人物共用)
+   ========================================= */
+
+/* 1. 卡牌页标题栏 (压扁版) */
+.bqc-chapter-bar {
+    /* [修改] 高度固定为 50px (比导航栏 60px 稍微小一点，显致密) */
+    height: 50px; 
+    
+    /* [修改] 布局方式：Flex 居中 */
+    display: flex; 
+    align-items: center; 
+    gap: 15px;
+    
+    /* [修改] 边距控制 */
+    width: 100%; 
+    padding: 0 20px; /* 左右留白 */
+    margin-bottom: 20px; /* 标题和下面内容的间距 */
+    margin-top: 60px !important; /* 避开顶部导航 */
+    
+    /* 样式 */
+    background: linear-gradient(90deg, #1a1a1a 0%, #0d0d0d 100%);
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #000;
+    
+    /* 左侧色条 */
+    border-left-width: 6px; 
+    border-left-style: solid; 
+    
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    position: sticky;
+    top: 0 !important;
+    z-index: 100;
+    cursor: pointer; /* 提示可点击 */
+}
+
+/* 第一个标题顶上去 */
+.bqc-chapter-bar:first-child { 
+    margin-top: 0 !important; 
+}
+
+/* 标题栏 Logo 微调 */
+.bqc-bar-logo { 
+    width: 24px; height: 24px; /* 图标改小一点适配扁条 */
+    object-fit: contain; 
+}
+
+/* 标题文字微调 */
+.bqc-bar-title { 
+    font-size: 16px; /* 字体改小一点 */
+    font-weight: bold; 
+    letter-spacing: 1px; 
+    color: #fff; 
+    text-transform: uppercase; 
+}
+
+/* =========================================
+   [新增] 人物页专用标题栏 (复用逻辑)
+   ========================================= */
+.char-sticky-bar {
+    /* [核心] 宽度占满屏幕 */
+    width: 100%; 
+    height: 50px; /* 压扁 */
+    
+    /* 内部布局 */
+    display: flex; 
+    align-items: center; 
+    gap: 15px;
+    padding: 0 40px; /* 左右留白，文字不要贴边 */
+    
+    /* 颜色与样式 */
+    background: linear-gradient(90deg, #1a1a1a 0%, #0d0d0d 100%);
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #000;
+    border-left-width: 8px; border-left-style: solid; /* 左侧色块 */
+    
+    /* === 【核心修复】 === */
+    /* 1. 必须声明 position: sticky */
+    position: -webkit-sticky; /* 兼容 Safari */
+    position: sticky;
+    
+    /* 2. 必须紧贴顶部 (因为滚动的父容器是 view-section) */
+    top: 0; 
+    
+    /* 3. 层级要高，压住下面的内容 */
+    z-index: 100;
+    
+    /* 4. 【关键】去掉 margin-top，防止它还没滚到顶就卡住 */
+    margin-top: 0; 
+    margin-bottom: 0; /* 底部间距交给下面的内容块去撑开 */
+    
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+/* === [核心修复] 分组容器 === */
+/* 给每一组【标题+社团】加个外套，确保 Sticky 只在这个范围内生效 */
+.char-group-section {
+    position: relative; /* 必须是 relative */
+    width: 100%;
+    
+    /* 组与组之间的间距，替代之前的 margin-top */
+    padding-bottom: 60px; 
+    
+    /* 【关键】不能有 overflow: hidden，否则 sticky 会失效 */
+    overflow: visible; 
+}
+
+/* 手机端稍微紧凑一点 */
+@media (max-width: 1000px) {
+    .char-group-section {
+        padding-bottom: 30px;
     }
+}
 
-    /* 2. 标题栏：横贯全屏 */
-    .bqc-chapter-bar {
-        display: flex; align-items: center; gap: 20px;
-        width: 100%; /* 占满屏幕 */
-        padding: 15px 40px; /* 内部文字留出边距 */
-        margin-bottom: 30px;
-        
-        /* 样式 */
-        background: linear-gradient(90deg, #1a1a1a 0%, #0d0d0d 100%);
-        border-top: 1px solid #444;
-        border-bottom: 1px solid #000;
-        border-left-width: 8px; border-left-style: solid; border-left-color: #666;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.6);
-        
-        /* [修复] 强行给每个标题上面加 60px 的空隙 */
-        margin-top: 60px !important; 
-        
-        /* 底部也留一点 */
-        margin-bottom: 30px !important;
-        
-        position: sticky;
-        top: 0 !important;
-        z-index: 100;
+/* 标题文字样式 (强制白色) */
+.char-bar-title {
+    font-size: 16px; 
+    font-weight: 900; 
+    letter-spacing: 2px;
+    color: #ffffff !important; /* 【遵命】全白 */
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+
+/* 2. 居中内容块 (受气包) */
+/* 这个类名专门用来包住 .society-grid */
+/* === 内容块 (配合标题栏) === */
+.archive-block {
+    max-width: 85%; 
+    width: 100%;
+    margin: 0 auto;
+    
+    padding: 0 20px;
+    padding-top: 20px !important;
+    
+    /* 【新增】给上面留点空隙，免得紧贴着标题栏太挤 */
+    padding-top: 30px; 
+    
+    /* 底部留空 */
+    padding-bottom: 30px; 
+}
+
+/* 手机端适配：内容块变宽，留白变小 */
+@media (max-width: 1000px) {
+    .archive-block {
+        max-width: 95%; /* 手机上稍微宽一点 */
+        padding: 0 10px;
+        padding: 15px 10px 0 10px !important;
     }
-
-/* 2. [关键] 第一个标题不需要顶部空隙 (否则会有一块黑白条) */
-    /* 这一段一定要写在 .bqc-chapter-bar 的下面 */
-    .bqc-chapter-bar:first-child { 
-        margin-top: 0 !important; 
+    .char-sticky-bar {
+        padding: 0 20px; /* 手机上标题栏留白也小一点 */
     }
+}
 
-    .bqc-chapter-bar:first-child { margin-top: 0; }
+/* 人物页第一个标题不需要间距 (因为它上面没有导航栏遮挡，或者由容器控制) */
+.char-sticky-bar.first { margin-top: 0; }
 
-    /* Logo 和 文字 */
-    .bqc-bar-logo { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3)); }
-    .bqc-bar-title { font-size: 20px; font-weight: 900; letter-spacing: 2px; color: #fff; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,0.8); font-family: "Microsoft YaHei", sans-serif; }
+.char-bar-title {
+    font-size: 16px; font-weight: bold; letter-spacing: 2px;
+    color: #ffffff !important; /* 【核心】强制白色 */
+}
+
+/* =========================================
+   [新增] 人物页跳转菜单 (复用卡牌菜单样式)
+   ========================================= */
+/* 这里的样式复用 .jump-menu-overlay 即可，不需要额外写 */
 
     /* 3. [关键] 卡牌网格：独立约束 (这就是您要的西瓜) */
     .bqc-grid {
@@ -1548,6 +1716,38 @@ html, body {
 
     /* 手机 / 窄屏 (768px 以下) */
     @media (max-width: 768px) { 
+
+        /* 1. 修改全局变量：把时间列宽从 100px 压扁到 35px */
+:root {
+        --time-col-width: 35px; 
+    }
+
+    .time-cell {
+        /* 1. 强制竖排模式 */
+        -webkit-writing-mode: vertical-rl; 
+        writing-mode: vertical-rl;
+        
+        /* 2. 【关键】让数字直立起来，而不是躺着 */
+        text-orientation: upright; 
+        
+        /* 3. 字体控制 */
+        font-size: 12px !important;
+        font-family: "Consolas", monospace; /* 等宽字体让数字对得更齐 */
+        
+        /* 4. 紧凑行高与字间距 */
+        letter-spacing: -1px !important; /* 把竖着的数字拉近一点，防止太长 */
+        line-height: 1;
+        
+        /* 5. 布局 */
+        padding: 5px 0 !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: auto; /* 允许高度自适应 */
+    }
+
+
         .bqc-grid { 
             /* --- E. [修改] 手机一行最少显示几张？ --- */
             /* repeat(2, 1fr) = 一行 2 张 (当前默认，比较清晰) */
@@ -1717,7 +1917,7 @@ html, body {
         background-color: transparent !important; 
         
         /* 稍微调整一下内边距，让视觉更平衡 */
-        padding-top: 20px;
+        padding-top: 0 !important;
     }
 
         /* =========================================
@@ -2068,25 +2268,25 @@ html, body {
 <div class="navbar">
     <div class="nav-brand">
         <div class="app-title-sm">不公正的哈尼</div>
-        <div class="page-title-display" id="current-page-title">👥 人物档案</div>
+        <div class="page-title-display" id="current-page-title">人物档案</div>
     </div>
 
     <div class="nav-toggle" onclick="toggleMobileMenu()">☰</div>
 
     <div class="nav-menu" id="nav-menu">
-        <div class="nav-btn active" onclick="switchView('chars', this, '👥 人物档案')">👥 人物档案</div>
-        <div class="nav-btn" onclick="switchView('cards', this, '🃏 斑丘卡')">🃏 斑丘卡</div>
-        <div class="nav-btn" onclick="switchView('attrs', this, '🧊 属性块')">🧊 属性块</div> 
-        <div class="nav-btn" onclick="switchView('rules', this, '📜 斑丘规则')">📜 斑丘规则</div> 
-        <div class="nav-btn" onclick="switchView('timeline', this, '📅 时间线')">📅 时间线</div>
-        <div class="nav-btn" onclick="switchView('scenery', this, '🌄 斑丘景色')">🌄 斑丘景色</div>
-        <div class="nav-btn" onclick="switchView('gallery', this, '⚔️ 战斗画廊')">⚔️ 战斗画廊</div>    
+        <div class="nav-btn active" onclick="switchView('chars', this, '人物档案')">人物档案</div>
+        <div class="nav-btn" onclick="switchView('cards', this, '斑丘卡')">斑丘卡</div>
+        <div class="nav-btn" onclick="switchView('attrs', this, '属性块')">属性块🚧施工中🚧</div> 
+        <div class="nav-btn" onclick="switchView('rules', this, '斑丘规则')">斑丘规则</div> 
+        <div class="nav-btn" onclick="switchView('timeline', this, '时间线')">时间线</div>
+        <div class="nav-btn" onclick="switchView('scenery', this, '斑丘景色')">斑丘景色🚧施工中🚧</div>
+        <div class="nav-btn" onclick="switchView('gallery', this, '战斗画廊')">战斗画廊🚧施工中🚧</div>    
     </div>
 </div>
 
 <div id="bqc-jump-menu" class="jump-menu-overlay" onclick="toggleBqcMenu()">
     <div class="jump-menu-content">
-        <div class="jump-title">快速跳转至...</div>
+        <div class="jump-title">→</div>
         <div class="jump-list" id="bqc-jump-list">
             </div>
     </div>
@@ -2097,11 +2297,27 @@ html, body {
     <div id="view-timeline" class="view-section">
         
         <div class="top-fixed-wrapper">
-            <div class="legend-bar">
-                <div class="legend-group"><span class="legend-label">白楼</span> <span class="dot bg-yan"></span>闫佳巧、甜锈（代行）</div>
-                <div class="legend-group"><span class="legend-label">社联组</span> <span class="dot bg-yu"></span>于沐川 <span class="dot bg-kid"></span>小孩 <span class="dot bg-hei"></span>小黑 <span class="dot bg-piao"></span>飘飘</div>
-                <div class="legend-group"><span class="legend-label">玩家</span> <span class="dot bg-sb"></span>草莓 <span class="dot bg-wc"></span>小野猫</div>
-            </div>
+<div class="legend-bar">
+    <div class="legend-group">
+        <span class="legend-label">白楼</span> 
+        <span class="dot bg-yan"></span><span style="color:var(--c-yan)">闫佳巧</span>、
+        <span style="color:var(--c-yan)">甜锈</span>
+    </div>
+    
+    <div class="legend-group">
+        <span class="legend-label">社联组</span> 
+        <span class="dot bg-yu"></span><span style="color:var(--c-yu)">于沐川</span> 
+        <span class="dot bg-kid"></span><span style="color:var(--c-kid)">小孩</span> 
+        <span class="dot bg-hei"></span><span style="color:var(--c-hei)">小黑</span> 
+        <span class="dot bg-piao"></span><span style="color:var(--c-piao)">飘飘</span>
+    </div>
+    
+    <div class="legend-group">
+        <span class="legend-label">玩家</span> 
+        <span class="dot bg-sb"></span><span style="color:#FF0055">草莓</span> 
+        <span class="dot bg-wc"></span><span style="color:#5050ff">小野猫</span>
+    </div>
+</div>
             <div class="header-row">
                 <div class="h-cell" style="background:#000;">阶段</div>
                 <div class="h-cell h-real">现实世界 (Real)</div>
@@ -2778,101 +2994,16 @@ html, body {
         </div>
     </div>
 
-    <div id="view-chars" class="view-section active">
-        <div class="archive-container">
-
-    <div class="section-header">
-        <div class="section-line"></div>
-        <div class="section-title">学生社团</div>
-        <div class="section-line"></div>
-    </div>
-
-    <div class="society-grid">
-        
-        <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div><div class="society-name">友谊百货</div></div>
-            <div class="char-list">
-                <div id="list-friendly-store"></div>
-            </div>
-        </div>
-
-        <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div><div class="society-name">冷凝塔</div></div>
-            <div class="char-list"><div id="list-condensing-tower"></div></div>
-        </div>
-
-        <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div><div class="society-name">坏蛋少年宫</div></div>
-            <div class="char-list"><div id="list-bad-kids"></div></div>
-        </div>
-
-        <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div><div class="society-name">炼厂</div></div>
-            <div class="char-list"><div id="list-refinery"></div></div>
-        </div>
-
-        <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div><div class="society-name">蜂山广场</div></div>
-            <div class="char-list"><div id="list-plaza"></div></div>
-        </div>
-    
-    </div>
-
-    <div class="section-header">
-        <div class="section-line"></div>
-        <div class="section-title" style="color:var(--c-yan)">哈尼社团</div>
-        <div class="section-line"></div>
-    </div>
-
-    <div class="society-grid">
-        <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div><div class="society-name">哈尼哈尼</div></div>
-            <div class="char-list"><div id="list-honey"></div></div>
-        </div>
-        <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div><div class="society-name">三子星</div></div>
-            <div class="char-list"><div id="list-stars"></div></div>
-        </div>
-        <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div><div class="society-name">毛毛毛毛毛</div></div>
-            <div class="char-list"><div id="list-mao"></div></div>
-        </div>
-        <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div>
-            <div class="society-name">蜂山广播社</div></div>
-            <div class="char-list"><div id="list-radio" style="min-height: 50px;"></div></div>
-        </div>
-            <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div>
-            <div class="society-name">步可连连（单飞）</div></div>
-            <div class="char-list"><div id="list-bukll" style="min-height: 50px;"></div></div>
-        </div>
-    </div>
-
-    <div class="section-header">
-        <div class="section-line"></div>
-        <div class="section-title" style="color:var(--c-yan)">管理社团</div>
-        <div class="section-line"></div>
-    </div>
-
-    <div class="society-grid">
-        <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div><div class="society-name">白楼</div></div>
-            <div class="char-list"><div id="list-white-building"></div></div>
-        </div>
-        <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div><div class="society-name">社联组 (第一届)</div></div>
-            <div class="char-list"><div id="list-union-1"></div></div>
-        </div>
-        <div class="society-card">
-            <div class="society-header"><div class="society-logo">Logo</div><div class="society-name">社联组 (第二届)</div></div>
-            <div class="char-list"><div id="list-union-2"></div></div>
-        </div>
-    </div>
-
+<div id="view-chars" class="view-section active">
+    <div id="char-root-container" style="width: 100%; min-height: 100%;"></div>
 </div>
 
+<div id="char-jump-menu" class="jump-menu-overlay" onclick="toggleCharMenu()">
+    <div class="jump-menu-content">
+        <div class="jump-title">档案目录</div>
+        <div class="jump-list" id="char-jump-list"></div>
     </div>
+</div>
 
     <div id="view-cards" class="view-section">
         <div class="bqc-main-container" id="bqcApp">
@@ -2881,25 +3012,25 @@ html, body {
 
     <div id="view-attrs" class="view-section">
         <div class="paste-zone" style="padding:50px; text-align:center; color:#666;">
-            <h2>🧊 属性块
+            <h2> 属性块
 
             </h2>
-            <p>在此处粘贴 [属性块] 的详细代码</p>
-            <p style="font-size:12px; opacity:0.5;">(例如：属性金字塔)</p>
+            <p>🚧施工中🚧</p>
+            <p style="font-size:12px; opacity:0.5;"></p>
         </div>
     </div>
 
     <div id="view-scenery" class="view-section">
         <div class="paste-zone" style="padding:50px; text-align:center; color:#666;">
-            <h2>🌄 斑丘景色</h2>
-            <p>在此处粘贴 [场景介绍/地图] 代码</p>
+            <h2>斑丘景色</h2>
+            <p>🚧施工中🚧</p>
         </div>
     </div>
 
     <div id="view-gallery" class="view-section">
         <div class="paste-zone" style="padding:50px; text-align:center; color:#666;">
-            <h2>⚔️ 战斗画廊</h2>
-            <p>在此处粘贴 [战斗CG/精彩瞬间] 代码</p>
+            <h2>战斗画廊</h2>
+            <p>🚧施工中🚧</p>
         </div>
     </div>
 
@@ -3030,53 +3161,63 @@ function toggleMobileMenu() {
     const mTitle = document.getElementById('m-title');
     const mDesc = document.getElementById('m-desc');
 
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', () => {
-            // 1. 内容填充
-            mTime.innerText = card.getAttribute('data-time');
-            mTitle.innerText = card.getAttribute('data-title');
-            mDesc.innerHTML = card.getAttribute('data-desc');
+/* === [修复] 事件卡点击逻辑：边框变色 === */
+document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+        // 1. 获取弹窗元素
+        const modalWin = document.querySelector('.modal-window');
+        const mTime = document.getElementById('m-time');
+        const mTitle = document.getElementById('m-title');
+        const mDesc = document.getElementById('m-desc');
+        const modal = document.getElementById('modal'); // 获取大遮罩层
 
-            // 2. 颜色匹配逻辑 (最稳妥的身份证识别法)
-            // 先清空，防止残留
-            mStripe.style.background = 'none';
-            mStripe.style.backgroundColor = 'transparent';
+        // 2. 填充内容
+        mTime.innerText = card.getAttribute('data-time');
+        mTitle.innerText = card.getAttribute('data-title');
+        mDesc.innerHTML = card.getAttribute('data-desc');
 
-            // 检查卡片不仅有哪些类名，根据类名直接给颜色
-            const cl = card.classList;
+        // 3. 【核心修复】边框颜色匹配逻辑
+        const cl = card.classList;
 
-            if (cl.contains('bd-sb')) {
-                // 草莓：左右渐变
-                mStripe.style.background = 'linear-gradient(to right, #00FF7F, #FF0055)';
-            } 
-            else if (cl.contains('bd-wc')) {
-                // 野猫：左右渐变
-                mStripe.style.background = 'linear-gradient(to right, #FFD700, #0000FF)';
-            }
-            else if (cl.contains('bd-yu')) {
-                mStripe.style.backgroundColor = 'var(--c-yu)';
-            }
-            else if (cl.contains('bd-kid')) {
-                mStripe.style.backgroundColor = 'var(--c-kid)';
-            }
-            else if (cl.contains('bd-hei')) {
-                mStripe.style.backgroundColor = 'var(--c-hei)';
-            }
-            else if (cl.contains('bd-yan')) {
-                mStripe.style.backgroundColor = 'var(--c-yan)';
-            }
-            else if (cl.contains('bd-piao')) {
-                mStripe.style.backgroundColor = 'var(--c-piao)';
-            }
-            else {
-                // 默认黑色或NPC色
-                mStripe.style.backgroundColor = '#666'; 
-            }
+        // A. 先重置：默认灰色，清除渐变
+        modalWin.style.borderColor = '#666'; 
+        modalWin.style.borderImage = 'none';
+        modalWin.style.borderWidth = '4px';
+        modalWin.style.borderStyle = 'solid';
 
-            // 3. 显示窗口
-            modal.style.display = 'flex';
-        });
+        // B. 判断颜色
+        if (cl.contains('bd-sb')) {
+            // 草莓：渐变边框
+            modalWin.style.borderImage = 'linear-gradient(to right, #00FF7F, #FF0055) 1';
+        } 
+        else if (cl.contains('bd-wc')) {
+            // 野猫：渐变边框
+            modalWin.style.borderImage = 'linear-gradient(to right, #FFD700, #0000FF) 1';
+        }
+        else if (cl.contains('bd-yu')) {
+            modalWin.style.borderColor = 'var(--c-yu)';
+        }
+        else if (cl.contains('bd-kid')) {
+            modalWin.style.borderColor = 'var(--c-kid)';
+        }
+        else if (cl.contains('bd-hei')) {
+            modalWin.style.borderColor = 'var(--c-hei)';
+        }
+        else if (cl.contains('bd-yan')) {
+            modalWin.style.borderColor = 'var(--c-yan)';
+        }
+        else if (cl.contains('bd-piao')) {
+            modalWin.style.borderColor = 'var(--c-piao)';
+        }
+        else {
+            // NPC 或其他：保持默认深灰
+            modalWin.style.borderColor = '#666'; 
+        }
+
+        // 4. 显示窗口
+        modal.style.display = 'flex';
     });
+});
 
     function closeModal() {
         modal.style.display = 'none';
@@ -4491,6 +4632,258 @@ const charModal = document.getElementById('char-modal');
             if(shineLayer) shineLayer.style.transition = '';
         }, 600);
     });
+
+/* =========================================================================
+   PART 7: 人物档案页 自动化构建与导航系统 (新增)
+   ========================================================================= */
+
+// 1. 配置数据：将原来分散的 HTML 结构整理成数据
+//    type: 'header' 生成扁标题栏
+//    type: 'grid'   生成社团网格
+const charPageConfig = [
+    // === 第一部分：学生社团 ===
+    { 
+        type: 'header', 
+        title: '学生社团', 
+        key: 'STUDENT', 
+        color: '#4169E1' // 皇家蓝
+    },
+    { 
+        type: 'grid', 
+        list: [
+            { id: 'list-friendly-store', name: '友谊百货', logo: Societies.FRIEND },
+            { id: 'list-condensing-tower', name: '冷凝塔', logo: Societies.TOWER },
+            { id: 'list-bad-kids', name: '坏蛋少年宫', logo: Societies.BAD },
+            { id: 'list-refinery', name: '炼厂', logo: Societies.FACTORY },
+            { id: 'list-plaza', name: '蜂山广场', logo: Societies.PLAZA }
+        ]
+    },
+
+    // === 第二部分：哈尼社团 ===
+    { 
+        type: 'header', 
+        title: '哈尼社团', 
+        key: 'HANI', 
+        color: '#FF1493' // 深粉色
+    },
+    { 
+        type: 'grid', 
+        list: [
+            { id: 'list-honey', name: '哈尼哈尼', logo: Societies.HANI },
+            { id: 'list-stars', name: '三子星', logo: Societies.STARS },
+            { id: 'list-mao', name: '毛毛毛毛毛', logo: Societies.MAO },
+            { id: 'list-radio', name: '蜂山广播社', logo: Societies.RADIO },
+            { id: 'list-bukll', name: '步可连连', logo: Societies.BUKLL }
+        ]
+    },
+
+    // === 第三部分：管理社团 ===
+    { 
+        type: 'header', 
+        title: '管理社团', 
+        key: 'ADMIN', 
+        color: '#aaaaaa' // 银灰色
+    },
+    { 
+        type: 'grid', 
+        list: [
+            { id: 'list-white-building', name: '白楼', logo: Societies.WHITE },
+            { id: 'list-union-1', name: '社联组 (第一届)', logo: Societies.UNION },
+            { id: 'list-union-2', name: '社联组 (第二届)', logo: Societies.UNION }
+        ]
+    }
+];
+
+// 2. 渲染主函数
+// 3. JS 逻辑重写 (修复 Logo 换回圆点)
+// === [修复版] 渲染主函数：增加分组包裹 ===
+function renderCharPage() {
+    const root = document.getElementById('char-root-container');
+    const menuList = document.getElementById('char-jump-list');
+    if (!root || !menuList) return;
+
+    let htmlStructure = '';
+    let menuHtml = '';
+
+    // 1. 遍历配置
+    charPageConfig.forEach((item, index) => {
+        
+        // === 遇到标题：开启新分组 ===
+        if (item.type === 'header') {
+            
+            // 【核心逻辑】如果不是第一个，先闭合上一个分组的 </div>
+            // 这样就保证了上一组的代码是完整的： <div class="group"> 标题... 内容... </div>
+            if (index > 0) {
+                htmlStructure += `</div>`; 
+            }
+            
+            // 【核心逻辑】开启一个新的分组容器
+            htmlStructure += `<div class="char-group-section" id="group-${item.key}">`;
+
+            // 塞入标题栏 (保持原样)
+            htmlStructure += `
+                <div class="char-sticky-bar" 
+                     id="char-anchor-${item.key}"
+                     onclick="toggleCharMenu()"
+                     style="border-left-color: ${item.color};">
+                     
+                     <div style="width:12px; height:12px; background:${item.color}; border-radius:50%; box-shadow: 0 0 5px ${item.color};"></div>
+                     
+                     <span class="char-bar-title">${item.title} ▾</span>
+                </div>
+            `;
+
+            // 生成菜单项 (保持原样)
+            menuHtml += `
+                <div class="jump-btn" 
+                     onclick="scrollToCharCat('${item.key}', event)"
+                     style="border-left-color: ${item.color}; text-align:left; display:flex; align-items:center; gap:10px;">
+                    <div style="width:10px; height:10px; background:${item.color}; border-radius:50%;"></div>
+                    <span style="color:#fff; font-weight:bold;">${item.title}</span>
+                </div>
+            `;
+        }
+
+        // === 遇到网格：直接塞入当前分组 ===
+        // 因为上面已经开启了 <div class="char-group-section">，这里直接往里塞就行
+        if (item.type === 'grid') {
+            htmlStructure += `<div class="archive-block"><div class="society-grid">`;
+            
+            item.list.forEach(soc => {
+                htmlStructure += `
+                    <div class="society-card">
+                        <div class="society-header">
+                            <div class="society-logo"><img src="${soc.logo}" style="width:100%; height:100%; object-fit:contain;"></div>
+                            <div class="society-name">${soc.name}</div>
+                        </div>
+                        <div class="char-list">
+                            <div id="${soc.id}"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            htmlStructure += `</div></div>`; 
+        }
+    });
+
+    // 【核心逻辑】循环结束，别忘了闭合最后一个分组的 </div>
+    htmlStructure += `</div>`;
+
+    root.innerHTML = htmlStructure;
+    menuList.innerHTML = menuHtml;
+
+    fillCharLists();
+}
+
+
+// 3. 填充人物卡片函数 (把原来分散的逻辑封装起来)
+function fillCharLists() {
+    // 复用你原来的 lists 和 charData 数据
+    for (const [id, keys] of Object.entries(lists)) {
+        const container = document.getElementById(id);
+        if(!container) continue;
+
+        // 清空容器，防止重复渲染
+        container.innerHTML = '';
+
+        keys.forEach(key => {
+            const d = charData[key];
+            if(!d) return; 
+            
+            const card = document.createElement('div');
+            const kingClass = d.isKing === true ? ' is-king' : '';
+            card.className = 'char-card' + kingClass;
+
+            let hoverColor = d.color;
+            if (d.color.includes('gradient')) {
+                const match = d.color.match(/#[a-fA-F0-9]{6}/);
+                if (match) hoverColor = match[0];
+            }
+            card.style.setProperty('--hover-color', hoverColor);
+
+            if(d.color.includes('gradient')) { 
+                card.style.borderImage = d.color + ' 1'; 
+                card.style.borderLeftWidth = '6px'; 
+                card.style.borderLeftStyle = 'solid'; 
+            } else { 
+                card.style.borderLeftColor = d.color; 
+            }
+            
+            card.onclick = () => openCharModal(key);
+            
+            const chairsList = d.chairs || []; 
+            let chairsHtml = '';
+            chairsList.forEach(color => { 
+                chairsHtml += `<div class="chair-icon chair-${color}">${chairSvg}</div>`; 
+            });
+
+            // 你的原有卡片 HTML 结构
+            card.innerHTML = `
+                <div class="crown-badge">♛</div>
+                <div class="chair-container">${chairsHtml}</div>
+                <div class="char-card-img"><img src="${d.cardImage || ''}" onerror="this.style.display='none'"></div>
+                <div class="char-card-info">
+                    <div class="cc-names">
+                        <span class="cc-nickname" style="${d.color.includes('gradient') ? 'background:'+d.color+';-webkit-background-clip:text;color:transparent' : 'color:'+d.color}">${d.name}</span>
+                        <span class="cc-realname">${d.real !== '-' ? d.real : ''}</span>
+                    </div>
+                    <div class="cc-job">${d.job}</div>
+                    <div class="cc-school">${d.school.replace(/大学附属高级中学|中学|学校/, '...')}</div>
+                </div>`;
+            
+            container.appendChild(card);
+        });
+    }
+}
+
+// 4. 菜单交互逻辑
+function toggleCharMenu() {
+    const menu = document.getElementById('char-jump-menu');
+    if(menu) menu.classList.toggle('active');
+}
+
+// === [终极修正] 菜单跳转逻辑 ===
+function scrollToCharCat(key, event) {
+    // 1. 阻止点击穿透
+    if (event) event.stopPropagation();
+    
+    // 2. 关闭菜单
+    toggleCharMenu();
+    
+    const container = document.getElementById('view-chars'); // 滚动容器
+    
+    // 【核心修改点】
+    // 以前我们找的是 `char-anchor-${key}` (那个会动的标题栏)
+    // 现在我们找 `group-${key}` (那一整块的父容器)
+    const targetGroup = document.getElementById(`group-${key}`);
+    
+    if (container && targetGroup) {
+        // 3. 计算位置
+        // offsetTop 是指：这个分组容器的顶部，距离父容器顶部的距离
+        // 这就是最原始、最真实的物理位置，不受 sticky 视觉欺骗影响
+        let targetPos = targetGroup.offsetTop;
+
+        // 【微调】
+        // 如果容器有 padding-top (比如 40px)，直接滚到 0 可能会觉得太靠上
+        // 或者因为 sticky bar 有高度，我们可能希望稍微往上多滚一点点或者正好对齐
+        // 这里不做减法，通常直接滚到 offsetTop 就是“精准对其顶部”
+        // 如果你觉得太顶了，可以写: targetPos - 20;
+        
+        // 4. 执行滚动
+        container.scrollTo({
+            top: targetPos, 
+            behavior: "smooth"
+        });
+    }
+}
+
+// 5. 初始化
+// 页面加载完后执行
+setTimeout(renderCharPage, 100);
+
+// 【注意】如果你原来的代码里有 `for (const [id, keys] of Object.entries(lists))` 这一段自动执行的代码，
+// 请将其注释掉或删除，因为现在由 `renderCharPage` -> `fillCharLists` 统一接管了。
 
 </script>
 
