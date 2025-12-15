@@ -8,8 +8,8 @@
         :root {
             /* ================= 全局变量 ================= */
             /* 布局 */
-            --sidebar-width: 180px;
-            --time-col-width: 100px;
+            --sidebar-width: 0px;
+            --navbar-height: 60px; /* [新增] 顶部导航高度 */
             
             /* 背景颜色 */
             --bg-body: #111;
@@ -53,27 +53,53 @@
             height: 100vh; display: flex; overflow: hidden;
         }
 
-        /* ================= 1. 左侧导航栏 ================= */
-        .sidebar {
-            width: var(--sidebar-width); background: #151515; border-right: 1px solid #333;
-            display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; z-index: 2000;
-        }
-        .app-title {
-            font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 40px;
-            padding-bottom: 20px; border-bottom: 2px solid #333; text-align: center; letter-spacing: 2px;
-        }
-        .nav-btn {
-            padding: 15px; margin-bottom: 10px; cursor: pointer; border-radius: 4px;
-            font-weight: bold; color: #777; transition: 0.2s; display: flex; align-items: center; gap: 10px;
-        }
-        .nav-btn:hover { background: #222; color: #fff; }
-        .nav-btn.active { background: #555; color: var(--c-yu); border-left: 4px solid var(--c-yu); }
+/* ================= 1. [重构] 顶部导航栏 ================= */
+.navbar {
+    position: fixed; top: 0; left: 0; width: 100%; height: var(--navbar-height);
+    background: #151515; border-bottom: 1px solid #333;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; z-index: 2000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
 
-        /* ================= 2. 主视图区域 ================= */
-        .main-view {
-            flex-grow: 1; display: flex; flex-direction: column; position: relative;
-            background: #000; width: calc(100vw - var(--sidebar-width));
-        }
+/* 左侧品牌区 */
+.nav-brand { display: flex; align-items: center; gap: 15px; }
+.app-title-sm { font-size: 14px; color: #666; font-weight: bold; }
+.page-title-display { font-size: 18px; color: #fff; font-weight: 900; letter-spacing: 1px; }
+
+/* 菜单列表 (默认隐藏，点击按钮显示) */
+.nav-menu {
+    position: absolute; top: 60px; right: 0;
+    background: #1a1a1a; border: 1px solid #333;
+    flex-direction: column; width: 200px;
+    display: none; /* 默认隐藏 */
+    box-shadow: -5px 5px 20px rgba(0,0,0,0.8);
+}
+.nav-menu.open { display: flex; } /* JS控制显示 */
+
+/* 菜单按钮样式 */
+.nav-btn {
+    padding: 15px 20px; cursor: pointer; color: #aaa; border-bottom: 1px solid #222;
+    transition: 0.2s; font-size: 14px;
+}
+.nav-btn:hover { background: #333; color: #fff; }
+.nav-btn.active { background: #444; color: var(--c-yu); border-left: 4px solid var(--c-yu); }
+
+/* 汉堡按钮 */
+.nav-toggle { font-size: 24px; color: #fff; cursor: pointer; padding: 5px; user-select: none; }
+
+/* ================= 2. [修正] 主视图区域 ================= */
+.main-view {
+    /* 宽度占满 */
+    width: 100%; 
+    /* 高度减去导航栏 */
+    height: calc(100vh - var(--navbar-height)); 
+    /* 向下推，留出导航栏的位置 */
+    margin-top: var(--navbar-height); 
+    
+    display: flex; flex-direction: column; position: relative;
+    background: #000; 
+}
 
         /* 视图切换控制 */
         .view-section { display: none; height: 100%; flex-direction: column; }
@@ -631,10 +657,15 @@
         }
         .section-line { height: 2px; background: #888; flex-grow: 1; }
 
-        /* === 网格布局 (3列) === */
-        .society-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;
-        }
+/* === 社团网格布局 (桌面端铁律) === */
+.society-grid {
+    display: grid; 
+    
+    /* [修改] 电脑端强制 3 列 (不要用 auto-fit 了，那个会变) */
+    grid-template-columns: repeat(3, 1fr); 
+    
+    gap: 25px;
+}
 
         /* === 社团卡片 === */
         .society-card {
@@ -682,6 +713,10 @@
             overflow: visible !important; 
             
             height: 100px; 
+            /* [新增] 宽度由 Grid 父亲决定，自己撑满即可 */
+            width: 100%; 
+            max-width: 100%;
+
             cursor: pointer; 
             
             /* 关键：必须有这个 transition 悬浮才会平滑 */
@@ -1385,9 +1420,23 @@
         border-left-width: 8px; border-left-style: solid; border-left-color: #666;
         box-shadow: 0 5px 20px rgba(0,0,0,0.6);
         
-        /* 吸顶 */
-        position: sticky; top: 0; z-index: 100;
+        /* [修复] 强行给每个标题上面加 60px 的空隙 */
+        margin-top: 60px !important; 
+        
+        /* 底部也留一点 */
+        margin-bottom: 30px !important;
+        
+        position: sticky;
+        top: 0 !important;
+        z-index: 100;
     }
+
+/* 2. [关键] 第一个标题不需要顶部空隙 (否则会有一块黑白条) */
+    /* 这一段一定要写在 .bqc-chapter-bar 的下面 */
+    .bqc-chapter-bar:first-child { 
+        margin-top: 0 !important; 
+    }
+
     .bqc-chapter-bar:first-child { margin-top: 0; }
 
     /* Logo 和 文字 */
@@ -1397,28 +1446,51 @@
     /* 3. [关键] 卡牌网格：独立约束 (这就是您要的西瓜) */
     .bqc-grid {
         display: grid;
-        /* 【铁律】这里写死了 6 列，谁也改不了它 */
-        grid-template-columns: repeat(6, 1fr); 
-        gap: 35px;
+        /* --- A. 电脑端列数 --- */
+        /* repeat(6, 1fr) 代表一行 6 张 */
+        /* 如果觉得太密，可以改成 5 或 4 */
+        grid-template-columns: repeat(6, 1fr);
+
+        /* --- B. [修改] 卡牌间距 --- */
+        /* 控制卡牌之间的缝隙大小 */
+        /* 建议：电脑端 20px - 30px，手机端 10px - 15px */
+        gap: 30px;
         
         /* 【关键】虽然父亲全宽了，但我自己依然保持最大 1400px 居中 */
         width: 100%;
         max-width: 1400px; 
         margin: 0 auto;   /* 居中 */
         
-        /* 左右留出呼吸空间，防止屏幕窄时卡牌贴边 */
-        padding: 0 40px; 
+        /* --- C. [修改] 左右留白 --- */
+        /* 整个网格距离屏幕边缘的距离 */
+        padding: 0 20px; 
         padding-bottom: 60px;
+
     }
 
-    /* 4. 响应式保底 (屏幕变窄时自动减少列数) */
-    /* 1200px以下变4列 */
+/* --- D. 响应式规则 (屏幕变窄时怎么变) --- */
+
+    /* 平板 / 小电脑 (1200px 以下) */
     @media (max-width: 1200px) { 
-        .bqc-grid { grid-template-columns: repeat(4, 1fr); } 
+        .bqc-grid { 
+            /* 变成 4 列 */
+            grid-template-columns: repeat(4, 1fr); 
+        } 
     }
-    /* 768px以下变2列 */
+
+    /* 手机 / 窄屏 (768px 以下) */
     @media (max-width: 768px) { 
-        .bqc-grid { grid-template-columns: repeat(2, 1fr); } 
+        .bqc-grid { 
+            /* --- E. [修改] 手机一行最少显示几张？ --- */
+            /* repeat(2, 1fr) = 一行 2 张 (当前默认，比较清晰) */
+            /* repeat(3, 1fr) = 一行 3 张 (卡牌会变小，能看更多) */
+            /* repeat(1, 1fr) = 一行 1 张 (巨大，类似社团卡) */
+            grid-template-columns: repeat(3, 1fr); 
+            
+            /* 手机上间距通常要更小一点，省空间 */
+            gap: 20px; 
+            padding: 0 25px; /* 左右留白也减小 */
+        } 
     }
 
     /* --- 卡牌样式保持不变 --- */
@@ -1462,26 +1534,32 @@
             display: flex;
         }
 
-        /* 大图容器 */
-        .bqc-modal-content {
-            width: auto;
-            height: 80vh; 
-            aspect-ratio: 1860 / 2598;
-            position: relative;
-            transform-style: preserve-3d; 
-            transition: transform 0.1s ease-out; 
-            
-            /* === [新增修复] 强制圆角裁剪 === */
-            /* 1. 给容器本身加圆角 (和图片保持一致) */
-            border-radius: 12px; 
-            
-            /* 2. 核心：超出圆角的部分统统隐藏 */
-            /* 这把剪刀会把图片和反光层的四个尖角都剪掉，保证边缘完美重合 */
-            overflow: hidden; 
-            
-            /* 3. 修复 Safari 浏览器下的 3D 裁剪 bug */
-            -webkit-mask-image: -webkit-radial-gradient(white, black);
-        }
+/* 大图容器 */
+    .bqc-modal-content {
+        width: auto;
+        
+        /* [修改] 高度限制：桌面端保持 80vh，但不能太大 */
+        height: 80vh; 
+        
+        /* [新增] 移动端安全距离核心代码 */
+        /* 意思是：宽度最大只能是屏幕的 85%，高度最大 85% */
+        /* 这样无论屏幕多小，四周都会留出空隙 */
+        max-width: 85vw;
+        max-height: 85vh;
+        
+        aspect-ratio: 1860 / 2598;
+        position: relative;
+        transform-style: preserve-3d; 
+        transition: transform 0.1s ease-out; 
+        
+        /* 圆角裁剪 */
+        border-radius: 12px; 
+        overflow: hidden; 
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
+        /* [修复] 把小手加在这里！ */
+        /* 只要鼠标进了这个框，不管是碰到光还是碰到图，都是小手 */
+        cursor: pointer; 
+    }
 
         .bqc-modal-img {
             width: 100%;
@@ -1492,8 +1570,6 @@
             /* [修改] 以前是 none (穿透)，现在改为 auto (允许点击) */
             pointer-events: auto; 
             
-            /* [新增] 鼠标放上去变成小手，提示可以点击 */
-            cursor: pointer;
         }
 
         /* 关闭提示 */
@@ -1507,13 +1583,6 @@
             font-weight: bold;
         }
 
-        /* 响应式适配：屏幕较小时改为3列或2列 */
-        @media (max-width: 1200px) {
-            .bqc-grid { grid-template-columns: repeat(4, 1fr); }
-        }
-        @media (max-width: 768px) {
-            .bqc-grid { grid-template-columns: repeat(2, 1fr); }
-        }
 
 /* === [修改] 动态反光层 (柔光 + 遮罩版) === */
         .bqc-card-shine {
@@ -1550,9 +1619,10 @@
             mask-position: center;
 
             opacity: 0; 
-            z-index: 10; 
-            pointer-events: none; 
+            pointer-events: none !important; 
+            z-index: 10;
             transition: opacity 0.2s; 
+            
         }
 
         /* =========================================
@@ -1608,6 +1678,173 @@
         /* transform: translateX(-50%) scale(1.2); */
     }
 
+/* =========================================
+   [核心适配] 移动端/竖屏 (整体缩放版)
+   ========================================= */
+
+@media (max-width: 1000px) {
+    /* [新增] 手机端页面容器：减少两侧留白 */
+    .archive-container {
+        padding: 15px !important; /* 从 40px 减小到 15px */
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* [新增] 强制社团卡片在手机上一行只显示一个 */
+    .society-grid {
+        grid-template-columns: 1fr !important; /* 强制单列 */
+        gap: 15px !important; /* 间距也稍微缩小 */
+    }
+
+/* 1. 浮窗本体：保持原样，锁定顶部 */
+    .char-modal-window {
+        display: grid !important;
+        grid-template-columns: 376px 1fr !important;
+        width: 960px !important;
+        min-width: 960px !important;
+        height: 640px !important;
+        
+        top: 70px !important; 
+        left: 50% !important;
+        
+        transform-origin: top center;
+        transform: translateX(-50%) scale(1); 
+        
+        margin: 0 !important;
+        overflow: hidden !important; /* 还是锁死，防止内容乱跑 */
+    }
+
+    /* 恢复内部布局 */
+    .modal-left { height: 100% !important; width: 100% !important; border-right: 1px solid #333 !important; border-bottom: none !important; }
+    .modal-right { overflow: hidden !important; }
+    .modal-top-row { grid-template-columns: 1fr 1.2fr !important; height: 360px !important; gap: 30px !important; }
+    .stats-panel { padding: 20px !important; border: 1px solid #2a2a2a00 !important; }
+    .attr-slots { justify-content: flex-end !important; padding-right: 50px !important; }
+    .modal-bottom-row { grid-template-columns: 1fr 150px !important; display: grid !important; padding-bottom: 0 !important; }
+    .logos-area { flex-direction: column !important; height: 100% !important; margin-top: 0 !important; }
+    
+/* === [修改点 1] 大外号：定位到立绘左下角 === */
+    .broken-name {
+        /* 1. 定位基准：父容器是 char-modal-window (960x640) */
+        /* 立绘区(modal-left) 宽度是 376px */
+        /* 我们把它定在 376px 这个格子的最下面 */
+        
+        position: absolute !important;
+        
+        /* 垂直：放在底部靠上一点 (根据字体大小调整) */
+        bottom: 20px !important; 
+        top: auto !important;
+        
+        /* 水平：左侧留 10px 边距 */
+        left: 10px !important;
+        right: auto !important;
+        
+        /* 样式 */
+        font-size: 70px !important; /* 字体大小 */
+        opacity: 1 !important;      /* 100% 不透明，清晰显示 */
+        z-index: 15 !important;     /* 保证在立绘图上面 */
+        text-align: left !important;
+        pointer-events: none;
+        
+        /* 限制宽度，防止字太多戳到右边的属性栏 */
+        max-width: 350px;
+        overflow: hidden;
+    }
+
+/* === [修改点 2] 战斗立绘：手机端横向撑满 === */
+    .broken-portrait-container {
+        position: fixed;
+        bottom: 0 !important; 
+        left: 0 !important; /* 强制从最左边开始 */
+        right: 0 !important; /* 强制到最右边结束 */
+        top: auto !important;
+        
+        /* 容器宽度占满屏幕 */
+        width: 100vw !important;
+        height: auto !important; /* 高度随内容撑开 */
+        
+        /* 允许溢出一点点，防止阴影被切 */
+        overflow: visible !important;
+        
+        z-index: 1005 !important;
+        opacity: 1 !important; 
+        
+        /* 内容对齐：底部居中 */
+        display: flex !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
+    }
+
+.broken-portrait-img {
+        /* 核心：宽度 100%，撑满手机横向 */
+        width: 100% !important;
+        height: auto !important; /* 高度自动计算，保持比例 */
+        
+        max-width: none !important;
+        max-height: 60vh !important; /* 限制一下最大高度，别把脸都顶出屏幕了 */
+        
+        margin: 0 !important;
+        object-fit: cover; /* 保证填满 */
+    }
+}
+/* === 卡牌跳转菜单样式 === */
+    .jump-menu-overlay {
+        display: none; /* 默认隐藏 */
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.8); z-index: 5000;
+        justify-content: center; align-items: center;
+        backdrop-filter: blur(5px);
+    }
+    .jump-menu-overlay.active { display: flex; }
+    
+    .jump-menu-content {
+        background: #222; border: 2px solid #555; border-radius: 10px;
+        width: 300px; padding: 20px; text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,1);
+    }
+    .jump-title {
+        color: #fff; font-size: 18px; font-weight: bold; margin-bottom: 20px;
+        border-bottom: 1px solid #444; padding-bottom: 10px;
+    }
+    
+    .jump-btn {
+        display: block; width: 100%; padding: 15px; margin-bottom: 10px;
+        background: #333; color: #ccc; border-radius: 6px; cursor: pointer;
+        font-weight: bold; transition: 0.2s; border-left: 5px solid transparent;
+    }
+    .jump-btn:hover { background: #444; color: #fff; transform: translateX(5px); }
+
+        /* =========================================
+        [终极修复] 鼠标点击穿透补丁
+        ========================================= */
+
+    /* 1. 修复按钮容器：让中间的空隙允许穿透 */
+    .nav-controls, .bqc-nav-pos {
+        /* 容器本身变成空气，不挡鼠标 */
+        pointer-events: none !important; 
+        
+        /* 确保边框和背景也不挡 (虽然现在没有) */
+        background: transparent !important; 
+    }
+
+    /* 2. 修复按钮本体：按钮必须能点 */
+    .nav-btn-char {
+        /* 恢复按钮的点击功能 */
+        pointer-events: auto !important; 
+    }
+
+    /* 3. 修复反光层：确保它是空气 */
+    .bqc-card-shine {
+        pointer-events: none !important; 
+    }
+
+    /* 4. 修复大图容器：强制显示小手 */
+    /* 只要鼠标在这个区域内，不管摸到谁，都显示小手 */
+    .bqc-modal-content, 
+    .bqc-modal-img {
+        cursor: pointer !important; 
+    }
+
 </style>
 </head>
 <body>
@@ -1626,20 +1863,33 @@
     </div>
 </div>
 
-<div class="sidebar">
-    <div class="app-title">不公正的哈尼<br><small style="font-size:12px; color:#666; font-weight:normal; letter-spacing:0">斑丘资料库</small></div>
-    <div class="nav-btn active" onclick="switchView('chars', this)">👥 人物档案</div>
-    <div class="nav-btn" onclick="switchView('cards', this)">🃏 斑丘卡</div>
-    <div class="nav-btn" onclick="switchView('attrs', this)">🧊 属性块</div> 
-    <div class="nav-btn" onclick="switchView('rules', this)">📜 斑丘规则</div> 
-    <div class="nav-btn" onclick="switchView('timeline', this)">📅 时间线</div>
-    <div class="nav-btn" onclick="switchView('scenery', this)">🌄 斑丘景色</div>
-    <div class="nav-btn" onclick="switchView('gallery', this)">⚔️ 战斗画廊</div>    
-    
-    
+<div class="navbar">
+    <div class="nav-brand">
+        <div class="app-title-sm">不公正的哈尼</div>
+        <div class="page-title-display" id="current-page-title">👥 人物档案</div>
+    </div>
 
+    <div class="nav-toggle" onclick="toggleMobileMenu()">☰</div>
 
+    <div class="nav-menu" id="nav-menu">
+        <div class="nav-btn active" onclick="switchView('chars', this, '👥 人物档案')">👥 人物档案</div>
+        <div class="nav-btn" onclick="switchView('cards', this, '🃏 斑丘卡')">🃏 斑丘卡</div>
+        <div class="nav-btn" onclick="switchView('attrs', this, '🧊 属性块')">🧊 属性块</div> 
+        <div class="nav-btn" onclick="switchView('rules', this, '📜 斑丘规则')">📜 斑丘规则</div> 
+        <div class="nav-btn" onclick="switchView('timeline', this, '📅 时间线')">📅 时间线</div>
+        <div class="nav-btn" onclick="switchView('scenery', this, '🌄 斑丘景色')">🌄 斑丘景色</div>
+        <div class="nav-btn" onclick="switchView('gallery', this, '⚔️ 战斗画廊')">⚔️ 战斗画廊</div>    
+    </div>
 </div>
+
+<div id="bqc-jump-menu" class="jump-menu-overlay" onclick="toggleBqcMenu()">
+    <div class="jump-menu-content">
+        <div class="jump-title">快速跳转至...</div>
+        <div class="jump-list" id="bqc-jump-list">
+            </div>
+    </div>
+</div>
+
 <div class="main-view">
     
     <div id="view-timeline" class="view-section">
@@ -2545,23 +2795,33 @@
 </div>
 
 <script>
-    // 视图切换逻辑
-    function switchView(viewId, btn) {
-        // 1. 隐藏所有页面
-        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-        
-        // 2. 显示目标页面 (拼接 ID：view- + 传入的id)
-        const target = document.getElementById('view-' + viewId);
-        if (target) {
-            target.classList.add('active');
-        }
+/* === [修改] 视图切换逻辑 === */
+// 增加了 title 参数，用于更新顶部文字
+function switchView(viewId, btn, title) {
+    // 1. 隐藏所有页面
+    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+    
+    // 2. 显示目标页面
+    const target = document.getElementById('view-' + viewId);
+    if (target) target.classList.add('active');
 
-        // 3. 激活按钮高亮
-        if (btn) {
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        }
+    // 3. 激活按钮高亮
+    if (btn) {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
     }
+
+    // 4. [新增] 更新顶部标题
+    if(title) document.getElementById('current-page-title').innerText = title;
+
+    // 5. [新增] 手机端点完自动收起菜单
+    document.getElementById('nav-menu').classList.remove('open');
+}
+
+/* === [新增] 菜单开关 === */
+function toggleMobileMenu() {
+    document.getElementById('nav-menu').classList.toggle('open');
+}
     const modal = document.getElementById('modal');
     const mStripe = document.getElementById('m-stripe');
     const mTime = document.getElementById('m-time');
@@ -3558,30 +3818,47 @@ const charModal = document.getElementById('char-modal');
     ];
     const bqBasePath = 'images/BQcards/cards_front/';
 
-    // 3. 渲染函数
+// 3. 渲染函数 (修复版：传入 event 阻止冒泡)
     function renderBqCards() {
         const container = document.getElementById('bqcApp');
+        const jumpListEl = document.getElementById('bqc-jump-list');
         if(!container) return; 
+        
         let htmlContent = '';
+        let jumpMenuHtml = ''; 
 
         bqCategories.forEach(cat => {
             const fileList = bqCardData[cat.key];
             if (!fileList) return;
             
-            // 渲染分割线 (注入动态颜色)
-            // style="border-left-color: ${cat.color}" 是关键！
+            // A. 渲染页面上的大标题 (注意 onclick 加了 event 参数)
             htmlContent += `
-                <div class="bqc-chapter-bar" style="border-left-color: ${cat.color};">
-                    
+                <div class="bqc-chapter-bar" 
+                    id="cat-anchor-${cat.key}"
+                    onclick="toggleBqcMenu()" 
+                    style="border-left-color: ${cat.color}; cursor: pointer;">
                     <img src="${cat.logo}" class="bqc-bar-logo" alt="${cat.key}" onerror="this.style.display='none'">
-                    
-                    <span class="bqc-bar-title" style="color:${cat.color}">${cat.name}</span>
+                    <span class="bqc-bar-title" style="color:${cat.color}">${cat.name} ▾</span>
                 </div>
-                
                 <div class="bqc-grid">`;
             
+            // B. 生成菜单项 (注意 onclick 加了 event 参数)
+            // 这里的 event 是关键，防止点击按钮穿透到遮罩层
+            jumpMenuHtml += `
+                <div class="jump-btn" 
+                    onclick="scrollToCat('${cat.key}', event)"
+                    style="border-left-color: ${cat.color};"> 
+                    
+                    <img src="${cat.logo}" class="jump-icon">
+                    
+                    <span class="jump-text" style="color:${cat.color}">
+                        ${cat.name}
+                    </span>
+                </div>`;
+
+            // C. 渲染卡牌
             fileList.forEach(fileName => {
-                const imgSrc = `${bqBasePath}${fileName}.png`;
+                const imgSrc = `${bqBasePath}${fileName}.png`; 
                 htmlContent += `
                     <div class="bqc-card-item" onclick="openBqcModal('${imgSrc}')">
                         <img src="${imgSrc}" class="bqc-card-img" loading="lazy" alt="${fileName}">
@@ -3589,7 +3866,96 @@ const charModal = document.getElementById('char-modal');
             });
             htmlContent += `</div>`;
         });
+        
         container.innerHTML = htmlContent;
+        
+        if(jumpListEl) jumpListEl.innerHTML = jumpMenuHtml;
+    }
+
+    // 切换卡牌函数 (修复PNG)
+    function navigateCard(dir) {
+        if (globalCardPlaylist.length === 0) return;
+
+        let newIndex = currentCardIndex + dir;
+        if (newIndex >= globalCardPlaylist.length) newIndex = 0;
+        if (newIndex < 0) newIndex = globalCardPlaylist.length - 1;
+
+        const nextFile = globalCardPlaylist[newIndex];
+        
+        // 👇 这里也改回了 .png
+        const nextSrc = bqBasePath + nextFile + '.png';
+        
+        openBqcModal(nextSrc);
+    }
+
+// =========================================
+    // [修正版] 菜单交互与跳转逻辑
+    // =========================================
+    
+    // 1. 开关菜单 (点击标题栏触发)
+    function toggleBqcMenu() {
+        const menu = document.getElementById('bqc-jump-menu');
+        if(menu) menu.classList.toggle('active');
+    }
+
+    // =========================================
+    // [终极修正 V3] 菜单跳转 (网格锚点定位法)
+    // =========================================
+
+    function scrollToCat(key, event) {
+        // 1. 阻止点击穿透 + 关闭菜单
+        if (event) event.stopPropagation();
+        const menu = document.getElementById('bqc-jump-menu');
+        if(menu) menu.classList.remove('active');
+        
+        // 2. 找到滚动容器
+        const container = document.getElementById('view-cards');
+        
+        // 3. 找到目标标题 (Header)
+        const header = document.getElementById(`cat-anchor-${key}`);
+        
+        if (container && header) {
+            // === 【核心修改】 ===
+            // 不要找 Header 的位置 (因为它会吸顶乱跑)
+            // 要找 Header 下面紧挨着的那个 "卡牌网格 (Grid)" 的位置
+            // Grid 很老实，永远不会吸顶
+            
+            const grid = header.nextElementSibling; // 获取标题下面的 div
+            
+            if (grid) {
+                // A. 算出 Grid 距离容器顶部的真实距离
+                // (Grid顶部 - 容器顶部) + 当前已滚动的距离
+                const gridTop = grid.getBoundingClientRect().top;
+                const containerTop = container.getBoundingClientRect().top;
+                const currentScroll = container.scrollTop;
+                
+                // B. 算出 Header 的高度 (包含 padding)
+                // 比如它是 60px 高
+                const headerHeight = header.offsetHeight;
+                
+                // C. 计算最终坐标
+                // 目标位置 = 网格的位置 - 标题的高度 - 一点点缝隙(20px)
+                // 这样滚过去后，标题正好压在网格上面，完美露出
+                const finalPos = currentScroll + (gridTop - containerTop) - headerHeight - 20;
+
+                // D. 执行滚动
+                container.scrollTo({
+                    top: finalPos,
+                    behavior: "smooth"
+                });
+            } else {
+                // 万一（虽然不可能）找不到 Grid，就只好勉强滚到 Header
+                // 这是保底逻辑
+                const headerTop = header.getBoundingClientRect().top - container.getBoundingClientRect().top;
+                container.scrollTo({ top: container.scrollTop + headerTop, behavior: "smooth" });
+            }
+        }
+    }
+    
+    // 2. 开关菜单 (点击标题栏触发) - 保持不变
+    function toggleBqcMenu() {
+        const menu = document.getElementById('bqc-jump-menu');
+        if(menu) menu.classList.toggle('active');
     }
 
     // 4. 交互逻辑 (3D + 反光 + 遮罩)
@@ -3734,7 +4100,50 @@ const charModal = document.getElementById('char-modal');
     // 5. 启动
     renderBqCards();
 
+// =========================================
+    // [新增] 移动端浮窗智能缩放系统
+    // =========================================
+    
+    function fitModalToMobile() {
+        const modalWin = document.querySelector('.char-modal-window');
+        if (!modalWin) return;
 
+        // 1. 获取屏幕宽度
+        const screenW = window.innerWidth;
+        
+        // 2. 如果是电脑 (宽度大于1000)，清除缩放，恢复默认
+        if (screenW > 1000) {
+            modalWin.style.transform = 'translateY(-50%) scale(0.9)'; // 恢复桌面端的居中
+            modalWin.style.top = '50%';
+            return;
+        }
+
+        // 3. 如果是手机 (宽度小于1000)，计算缩放比例
+        // 目标：让 960px 宽的浮窗，塞进 screenW 宽的屏幕里
+        // 留出 20px 的边距 (screenW - 20)
+        const targetScale = (screenW - 20) / 960;
+        
+        // 4. 应用缩放
+        // translateX(-50%) 是为了保持水平居中
+        // scale(...) 是我们算出来的比例
+        modalWin.style.transform = `translateX(-50%) scale(${targetScale})`;
+        
+        // 5. 强制置顶
+        modalWin.style.top = '70px'; // 躲开顶部导航栏
+    }
+
+    // 监听：由以下情况触发缩放计算
+    // A. 窗口大小改变时 (旋转屏幕)
+    window.addEventListener('resize', fitModalToMobile);
+    
+    // B. 打开人物弹窗时 (挂载到原来的 openCharModal 函数里)
+    // 请您手动去 openCharModal 函数的【最后一行】，加上 fitModalToMobile(); 
+    // 或者用下面的代码自动挂载：
+    const _originalOpenChar = openCharModal;
+    openCharModal = function(key) {
+        _originalOpenChar(key); // 执行原来的逻辑
+        setTimeout(fitModalToMobile, 0); // 立刻执行缩放
+    };
 
 </script>
 
