@@ -1724,7 +1724,7 @@
         top: auto !important;     
         
         /* 挂在浮窗屁股下面 */
-        bottom: -110px !important; 
+        bottom: -150px !important; 
         
         left: 50% !important;
         transform: translateX(-50%) !important;
@@ -1759,17 +1759,26 @@
     }
 
 
-    /* [新增] 手机端页面容器：减少两侧留白 */
-.archive-container {
-        /* 顺序是：上 右 下 左 
-           上: 40px (保持电脑端的呼吸感，解决往上窜的问题)
-           右/左: 15px (保持手机端的宽敞感，不挤压卡片)
-           下: 15px
-        */
-        padding: 40px 15px 15px 15px !important; 
+/* 2. [全局修复] 通用页面容器：手机端适配策略 */
+    /* 逻辑：继承电脑端的顶部大留白(40px)，只压缩左右两边 */
+    .archive-container, 
+    .rules-wrapper {
+        /* 写法：上 右 下 左 */
+        /* 上: 40px (死守这个防线，防止上窜！) */
+        /* 右: 15px (手机屏幕窄，省空间) */
+        /* 下: 20px (底部留点空) */
+        /* 左: 15px (同右) */
+        padding: 40px 15px 20px 15px !important; 
         
+        /* 确保宽度占满 */
         width: 100% !important;
         max-width: 100% !important;
+    }
+
+    /* 3. [修复] 规则页内部小节 */
+    .rule-section {
+        padding: 15px !important; 
+        margin-bottom: 30px !important;
     }
     
     /* [新增] 强制社团卡片在手机上一行只显示一个 */
