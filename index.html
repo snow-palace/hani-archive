@@ -1382,16 +1382,33 @@
             transform: scale(0.95);
         }
 
-        /* === [新增] 键盘触发的按钮激活态 === */
-        /* 这个样式不仅缩小(scale)，还强制变白(hover态)，反馈感更强 */
-        .nav-btn-char.is-active {
-            transform: scale(0.9) !important;       /* 缩小，模拟按压 */
-            background: #8a8a8a !important;            /* 变白，模拟高亮 */
-            color: #000 !important;                 /* 文字变黑 */
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6) !important; /* 发光 */
-            border-color: #fff !important;
-        }
+/* =========================================
+       [终极修复] 按钮高亮动画 (强制覆盖版)
+       ========================================= */
+    
+    /* 只要有这个类名，不管是在手机还是电脑，必须变白发光 */
+    .nav-btn-char.is-active {
+        /* 1. 强制变白 */
+        background: #ffffff !important;
+        border-color: #ffffff !important;
+        color: #000000 !important;
+        
+        /* 2. 强力发光 (加两层阴影) */
+        box-shadow: 
+            0 0 15px rgba(255, 255, 255, 0.8),
+            0 0 30px rgba(255, 255, 255, 0.4) !important;
+            
+        /* 3. 物理按压感 (缩小) */
+        transform: scale(0.9) !important;
+        
+        /* 4. 过渡要极快 (按下瞬间变亮) */
+        transition: all 0.05s linear !important; 
+    }
 
+    /* 常态下恢复慢过渡 (松开时慢慢变暗) */
+    .nav-btn-char {
+        transition: all 0.2s ease-out !important;
+    }
 
 /* =========================================
        PART 6: 斑丘卡牌系统 (最终修正版)
@@ -1687,7 +1704,7 @@
     /* === 1. [修复] 卡牌大图的左右按钮 (手机版) === */
     .bqc-nav-pos {
         /* 1. 位置调整：稍微往上提一点，放在手指容易够到的地方 */
-        bottom: 80px !important;
+        bottom: 40px !important;
         
         /* 2. 宽度限制：占满屏幕宽度，但留出边距 */
         width: 100% !important;
@@ -1701,36 +1718,44 @@
         z-index: 13000 !important;
     }
 
-/* 2. 修复：底部导航按钮 (挂在浮窗正下方 10px 处) */
-    /* 使用 :not(.bqc-nav-pos) 是为了不影响卡牌页面的按钮 */
+/* 2. [调整] 底部导航按钮 (大按钮 + 两侧对齐) */
     .nav-controls:not(.bqc-nav-pos) {
-        /* 定位逻辑 */
         position: absolute !important;
-        top: auto !important;     /* 清楚之前的顶部定位 */
+        top: auto !important;     
         
-        /* 放在浮窗底部外面：按钮高度(50) + 间距(10) = -60px */
-        bottom: -70px !important; 
+        /* 挂在浮窗屁股下面 */
+        bottom: -90px !important; 
         
-        /* 居中逻辑 */
         left: 50% !important;
         transform: translateX(-50%) !important;
         
-        /* 布局 */
-        width: auto !important;   /* 宽度随内容自适应 */
-        display: flex !important;
-        gap: 80px !important;     /* 两个按钮之间的距离 */
-        padding: 0 !important;
+        /* 【改这里】宽度设为 100% (或者和浮窗一样宽)，让按钮撑到两边 */
+        width: 95% !important;   
+        max-width: 960px !important; /* 限制一下最大距离，防止iPad上太远 */
         
-        /* 层级与点击 */
+        display: flex !important;
+        
+        /* 【改这里】Space Between = 撑开到两头 */
+        justify-content: space-between !important; 
+        
+        gap: 0 !important;     
+        padding: 0 10px !important;
         z-index: 12000 !important;
-        pointer-events: none !important; /* 容器穿透 */
+        pointer-events: none !important; 
     }
 
-    /* 按钮本体恢复点击 */
+    /* 3. [调整] 按钮变大 */
     .nav-controls:not(.bqc-nav-pos) .nav-btn-char {
         pointer-events: auto !important;
-        background: rgba(30, 30, 30, 0.9) !important; /* 加深背景，防看不清 */
-        border: 1px solid #666 !important;
+        background: rgba(30, 30, 30, 0.9) !important;
+        border: 1px solid #777 !important;
+        
+        /* 【改这里】加大尺寸，方便手指点击 */
+        width: 90px !important;  
+        height: 90px !important;
+        font-size: 28px !important;
+        border-radius: 50%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
 
 
@@ -1747,23 +1772,32 @@
         gap: 15px !important; /* 间距也稍微缩小 */
     }
 
-/* 1. 浮窗本体：必须允许"溢出"，否则挂在下面的按钮会被切掉 */
+/* ... 在 @media (max-width: 1000px) 内部 ... */
+
+    /* 1. [终极修复] 浮窗本体 (松绑版) */
     .char-modal-window {
-        /* ... 之前的 grid/width/height 等保持不变 ... */
         display: grid !important;
         grid-template-columns: 376px 1fr !important;
         width: 960px !important;
         min-width: 960px !important;
         height: 640px !important;
-        top: 70px !important; 
-        left: 50% !important;
-        transform: translateX(-50%) scale(1); /* 这里的 scale 会被 JS 覆盖，不用管 */
+        
+        /* === 【关键修改】 === */
+        /* 全部归零，把位置控制权 100% 交给 JS 的 transform */
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
         margin: 0 !important;
         
-        /* 【核心修改】改为 visible，让按钮能显示在盒子外面 */
+        /* 设定基点为左上角 */
+        transform-origin: top left !important;
+        
+        /* 允许按钮溢出 */
         overflow: visible !important; 
+        box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important;
     }
 
+    
     /* 恢复内部布局 */
     .modal-left { height: 100% !important; width: 100% !important; border-right: 1px solid #333 !important; border-bottom: none !important; }
     .modal-right { overflow: hidden !important; }
@@ -1839,7 +1873,6 @@
         object-fit: cover; /* 保证填满 */
     }
 
-    /* ... 在 @media (max-width: 1000px) 内部 ... */
 
     /* === 3. [终极修复] 大外号：手机端简化渲染模式 === */
     .broken-name {
@@ -1946,6 +1979,8 @@
     .bqc-modal-img {
         cursor: pointer !important; 
     }
+
+
 
 </style>
 </head>
@@ -3799,7 +3834,55 @@ const charModal = document.getElementById('char-modal');
         }
     });
 
-    // 按钮动画触发器 (保持不变)
+// =========================================
+    // [新增] 物理按键反馈系统 (Press & Release)
+    // =========================================
+
+    // 1. 定义一个通用的高亮函数
+    function setupButtonFeedback() {
+        // 找到所有的圆形导航按钮 (人物页 + 卡牌页)
+        const allBtns = document.querySelectorAll('.nav-btn-char');
+
+        allBtns.forEach(btn => {
+            // --- 手机端逻辑 (触摸) ---
+            
+            // 手指按下 -> 亮
+            btn.addEventListener('touchstart', function(e) {
+                // 不阻止冒泡，保证 onclick 能触发跳转
+                btn.classList.add('is-active');
+            }, { passive: true });
+
+            // 手指松开/移开/被打断 -> 灭
+            const endHighlight = () => {
+                // 稍微给一点点延迟(50ms)，防止点击太快看不清闪烁
+                setTimeout(() => {
+                    btn.classList.remove('is-active');
+                }, 50);
+            };
+
+            btn.addEventListener('touchend', endHighlight);
+            btn.addEventListener('touchcancel', endHighlight);
+            
+            
+            // --- 电脑端逻辑 (鼠标) ---
+            
+            // 鼠标按下 -> 亮
+            btn.addEventListener('mousedown', function() {
+                btn.classList.add('is-active');
+            });
+            
+            // 鼠标松开/移开 -> 灭
+            btn.addEventListener('mouseup', () => btn.classList.remove('is-active'));
+            btn.addEventListener('mouseleave', () => btn.classList.remove('is-active'));
+        });
+    }
+
+    // 2. 页面加载完，立刻给所有按钮装上这个系统
+    // 放在 setTimeout 里确保 HTML 已经渲染完了
+    setTimeout(setupButtonFeedback, 500);
+
+    // 3. 为了兼容原来的键盘逻辑，保留 triggerBtnAnim 但改写它
+    // (给键盘用的，还是保持定时自动灭，因为键盘没有 touchstart)
     function triggerBtnAnim(btnId) {
         const btn = document.getElementById(btnId);
         if (!btn) return;
@@ -4087,56 +4170,7 @@ const charModal = document.getElementById('char-modal');
         }
     });
 
-// 3D 侧倾与光照逻辑
-    document.addEventListener('mousemove', function(e) {
-        if (!bqcModal.classList.contains('active')) return;
-        
-        const shineLayer = document.getElementById('bqcShine');
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        
-        // 鼠标位置 (-0.5 到 0.5)
-        const xPos = (e.clientX / width) - 0.5;
-        const yPos = (e.clientY / height) - 0.5;
 
-        // ==============================================================
-        // [核心参数控制] 改这就行
-        // ==============================================================
-        
-        // 1. 旋转极限 (您设定的 8 度)
-        const rotationLimit = 15; 
-
-        // 2. [新增] 反光灵敏度系数
-        // 解释：这个数字决定了"一度倾斜对应多少反光位移"
-        // 建议值：15 ~ 25。
-        // 如果觉得反光跑得太慢，把 20 改成 30；如果觉得太快，改成 10。
-        const shineFactor = 15; 
-
-        // 3. 自动计算反光范围 (绑定逻辑！)
-        // 这样：旋转角度越小，反光跑得越短；旋转角度越大，反光跑得越远。
-        const shineRange = rotationLimit * shineFactor; 
-        
-        // ==============================================================
-
-        // 计算卡牌倾斜
-        const tiltX = yPos * -rotationLimit; 
-        const tiltY = xPos * rotationLimit; 
-        
-        // 应用 3D 变换
-        tiltCard.style.transform = `perspective(1800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
-
-        // 计算反光位置 (现在使用了 shineRange 变量，而不是写死的数字)
-        const shineX = 50 + (xPos * shineRange); 
-        const shineY = 50 + (yPos * shineRange); 
-
-        if(shineLayer) {
-            shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%`;
-            
-            // 动态透明度 (离中心越远越亮)
-            const dist = Math.hypot(xPos, yPos); 
-            shineLayer.style.opacity = Math.min(dist * 1.5, 0.6);
-        }
-    });
 
 // ==============================================================
     // [新增] 移动端 3D 触摸支持 (不影响电脑端)
@@ -4211,36 +4245,48 @@ const charModal = document.getElementById('char-modal');
     // 5. 启动
     renderBqCards();
 
-// =========================================
-    // [新增] 移动端浮窗智能缩放系统
     // =========================================
-    
+    // [终极修正 V2] 浮窗缩放系统 (Translate + Scale)
+    // =========================================
     function fitModalToMobile() {
         const modalWin = document.querySelector('.char-modal-window');
         if (!modalWin) return;
 
-        // 1. 获取屏幕宽度
         const screenW = window.innerWidth;
+        const screenH = window.innerHeight; // 获取屏幕高度
+        const baseWidth = 960; 
         
-        // 2. 如果是电脑 (宽度大于1000)，清除缩放，恢复默认
+        // 1. 电脑端：恢复默认 (居中)
         if (screenW > 1000) {
-            modalWin.style.transform = 'translateY(-50%) scale(0.9)'; // 恢复桌面端的居中
+            modalWin.style.transformOrigin = 'center center';
+            modalWin.style.transform = 'translateY(-50%) scale(0.9)';
+            modalWin.style.left = '50%';
             modalWin.style.top = '50%';
             return;
         }
 
-        // 3. 如果是手机 (宽度小于1000)，计算缩放比例
-        // 目标：让 960px 宽的浮窗，塞进 screenW 宽的屏幕里
-        // 留出 20px 的边距 (screenW - 20)
-        const targetScale = (screenW - 20) / 960;
+        // 2. 手机端：全权接管
+        // A. 计算缩放比例 (两边留 20px 缝隙)
+        const targetScale = (screenW - 20) / baseWidth;
         
-        // 4. 应用缩放
-        // translateX(-50%) 是为了保持水平居中
-        // scale(...) 是我们算出来的比例
-        modalWin.style.transform = `translateX(-50%) scale(${targetScale})`;
+        // B. 计算水平偏移量 (让缩放后的物体居中)
+        // (屏幕宽 - 物体缩放后的宽) / 2
+        const xOffset = (screenW - (baseWidth * targetScale)) / 2;
         
-        // 5. 强制置顶
-        modalWin.style.top = '70px'; // 躲开顶部导航栏
+        // C. 计算垂直偏移量 (您希望它在屏幕上方，比如 10%)
+        const yOffset = screenH * 0.1;
+
+        // D. 【核心】应用变换
+        // 这一句命令包含了：钉死在(0,0) -> 移到(x, y) -> 缩放(scale)
+        // 顺序很重要：先位移，再缩放？不对，transform执行顺序很玄学
+        // 对于 top-left 基点：直接 translate 就行，因为它是在基点坐标系上移动
+        modalWin.style.transformOrigin = 'top left';
+        modalWin.style.transform = `translate(${xOffset}px, ${yOffset}px) scale(${targetScale})`;
+        
+        // E. 清理 CSS 遗留 (双重保险)
+        modalWin.style.left = '0';
+        modalWin.style.top = '0';
+        modalWin.style.margin = '0';
     }
 
     // 监听：由以下情况触发缩放计算
@@ -4257,106 +4303,124 @@ const charModal = document.getElementById('char-modal');
     };
 
 // ==============================================================
-    // [终极重构] 移动端 3D 触摸 (相对滑动 + 阻尼感)
+    // [终极稳定版] 3D 交互 (带防抖 + 按钮屏蔽)
     // ==============================================================
 
-    // 定义全局变量记录起点
+    // 全局状态
     let touchStartX = 0;
     let touchStartY = 0;
     let isTouching = false;
 
-    // 1. 触摸开始 (记录原点)
+    // --- 1. 触摸开始 ---
     document.addEventListener('touchstart', function(e) {
         if (!bqcModal.classList.contains('active')) return;
         
+        // 【屏蔽机制】如果点的是按钮，直接忽略，不开启 3D 模式
+        if (e.target.closest('.nav-btn-char') || e.target.closest('.nav-controls')) {
+            isTouching = false;
+            return;
+        }
+
         const touch = e.touches[0];
-        // 记录手指按下去的瞬间，坐标在哪里
         touchStartX = touch.clientX;
         touchStartY = touch.clientY;
         isTouching = true;
-        
-        // 可选：按下瞬间给一点点微小的缩放反馈
-        const tiltCard = document.getElementById('bqcTiltCard');
-        if(tiltCard) tiltCard.style.transition = 'transform 0.1s ease-out';
     }, { passive: false });
 
-    // 2. 触摸移动 (计算相对位移)
+    // --- 2. 触摸移动 (手机端) ---
     document.addEventListener('touchmove', function(e) {
+        // 如果没激活，或者刚才点的是按钮，就啥也不干
         if (!bqcModal.classList.contains('active') || !isTouching) return;
-        if(e.cancelable) e.preventDefault(); // 阻止页面滚动
+        if(e.cancelable) e.preventDefault(); 
 
-        const shineLayer = document.getElementById('bqcShine');
+        // 【屏蔽机制】再次检查：如果手指划到了按钮上，立刻停止旋转
+        if (e.target.closest('.nav-btn-char')) return;
+
         const tiltCard = document.getElementById('bqcTiltCard');
-        
+        const shineLayer = document.getElementById('bqcShine');
         const touch = e.touches[0];
-        
-        // === [核心算法改变] ===
-        // 不再计算"手指在屏幕哪里"，而是计算"手指移动了多远"
-        // deltaX > 0 代表向右滑，deltaX < 0 代表向左滑
+
         const deltaX = touch.clientX - touchStartX;
         const deltaY = touch.clientY - touchStartY;
 
-        // === [参数调校区] ===
-        
-        // 1. 灵敏度 (Sensitivity)
-        // 意思是：手指每移动 1像素，卡牌转动多少度
-        // 建议：0.1 ~ 0.3 之间。0.2 比较跟手。
+        // 【防抖机制】如果移动距离小于 3px (手抖)，直接忽略
+        if (Math.abs(deltaX) < 3 && Math.abs(deltaY) < 3) return;
+
+        // 参数配置
         const speed = 0.2; 
+        const maxAngle = 20; 
 
-        // 2. 最大角度限制 (Limit)
-        // 限制卡牌最多只能歪多少度，防止翻跟头
-        const maxAngle = 25; 
+        // 计算角度 (下沉模式)
+        let tiltX = deltaY * speed * -1; 
+        let tiltY = deltaX * speed;      
 
-        // === 计算角度 (下沉模式：符号已取反) ===
-        // 加上 Math.max/min 锁死边界，防止转过头
-        let tiltX = deltaY * speed * -1; // 上下移动控制 X 轴旋转 (取反=下沉)
-        let tiltY = deltaX * speed;      // 左右移动控制 Y 轴旋转 (正数=下沉)
-
-        // 限制在最大角度内
         tiltX = Math.max(-maxAngle, Math.min(maxAngle, tiltX));
         tiltY = Math.max(-maxAngle, Math.min(maxAngle, tiltY));
         
-        // 应用 3D 变换 (透视 1000px)
+        // 应用变换
         tiltCard.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
 
-        // === 计算反光 (跟随手指移动) ===
+        // 反光
         if(shineLayer) {
-            // 反光位移倍率 (光要跑得比手指快才好看)
             const shineSpeed = 1.5; 
-            
-            // 基础位置是 50%，加上移动距离
             const shineX = 50 + (deltaX * speed * shineSpeed);
             const shineY = 50 + (deltaY * speed * shineSpeed);
-            
             shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%`;
             
-            // 根据移动距离计算透明度 (动得越远越亮)
             const dist = Math.hypot(deltaX, deltaY);
-            // 透明度上限 0.6，除以 200 是为了让光慢慢变亮
             shineLayer.style.opacity = Math.min(dist / 200, 0.6); 
         }
-
     }, { passive: false });
 
-
-    // 3. 触摸结束 (回正)
-    document.addEventListener('touchend', function(e) {
+    // --- 3. 鼠标移动 (电脑端) ---
+    document.addEventListener('mousemove', function(e) {
         if (!bqcModal.classList.contains('active')) return;
-        isTouching = false;
+
+        // 【屏蔽机制】如果鼠标悬停在按钮上，不触发倾斜
+        if (e.target.closest('.nav-btn-char') || e.target.closest('.nav-controls')) return;
 
         const tiltCard = document.getElementById('bqcTiltCard');
         const shineLayer = document.getElementById('bqcShine');
+        
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        const xPos = (e.clientX / width) - 0.5;
+        const yPos = (e.clientY / height) - 0.5;
 
-        // 慢动作回正
+        const rotationLimit = 12; 
+        const shineFactor = 20; 
+        const shineRange = rotationLimit * shineFactor; 
+
+        // 计算角度 (下沉模式)
+        const tiltX = yPos * -rotationLimit; 
+        const tiltY = xPos * rotationLimit;  
+        
+        tiltCard.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
+
+        const shineX = 50 + (xPos * shineRange); 
+        const shineY = 50 + (yPos * shineRange); 
+
+        if(shineLayer) {
+            shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%`;
+            const dist = Math.hypot(xPos, yPos); 
+            shineLayer.style.opacity = Math.min(dist * 1.5, 0.6);
+        }
+    });
+
+    // --- 4. 触摸结束 ---
+    document.addEventListener('touchend', function(e) {
+        if (!bqcModal.classList.contains('active')) return;
+        isTouching = false;
+        // ... (保持之前的回正动画代码) ...
+        const tiltCard = document.getElementById('bqcTiltCard');
+        const shineLayer = document.getElementById('bqcShine');
         tiltCard.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)'; 
         tiltCard.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
-        
         if(shineLayer) {
             shineLayer.style.transition = 'opacity 0.6s ease';
             shineLayer.style.opacity = 0;
         }
-
-        // 清理动画属性，防止下次拖拽延迟
         setTimeout(() => {
             if(tiltCard) tiltCard.style.transition = ''; 
             if(shineLayer) shineLayer.style.transition = '';
