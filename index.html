@@ -10,6 +10,7 @@
             /* 布局 */
             --sidebar-width: 0px;
             --navbar-height: 60px; /* [新增] 顶部导航高度 */
+            --time-col-width: 100px;
             
             /* 背景颜色 */
             --bg-body: #111;
@@ -4034,6 +4035,82 @@ const charModal = document.getElementById('char-modal');
             const dist = Math.hypot(xPos, yPos); 
             shineLayer.style.opacity = Math.min(dist * 1.5, 0.6);
         }
+    });
+
+// ==============================================================
+    // [新增] 移动端 3D 触摸支持 (不影响电脑端)
+    // ==============================================================
+
+    // 1. 触摸移动监听 (Touch Move)
+    document.addEventListener('touchmove', function(e) {
+        // 如果卡牌弹窗没开，啥也不干，让用户正常滚页面
+        if (!bqcModal.classList.contains('active')) return;
+
+        // 【关键】阻止浏览器默认的滚动行为！
+        // 这样你的手指滑动才会被当成"拖拽卡牌"，而不是"滚动网页"
+        if(e.cancelable) e.preventDefault();
+
+        const shineLayer = document.getElementById('bqcShine');
+        const tiltCard = document.getElementById('bqcTiltCard'); // 重新获取一下，保险
+        
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        // 获取第一个手指的坐标 (Touch 0)
+        const touch = e.touches[0];
+        
+        // 计算逻辑和电脑端完全一样
+        const xPos = (touch.clientX / width) - 0.5;
+        const yPos = (touch.clientY / height) - 0.5;
+
+        // 参数配置 (建议手机上稍微灵敏一点，因为手指挡屏幕)
+        const rotationLimit = 12; // 手机上角度大一点看着爽
+        const shineFactor = 7; 
+        const shineRange = rotationLimit * shineFactor; 
+
+        // 计算角度
+        const tiltX = yPos * rotationLimit; 
+        const tiltY = xPos * -rotationLimit; 
+        
+        // 应用 3D 变换
+        tiltCard.style.transform = `perspective(2000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
+
+        // 计算反光
+        const shineX = 50 + (xPos * shineRange); 
+        const shineY = 50 + (yPos * shineRange); 
+
+        if(shineLayer) {
+            shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%`;
+            const dist = Math.hypot(xPos, yPos); 
+            shineLayer.style.opacity = Math.min(dist * 1.5, 0.6);
+        }
+
+    }, { passive: false }); // 【必须写】passive: false 允许我们使用 preventDefault 阻止滚动
+
+
+    // 2. 触摸结束监听 (Touch End)
+    // 手指离开屏幕时，卡牌自动回正 (电脑上不需要这个，因为鼠标会移出屏幕)
+    document.addEventListener('touchend', function(e) {
+        if (!bqcModal.classList.contains('active')) return;
+
+        const tiltCard = document.getElementById('bqcTiltCard');
+        const shineLayer = document.getElementById('bqcShine');
+
+        // 平滑复位到 0 度
+        tiltCard.style.transition = 'transform 0.5s ease-out'; // 加个临时动画让它慢点回正
+        tiltCard.style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+        
+        // 反光消失
+        if(shineLayer) {
+            shineLayer.style.transition = 'opacity 0.5s ease';
+            shineLayer.style.opacity = 0;
+        }
+
+        // 0.5秒后把临时动画去掉，防止下次拖拽有延迟感
+        setTimeout(() => {
+            tiltCard.style.transition = ''; 
+            if(shineLayer) shineLayer.style.transition = '';
+        }, 500);
     });
 
     // =========================================
