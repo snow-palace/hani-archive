@@ -1489,8 +1489,8 @@
             grid-template-columns: repeat(3, 1fr); 
             
             /* 手机上间距通常要更小一点，省空间 */
-            gap: 20px; 
-            padding: 0 25px; /* 左右留白也减小 */
+            gap: 13px; 
+            padding: 0 10px; /* 左右留白也减小 */
         } 
     }
 
@@ -1684,6 +1684,56 @@
    ========================================= */
 
 @media (max-width: 1000px) {
+    /* === 1. [修复] 卡牌大图的左右按钮 (手机版) === */
+    .bqc-nav-pos {
+        /* 1. 位置调整：稍微往上提一点，放在手指容易够到的地方 */
+        bottom: 80px !important;
+        
+        /* 2. 宽度限制：占满屏幕宽度，但留出边距 */
+        width: 100% !important;
+        padding: 0 20px !important;
+        
+        /* 3. 核心：取消 900px 间距，改为两端对齐 */
+        gap: 0 !important;
+        justify-content: space-between !important;
+        
+        /* 4. 确保在最上层 */
+        z-index: 13000 !important;
+    }
+
+/* 2. 修复：底部导航按钮 (挂在浮窗正下方 10px 处) */
+    /* 使用 :not(.bqc-nav-pos) 是为了不影响卡牌页面的按钮 */
+    .nav-controls:not(.bqc-nav-pos) {
+        /* 定位逻辑 */
+        position: absolute !important;
+        top: auto !important;     /* 清楚之前的顶部定位 */
+        
+        /* 放在浮窗底部外面：按钮高度(50) + 间距(10) = -60px */
+        bottom: -70px !important; 
+        
+        /* 居中逻辑 */
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        
+        /* 布局 */
+        width: auto !important;   /* 宽度随内容自适应 */
+        display: flex !important;
+        gap: 80px !important;     /* 两个按钮之间的距离 */
+        padding: 0 !important;
+        
+        /* 层级与点击 */
+        z-index: 12000 !important;
+        pointer-events: none !important; /* 容器穿透 */
+    }
+
+    /* 按钮本体恢复点击 */
+    .nav-controls:not(.bqc-nav-pos) .nav-btn-char {
+        pointer-events: auto !important;
+        background: rgba(30, 30, 30, 0.9) !important; /* 加深背景，防看不清 */
+        border: 1px solid #666 !important;
+    }
+
+
     /* [新增] 手机端页面容器：减少两侧留白 */
     .archive-container {
         padding: 15px !important; /* 从 40px 减小到 15px */
@@ -1697,22 +1747,21 @@
         gap: 15px !important; /* 间距也稍微缩小 */
     }
 
-/* 1. 浮窗本体：保持原样，锁定顶部 */
+/* 1. 浮窗本体：必须允许"溢出"，否则挂在下面的按钮会被切掉 */
     .char-modal-window {
+        /* ... 之前的 grid/width/height 等保持不变 ... */
         display: grid !important;
         grid-template-columns: 376px 1fr !important;
         width: 960px !important;
         min-width: 960px !important;
         height: 640px !important;
-        
         top: 70px !important; 
         left: 50% !important;
-        
-        transform-origin: top center;
-        transform: translateX(-50%) scale(1); 
-        
+        transform: translateX(-50%) scale(1); /* 这里的 scale 会被 JS 覆盖，不用管 */
         margin: 0 !important;
-        overflow: hidden !important; /* 还是锁死，防止内容乱跑 */
+        
+        /* 【核心修改】改为 visible，让按钮能显示在盒子外面 */
+        overflow: visible !important; 
     }
 
     /* 恢复内部布局 */
@@ -1724,32 +1773,34 @@
     .modal-bottom-row { grid-template-columns: 1fr 150px !important; display: grid !important; padding-bottom: 0 !important; }
     .logos-area { flex-direction: column !important; height: 100% !important; margin-top: 0 !important; }
     
-/* === [修改点 1] 大外号：定位到立绘左下角 === */
+    /* === 3. [修复] 大外号：防止右侧被切 === */
     .broken-name {
-        /* 1. 定位基准：父容器是 char-modal-window (960x640) */
-        /* 立绘区(modal-left) 宽度是 376px */
-        /* 我们把它定在 376px 这个格子的最下面 */
-        
         position: absolute !important;
         
-        /* 垂直：放在底部靠上一点 (根据字体大小调整) */
-        bottom: 20px !important; 
-        top: auto !important;
-        
-        /* 水平：左侧留 10px 边距 */
+        /* 放在立绘的左下角位置 */
+        bottom: 10px !important; 
         left: 10px !important;
+        top: auto !important;
         right: auto !important;
         
-        /* 样式 */
-        font-size: 70px !important; /* 字体大小 */
-        opacity: 1 !important;      /* 100% 不透明，清晰显示 */
-        z-index: 15 !important;     /* 保证在立绘图上面 */
-        text-align: left !important;
-        pointer-events: none;
+        /* 字体调整 */
+        font-size: 60px !important;
+        line-height: 0.9 !important; /* 行高紧凑点 */
         
-        /* 限制宽度，防止字太多戳到右边的属性栏 */
-        max-width: 350px;
-        overflow: hidden;
+        /* 层级 */
+        z-index: 15 !important;
+        opacity: 1 !important;
+        
+        /* === 核心防切代码 === */
+        width: auto !important;
+        max-width: 90% !important; /* 限制最大宽度 */
+        
+        /* 允许文字折行 (万一名字太长) */
+        white-space: normal !important; 
+        word-break: break-word !important;
+        
+        /* 对齐方式 */
+        text-align: left !important;
     }
 
 /* === [修改点 2] 战斗立绘：手机端横向撑满 === */
@@ -1786,6 +1837,56 @@
         
         margin: 0 !important;
         object-fit: cover; /* 保证填满 */
+    }
+
+    /* ... 在 @media (max-width: 1000px) 内部 ... */
+
+    /* === 3. [终极修复] 大外号：手机端简化渲染模式 === */
+    .broken-name {
+        /* 位置保持不变 */
+        position: absolute !important;
+        bottom: 10px !important; 
+        left: 10px !important;
+        top: auto !important; right: auto !important;
+        z-index: 15 !important;
+        
+        /* 允许换行 */
+        width: 350px !important; /* 限制宽度，逼它换行 */
+        white-space: normal !important;
+        word-break: break-word !important;
+        line-height: 0.85 !important; /* 行高压紧一点，更好看 */
+        
+        /* === 【核心】关闭 PC 端的高级分层特效 === */
+        /* 1. 杀掉分身 (伪元素) */
+        content: none !important; 
+    }
+    
+    .broken-name::before, 
+    .broken-name::after {
+        display: none !important; /* 彻底隐藏 PC 端的那两个图层 */
+    }
+
+    /* === 【核心】启用手机端的简单渲染 === */
+    .broken-name {
+        /* 1. 直接上色 (不用透明了) */
+        color: var(--char-color) !important;
+        
+        /* 2. 确保背景裁剪关闭 (防止变成黑框) */
+        background: none !important;
+        -webkit-text-fill-color: var(--char-color) !important;
+        -webkit-background-clip: border-box !important;
+        
+        /* 3. 简单描边 (兼容性最好) */
+        /* 黑色描边，3px 粗 */
+        text-shadow: 
+            2px 2px 0 #000,
+            -1px -1px 0 #000,  
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
+            
+        /* 或者使用 Webkit 描边 (更锐利) */
+        -webkit-text-stroke: 3px #000 !important;
     }
 }
 /* === 卡牌跳转菜单样式 === */
@@ -4045,86 +4146,6 @@ const charModal = document.getElementById('char-modal');
     // [修正版] 移动端 3D 触摸 (高灵敏度 + 范围锁定)
     // ==============================================================
 
-    // 1. 触摸移动监听
-    document.addEventListener('touchmove', function(e) {
-        if (!bqcModal.classList.contains('active')) return;
-        if(e.cancelable) e.preventDefault();
-
-        const shineLayer = document.getElementById('bqcShine');
-        const tiltCard = document.getElementById('bqcTiltCard');
-        
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        const touch = e.touches[0];
-        
-        // === [核心修改 1] 定义灵敏度倍数 ===
-        // 数值越大，手指稍微动一下，卡牌转得越快
-        // 建议 2.5 ~ 3.0，意味着手指只要划过屏幕的 1/3 就能拉满效果
-        const sensitivity = 8; 
-
-        // === [核心修改 2] 计算并放大坐标 ===
-        // (坐标 - 中心点) * 灵敏度
-        let xPos = ((touch.clientX / width) - 0.5) * sensitivity;
-        let yPos = ((touch.clientY / height) - 0.5) * sensitivity;
-
-        // === [核心修改 3] 锁定最大值 (Clamp) ===
-        // 因为乘了灵敏度，数值可能会变成 1.5 或 2.0（翻过头了）
-        // 我们强制把它锁死在 -0.5 到 0.5 之间 (对应最大角度)
-        // 这样给人的感觉是：轻轻一划就到底，再划也不会穿模
-        xPos = Math.max(-0.55, Math.min(0.55, xPos));
-        yPos = Math.max(-0.55, Math.min(0.55, yPos));
-
-        // === [核心修改 4] 增大最大角度 ===
-        // 手机屏幕小，角度大一点才显得有冲击力 (建议 15~20)
-        const rotationLimit = 18; 
-        
-        // 反光跟随速度
-        const shineRange = rotationLimit * 5; 
-
-        // 计算最终角度
-        const tiltX = yPos * -rotationLimit;      // 上下转
-        const tiltY = xPos * rotationLimit;     // 左右转
-        
-        // 【参数 3：透视大小】(控制 3D 立体感强弱)
-        // 找到这一行：tiltCard.style.transform = `perspective(2000px) ...`
-        // 修改 perspective 的数值：
-        // 2000px = 比较平缓，像远看
-        // 800px  = 冲击力强，像广角镜头怼在脸上
-        // 👇 比如改成 1000px：
-        tiltCard.style.transform = `perspective(1800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
-
-        // 计算反光
-        const shineX = 50 + (xPos * shineRange); 
-        const shineY = 50 + (yPos * shineRange); 
-
-        if(shineLayer) {
-            shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%`;
-            // 距离中心越远，光越亮
-            const dist = Math.hypot(xPos, yPos); 
-            shineLayer.style.opacity = Math.min(dist * 2.0, 0.7); // 光也可以调亮一点
-        }
-
-    }, { passive: false });
-
-    // 2. 触摸结束监听 (保持不变，直接复制之前的即可)
-    document.addEventListener('touchend', function(e) {
-        if (!bqcModal.classList.contains('active')) return;
-        const tiltCard = document.getElementById('bqcTiltCard');
-        const shineLayer = document.getElementById('bqcShine');
-
-        tiltCard.style.transition = 'transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)'; // 加上缓动曲线更丝滑
-        tiltCard.style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg) scale(1)`;
-        
-        if(shineLayer) {
-            shineLayer.style.transition = 'opacity 0.5s ease';
-            shineLayer.style.opacity = 0;
-        }
-
-        setTimeout(() => {
-            tiltCard.style.transition = ''; 
-            if(shineLayer) shineLayer.style.transition = '';
-        }, 500);
-    });
 
     // =========================================
     // [新增] 卡牌切换系统 (上一张/下一张)
@@ -4234,6 +4255,113 @@ const charModal = document.getElementById('char-modal');
         _originalOpenChar(key); // 执行原来的逻辑
         setTimeout(fitModalToMobile, 0); // 立刻执行缩放
     };
+
+// ==============================================================
+    // [终极重构] 移动端 3D 触摸 (相对滑动 + 阻尼感)
+    // ==============================================================
+
+    // 定义全局变量记录起点
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isTouching = false;
+
+    // 1. 触摸开始 (记录原点)
+    document.addEventListener('touchstart', function(e) {
+        if (!bqcModal.classList.contains('active')) return;
+        
+        const touch = e.touches[0];
+        // 记录手指按下去的瞬间，坐标在哪里
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        isTouching = true;
+        
+        // 可选：按下瞬间给一点点微小的缩放反馈
+        const tiltCard = document.getElementById('bqcTiltCard');
+        if(tiltCard) tiltCard.style.transition = 'transform 0.1s ease-out';
+    }, { passive: false });
+
+    // 2. 触摸移动 (计算相对位移)
+    document.addEventListener('touchmove', function(e) {
+        if (!bqcModal.classList.contains('active') || !isTouching) return;
+        if(e.cancelable) e.preventDefault(); // 阻止页面滚动
+
+        const shineLayer = document.getElementById('bqcShine');
+        const tiltCard = document.getElementById('bqcTiltCard');
+        
+        const touch = e.touches[0];
+        
+        // === [核心算法改变] ===
+        // 不再计算"手指在屏幕哪里"，而是计算"手指移动了多远"
+        // deltaX > 0 代表向右滑，deltaX < 0 代表向左滑
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+
+        // === [参数调校区] ===
+        
+        // 1. 灵敏度 (Sensitivity)
+        // 意思是：手指每移动 1像素，卡牌转动多少度
+        // 建议：0.1 ~ 0.3 之间。0.2 比较跟手。
+        const speed = 0.2; 
+
+        // 2. 最大角度限制 (Limit)
+        // 限制卡牌最多只能歪多少度，防止翻跟头
+        const maxAngle = 25; 
+
+        // === 计算角度 (下沉模式：符号已取反) ===
+        // 加上 Math.max/min 锁死边界，防止转过头
+        let tiltX = deltaY * speed * -1; // 上下移动控制 X 轴旋转 (取反=下沉)
+        let tiltY = deltaX * speed;      // 左右移动控制 Y 轴旋转 (正数=下沉)
+
+        // 限制在最大角度内
+        tiltX = Math.max(-maxAngle, Math.min(maxAngle, tiltX));
+        tiltY = Math.max(-maxAngle, Math.min(maxAngle, tiltY));
+        
+        // 应用 3D 变换 (透视 1000px)
+        tiltCard.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
+
+        // === 计算反光 (跟随手指移动) ===
+        if(shineLayer) {
+            // 反光位移倍率 (光要跑得比手指快才好看)
+            const shineSpeed = 1.5; 
+            
+            // 基础位置是 50%，加上移动距离
+            const shineX = 50 + (deltaX * speed * shineSpeed);
+            const shineY = 50 + (deltaY * speed * shineSpeed);
+            
+            shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%`;
+            
+            // 根据移动距离计算透明度 (动得越远越亮)
+            const dist = Math.hypot(deltaX, deltaY);
+            // 透明度上限 0.6，除以 200 是为了让光慢慢变亮
+            shineLayer.style.opacity = Math.min(dist / 200, 0.6); 
+        }
+
+    }, { passive: false });
+
+
+    // 3. 触摸结束 (回正)
+    document.addEventListener('touchend', function(e) {
+        if (!bqcModal.classList.contains('active')) return;
+        isTouching = false;
+
+        const tiltCard = document.getElementById('bqcTiltCard');
+        const shineLayer = document.getElementById('bqcShine');
+
+        // 慢动作回正
+        tiltCard.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)'; 
+        tiltCard.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+        
+        if(shineLayer) {
+            shineLayer.style.transition = 'opacity 0.6s ease';
+            shineLayer.style.opacity = 0;
+        }
+
+        // 清理动画属性，防止下次拖拽延迟
+        setTimeout(() => {
+            if(tiltCard) tiltCard.style.transition = ''; 
+            if(shineLayer) shineLayer.style.transition = '';
+        }, 600);
+    });
 
 </script>
 
