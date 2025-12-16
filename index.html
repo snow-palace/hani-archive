@@ -1867,17 +1867,17 @@ html, body {
             /* 这种光中间亮、四周慢慢变透明，没有任何硬边缘 */
             background: radial-gradient(
                 circle at center, 
-                rgba(255, 255, 255, 0.6) 0%, 
+                rgba(255, 255, 255, 0.85) 0%, 
                 rgba(255, 255, 255, 0.2) 40%, 
                 transparent 70%
             );
             
             /* 2. 把光斑放大，保证移动时能覆盖全身 */
-            background-size: 400% 400%;
+            background-size: 300% 300%;
             background-repeat: repeat;
             
             /* 3. 混合模式：Soft Light (柔光) 比 Overlay 更自然，不容易过曝 */
-            mix-blend-mode: hard-light; 
+            mix-blend-mode: soft-light; 
             /* 如果觉得不够亮，可以改回 soft-light、hard-light、overlay、color-dodge、screen */
             
             /* 4. [解决圆角问题] 遮罩基础设置 */
