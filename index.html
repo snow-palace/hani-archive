@@ -1763,6 +1763,7 @@ html, body {
 
     /* --- 卡牌样式保持不变 --- */
     .bqc-card-item {
+        overflow: visible !important;
         position: relative;
         aspect-ratio: 1860 / 2598; 
         cursor: pointer;
@@ -1772,6 +1773,8 @@ html, body {
         image-rendering: -webkit-optimize-contrast; 
     }
     .bqc-card-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    
+    
     .bqc-card-item:hover { transform: scale(1.035); 
         z-index: 2; 
         box-shadow: 0 0 4px 2px rgba(255, 255, 255, 0.767); }
