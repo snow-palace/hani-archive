@@ -2009,8 +2009,8 @@ html, body {
     }
     /* 专门控制卡牌浮窗按钮 */
     .bqc-nav-pos .nav-btn-char {
-    width: 80px !important;   /* 比如卡牌的想小一点 */
-    height: 80px !important;
+    width: 70px !important;   /* 比如卡牌的想小一点 */
+    height: 70px !important;
     font-size: 20px !important;
 }
 
@@ -4943,6 +4943,23 @@ setTimeout(renderCharPage, 100);
 
 // 【注意】如果你原来的代码里有 `for (const [id, keys] of Object.entries(lists))` 这一段自动执行的代码，
 // 请将其注释掉或删除，因为现在由 `renderCharPage` -> `fillCharLists` 统一接管了。
+
+/* === [新增] 点击空白处关闭顶部导航菜单 === */
+document.addEventListener('click', function(event) {
+    const navMenu = document.getElementById('nav-menu');
+    const navToggle = document.querySelector('.nav-toggle');
+
+    // 1. 如果菜单没加载或者没打开，直接忽略
+    if (!navMenu || !navMenu.classList.contains('open')) return;
+
+    // 2. 判断点击目标
+    // event.target 是你手指点的那个元素
+    // !navMenu.contains(...) 意思是不是点在菜单里面
+    // !navToggle.contains(...) 意思是不是点在汉堡按钮上 (防止点按钮时重复触发)
+    if (!navMenu.contains(event.target) && !navToggle.contains(event.target)) {
+        navMenu.classList.remove('open');
+    }
+});
 
 </script>
 
