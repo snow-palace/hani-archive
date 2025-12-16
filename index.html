@@ -1957,7 +1957,7 @@ html, body {
     /* === 1. [修复] 卡牌大图的左右按钮 (手机版) === */
     .bqc-nav-pos {
         /* 1. 位置调整：稍微往上提一点，放在手指容易够到的地方 */
-        bottom: 40px !important;
+        bottom: 30px !important;
         
         /* 2. 宽度限制：占满屏幕宽度，但留出边距 */
         width: 100% !important;
@@ -1971,13 +1971,15 @@ html, body {
         z-index: 13000 !important;
     }
 
+    
+
 /* 2. [调整] 底部导航按钮 (大按钮 + 两侧对齐) */
     .nav-controls:not(.bqc-nav-pos) {
         position: absolute !important;
         top: auto !important;     
         
         /* 挂在浮窗屁股下面 */
-        bottom: -150px !important; 
+        bottom: -250px !important; 
         
         left: 50% !important;
         transform: translateX(-50%) !important;
@@ -2004,18 +2006,28 @@ html, body {
         border: 1px solid #777 !important;
         
         /* 【改这里】加大尺寸，方便手指点击 */
-        width: 130px !important;  
-        height: 130px !important;
+        width: 150px !important;  
+        height: 150px !important;
         font-size: 28px !important;
         border-radius: 50%;
         box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
 /* 专门控制卡牌浮窗按钮 */
 .bqc-nav-pos .nav-btn-char {
-    width: 67px !important;   /* 比如卡牌的想小一点 */
-    height: 67px !important;
+    width: 80px !important;   /* 比如卡牌的想小一点 */
+    height: 80px !important;
     font-size: 20px !important;
 }
+
+/* 修改遮罩层的对齐方式 */
+    .bqc-modal-overlay {
+        /* 1. 原来是 center (居中)，现在改为 flex-start (顶端对齐) */
+        align-items: flex-start !important;
+        
+        /* 2. 给顶部留出距离 (比如 10% 的屏幕高度) */
+        /* 您可以调整这个值：越小越靠上，越大越靠下 */
+        padding-top: 5vh !important; 
+    }
 
 /* 2. [全局修复] 通用页面容器：手机端适配策略 */
     /* 逻辑：继承电脑端的顶部大留白(40px)，只压缩左右两边 */
