@@ -11,7 +11,7 @@
             /* ================= 全局变量 ================= */
             /* 布局 */
             --sidebar-width: 0px;
-            --navbar-height: 60px; /* [新增] 顶部导航高度 */
+            --navbar-height: 40px; /* [新增] 顶部导航高度 */
             --time-col-width: 100px;
             
             /* 背景颜色 */
@@ -774,7 +774,8 @@ html, body {
             box-shadow: 0 5px 20px rgba(39, 39, 39, 0.3);
         }
         .society-header {
-            background: #666;; padding: 0px;
+            background: #666;
+            padding: 0px;
             display: flex; align-items: center; gap: 15px;
             border-bottom: 2px solid var(--border-color);
         }
@@ -844,26 +845,36 @@ html, body {
             /* 5. 层级提升 */
             z-index: 10; 
         }
-        /* === 2. 修改：王冠样式 (确保在最上层) === */
+                /* === 2. 新增：王冠角标样式 === */
         .crown-badge {
             position: absolute;
-            top: -15px;      /* 往上提，突出卡片 */
-            left: -12px;     /* 往左移，突出卡片 */
-            font-size: 28px; 
-            color: #FFD700;  
-            text-shadow: 2px 2px 0px #000; /* 纯黑描边，防止被背景吃掉 */
-            z-index: 999;    /* 【关键】层级设得非常高，盖过一切 */
-            display: none;   
-            transform: rotate(-25deg);
-            pointer-events: none; /* 让鼠标能穿透它点击卡片 */
+            top: -13px;      /* 位置微调：突出去一点 */
+            left: -13px;
+            font-size: 26px; /* 大小 */
+            color: #FFD700;  /* 亮黄色 */
+            text-shadow: 3px 3px 3px rgb(0, 0, 0); /* 加黑投影让它看清 */
+            z-index: 20;     /* 保证在最上层 */
+            display: none;   /* 【核心】默认隐藏！只有开启才显示 */
+            transform: rotate(-30deg); /* 稍微歪一点 */
         }
-        .char-card.is-king .crown-badge { display: block; }
+        
+        /* 当卡片拥有 'is-king' 这个类名时，显示王冠 */
+        .char-card.is-king .crown-badge {
+            display: block;
+        }
+        /* === 详情弹窗 (升级版) === */
+        /* === 修改：数值条容器 (增加呼吸感) === */
+        .stats-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* 【核心】原来的间距太小了，改成 20px 或更大，瞬间通透 */
+        }
 
         /* === 3. 新增：椅子容器 (放在左下角) === */
         .chair-container {
             position: absolute;
-            bottom: -8px;  /* 稍微突出去一点，更有层次感 */
-            left: -5px;
+            bottom: 0px;  /* 稍微突出去一点，更有层次感 */
+            left: 0px;
             display: flex; /* 让椅子横向排列 */
             gap: -5px;     /* 椅子稍微叠在一起一点点 */
             z-index: 998;  /* 仅次于王冠 */
@@ -873,17 +884,18 @@ html, body {
         .chair-icon {
             width: 24px;
             height: 24px;
-            filter: drop-shadow(1px 1px 1px black); /* 给椅子加个阴影 */
+            filter: drop-shadow(2px 2px 2px black); /* 给椅子加个阴影 */
         }
         
         /* 椅子颜色定义 (SVG 填充色) */
-        .chair-white path { fill: #f0f0f0; stroke: #555; stroke-width: 1px; } /* 白椅子加个边框不然看不见 */
+        .chair-white path { fill: #f0f0f0; } /* 白椅子加个边框不然看不见 */
         .chair-cyan path  { fill: #00ffff; }
         .chair-yellow path{ fill: #ffd700; }
         .chair-green path { fill: #32cd32; }
         .chair-rose path  { fill: #ff007f; }
+        
         /* 左侧：图片位 (1800:750 = 2.4:1) */
-.char-card-img {
+        .char-card-img {
             width: 240px; 
             
             /* === [修改] 背景纹理：正交小圆点 === */
@@ -916,59 +928,47 @@ html, body {
         
         .cc-names { display: flex; flex-direction: column; }
         .cc-nickname { font-size: 22px; font-weight: 900; color: #fff; line-height: 1; margin-bottom: 4px; }
-        .cc-realname { font-size: 12px; color: #666; font-weight: normal; }
+        .cc-realname { font-size: 13px; color: #9e9e9e; font-weight: normal; }
 
         /* 右上角：职业 */
         .cc-job {
             position: absolute; top: 6px; right: 6px;
             background: #ccc; color: #111;
-            padding: 2px 8px; border-radius: 4px;
+            padding: 2px 4px; border-radius: 4px;
             font-size: 12px; font-weight: 800;
             box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
 
         /* 右下角：学校 */
-/* === 1. 修改：校名样式 (符合你的右对齐、限宽、无背景要求) === */
-        .cc-school {
-            position: absolute; 
-            bottom: 8px; 
-            right: 10px;
-            font-size: 10px; 
-            color: #555; /* 保持原灰色，不改变颜色 */
-            font-weight: bold;
-            
-            /* 新增控制 */
-            text-align: right;   /* 强制右对齐 */
-            max-width: 20em;     /* 限制最大宽度约15个字符 */
-            white-space: normal; /* 允许换行，绝对不会变成省略号 */
-            line-height: 1.2;    /* 如果换行了，行高紧凑一点 */
-            background: none;    /* 确保没有任何背景色 */
-        }
+/* === [CSS 配套] 确保长名字能完整显示 === */
+.cc-school {
+    position: absolute !important;
+    bottom: 6px !important;
+    right: 10px !important;
+    
+    /* 1. 强制拉通左边，给它最大的舞台 */
+    left: 10px !important;
+    width: auto !important;
+    
+    /* 2. 允许名字很长，不许换行 */
+    max-width: none !important;
+    white-space: nowrap !important;
+    
+    /* 3. 右对齐 */
+    text-align: right !important;
+    
+    /* 4. 如果名字实在太长(超过卡片宽度)，才显示省略号 */
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    
+    font-size: 10px !important;
+    color: #555 !important;
+    background: none !important;
+    pointer-events: none;
+    z-index: 5;
+}
 
-        /* === 2. 新增：王冠角标样式 === */
-        .crown-badge {
-            position: absolute;
-            top: -8px;      /* 位置微调：突出去一点 */
-            left: -8px;
-            font-size: 26px; /* 大小 */
-            color: #FFD700;  /* 亮黄色 */
-            text-shadow: 2px 2px 2px rgba(0,0,0,0.8); /* 加黑投影让它看清 */
-            z-index: 20;     /* 保证在最上层 */
-            display: none;   /* 【核心】默认隐藏！只有开启才显示 */
-            transform: rotate(-20deg); /* 稍微歪一点 */
-        }
-        
-        /* 当卡片拥有 'is-king' 这个类名时，显示王冠 */
-        .char-card.is-king .crown-badge {
-            display: block;
-        }
-        /* === 详情弹窗 (升级版) === */
-        /* === 修改：数值条容器 (增加呼吸感) === */
-        .stats-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px; /* 【核心】原来的间距太小了，改成 20px 或更大，瞬间通透 */
-        }
+
 /* === 修改：属性图标框 (半透明毛玻璃风格) === */
         .attr-img-box {
             width: 60px; 
@@ -1517,7 +1517,7 @@ html, body {
 /* 1. 卡牌页标题栏 (压扁版) */
 .bqc-chapter-bar {
     /* [修改] 高度固定为 50px (比导航栏 60px 稍微小一点，显致密) */
-    height: 50px; 
+    height: 40px; 
     
     /* [修改] 布局方式：Flex 居中 */
     display: flex; 
@@ -1572,7 +1572,7 @@ html, body {
 .char-sticky-bar {
     /* [核心] 宽度占满屏幕 */
     width: 100%; 
-    height: 50px; /* 压扁 */
+    height: 40px; /* 压扁 */
     
     /* 内部布局 */
     display: flex; 
@@ -1756,7 +1756,7 @@ html, body {
             grid-template-columns: repeat(3, 1fr); 
             
             /* 手机上间距通常要更小一点，省空间 */
-            gap: 13px; 
+            gap: 10px; 
             padding: 0 10px; /* 左右留白也减小 */
         } 
     }
@@ -1772,9 +1772,9 @@ html, body {
         image-rendering: -webkit-optimize-contrast; 
     }
     .bqc-card-img { width: 100%; height: 100%; object-fit: contain; display: block; }
-    .bqc-card-item:hover { transform: scale(1.05); 
+    .bqc-card-item:hover { transform: scale(1.035); 
         z-index: 2; 
-        box-shadow: 0 0 7px 2px rgba(255, 255, 255, 0.767); }
+        box-shadow: 0 0 4px 2px rgba(255, 255, 255, 0.767); }
     
     /* --- 弹窗样式保持不变 (略) --- */
         /* =========================================
@@ -1864,17 +1864,17 @@ html, body {
             /* 这种光中间亮、四周慢慢变透明，没有任何硬边缘 */
             background: radial-gradient(
                 circle at center, 
-                rgba(255, 255, 255, 0.7) 0%, 
+                rgba(255, 255, 255, 0.6) 0%, 
                 rgba(255, 255, 255, 0.2) 40%, 
                 transparent 70%
             );
             
             /* 2. 把光斑放大，保证移动时能覆盖全身 */
-            background-size: 200% 200%;
+            background-size: 400% 400%;
             background-repeat: repeat;
             
             /* 3. 混合模式：Soft Light (柔光) 比 Overlay 更自然，不容易过曝 */
-            mix-blend-mode: soft-light; 
+            mix-blend-mode: hard-light; 
             /* 如果觉得不够亮，可以改回 soft-light、hard-light、overlay、color-dodge、screen */
             
             /* 4. [解决圆角问题] 遮罩基础设置 */
@@ -1974,7 +1974,7 @@ html, body {
         top: auto !important;     
         
         /* 挂在浮窗屁股下面 */
-        bottom: -150px !important; 
+        bottom: -200px !important; 
         
         left: 50% !important;
         transform: translateX(-50%) !important;
@@ -2001,12 +2001,18 @@ html, body {
         border: 1px solid #777 !important;
         
         /* 【改这里】加大尺寸，方便手指点击 */
-        width: 90px !important;  
-        height: 90px !important;
+        width: 130px !important;  
+        height: 130px !important;
         font-size: 28px !important;
         border-radius: 50%;
         box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
+    /* 专门控制卡牌浮窗按钮 */
+    .bqc-nav-pos .nav-btn-char {
+    width: 80px !important;   /* 比如卡牌的想小一点 */
+    height: 80px !important;
+    font-size: 20px !important;
+}
 
 
 /* 2. [全局修复] 通用页面容器：手机端适配策略 */
@@ -2132,6 +2138,7 @@ html, body {
     /* 锚点设为右上，保证脸露出来 */
     object-fit: contain; 
     object-position: top right !important; 
+    
 }
 
 
@@ -2282,7 +2289,7 @@ html, body {
 
 <div id="bqc-jump-menu" class="jump-menu-overlay" onclick="toggleBqcMenu()">
     <div class="jump-menu-content">
-        <div class="jump-title">→</div>
+        <div class="jump-title">卡牌目录</div>
         <div class="jump-list" id="bqc-jump-list">
             </div>
     </div>
@@ -3670,11 +3677,12 @@ document.querySelectorAll('.card').forEach(card => {
     };
 
     const lists = {
-        'list-friendly-store': ['yumu', 'zhou', 'cotton', 'song'],
+        
         'list-condensing-tower': ['stone', 'master', 'coco', 'xiaobei'],
         'list-bad-kids': ['hei',  'ban', 'hong'],
         'list-refinery': ['piao', 'wildcat', 'dou', 'hua',],
         'list-plaza': ['sb', 'nao'],
+        'list-friendly-store': ['yumu', 'zhou', 'cotton', 'song'],
         'list-honey': ['kid', 'xhani',  'pigeon', 'nurse', 'dream', 'wax', 'candy', 'king',],
         'list-stars': ['pika', 'ding', 'buta'],
         'list-mao': ['xdq', 'pao', 'zhe', 'tie'],
@@ -3689,11 +3697,12 @@ document.querySelectorAll('.card').forEach(card => {
     };
 
     const listToLogoMap = {
-        'list-friendly-store':   Societies.FRIEND, 
+        
         'list-condensing-tower': Societies.TOWER, 
         'list-bad-kids': Societies.BAD, 
         'list-refinery': Societies.FACTORY, 
         'list-plaza': Societies.PLAZA,
+        'list-friendly-store':   Societies.FRIEND, 
         'list-honey': Societies.HANI, 
         'list-stars': Societies.STARS, 
         'list-mao': Societies.MAO, 
@@ -3745,17 +3754,60 @@ document.querySelectorAll('.card').forEach(card => {
             const chairsList = d.chairs || []; 
             let chairsHtml = '';
             chairsList.forEach(color => { chairsHtml += `<div class="chair-icon chair-${color}">${chairSvg}</div>`; });
-            card.innerHTML = `<div class="crown-badge">♛</div><div class="chair-container">${chairsHtml}</div><div class="char-card-img"><img src="${d.cardImage || ''}" onerror="this.style.display='none'"></div><div class="char-card-info"><div class="cc-names"><span class="cc-nickname" style="${d.color.includes('gradient') ? 'background:'+d.color+';-webkit-background-clip:text;color:transparent' : 'color:'+d.color}">${d.name}</span><span class="cc-realname">${d.real !== '-' ? d.real : ''}</span></div><div class="cc-job">${d.job}</div><div class="cc-school">${d.school.replace(/大学附属高级中学|中学|学校/, '...')}</div></div>`;
+            card.innerHTML = `<div class="crown-badge">♛</div><div class="chair-container">${chairsHtml}</div><div class="char-card-img"><img src="${d.cardImage || ''}" onerror="this.style.display='none'"></div><div class="char-card-info"><div class="cc-names"><span class="cc-nickname" style="${d.color.includes('gradient') ? 'background:'+d.color+';-webkit-background-clip:text;color:transparent' : 'color:'+d.color}">${d.name}</span><span class="cc-realname">${d.real !== '-' ? d.real : ''}</span></div><div class="cc-job">${d.job}</div><div class="cc-school">${d.school}</div></div>`;
             container.appendChild(card);
         });
     }
 
 const charModal = document.getElementById('char-modal');
     
-    function openCharModal(key) {
+    // === [新增] 定向智能预加载 ===
+// direction: 1 (向右点) / -1 (向左点)
+function smartPreload(centerKey, direction) {
+    if (globalCharPlaylist.length === 0) return;
+    
+    // 找到当前 ID 在列表里的位置
+    const centerIndex = globalCharPlaylist.indexOf(centerKey);
+    if (centerIndex === -1) return;
+
+    // 预加载队列
+    const listToLoad = [];
+    
+    // 1. 优先加载：当前这个人的图 (防止网慢)
+    listToLoad.push(centerKey);
+
+    // 2. 循环加载邻居 (范围：前后各2个)
+    for (let i = 1; i <= 2; i++) {
+        // 核心逻辑：根据 direction 决定谁先谁后
+        // 如果是点右箭头(1)，先加载 center + 1，再加载 center - 1
+        
+        // 顺势方向 (Next)
+        let nextIdx = centerIndex + (i * direction);
+        // 处理数组循环 (超出长度回到开头，小于0回到结尾)
+        nextIdx = (nextIdx % globalCharPlaylist.length + globalCharPlaylist.length) % globalCharPlaylist.length;
+        listToLoad.push(globalCharPlaylist[nextIdx]);
+
+        // 逆势方向 (Prev)
+        let prevIdx = centerIndex - (i * direction);
+        prevIdx = (prevIdx % globalCharPlaylist.length + globalCharPlaylist.length) % globalCharPlaylist.length;
+        listToLoad.push(globalCharPlaylist[prevIdx]);
+    }
+
+    // 3. 执行加载 (静默加载，不影响界面)
+    listToLoad.forEach(key => {
+        const d = charData[key];
+        if (!d) return;
+        // 只有没缓存过才下载
+        if (d.portrait) new Image().src = d.portrait;
+        if (d.battleArt) new Image().src = d.battleArt;
+    });
+}
+
+    function openCharModal(key, direction = 1) {
         // 1. 告诉导航系统当前是谁
         updateCurrentIndex(key); 
-
+        // === [新增] 调用上面的预加载函数 ===
+        smartPreload(key, direction);
         // 2. 获取数据
         const d = charData[key];
         
@@ -3852,50 +3904,45 @@ const charModal = document.getElementById('char-modal');
         setLogo('m-school-logo', 'm-school-text', d.schoolLogo); setLogo('m-society-logo', 'm-society-text', d.societyLogo);
         /* === [优化] 左侧立绘：预加载 + 无缝切换 === */
 
-        // 1. 获取图片标签本身，而不是外面的盒子
+        // =========================================
+        // 【修改点】左侧立绘：直接切换，无残留，无模糊
+        // =========================================
         const pImg = document.getElementById('m-portrait');
         const pText = document.getElementById('m-portrait-text');
-        
-        if (d.portrait) {
-            // A. 如果有图：
+        // 1. 记录防错位ID (和你写的战斗立绘逻辑保持一致)
+    pImg.dataset.waitingFor = key;
+
+// 1. 记录防错位ID (和你写的战斗立绘逻辑保持一致)
+    pImg.dataset.waitingFor = key;
+
+    // 2. 【核心】瞬间清除旧图，绝不残留
+    pImg.style.display = 'none'; // 先隐藏
+    pImg.src = '';               // 清空源
+    if(pText) pText.style.display = 'block'; // 显示文字占位
+
+    if (d.portrait) {
+        // 3. 后台下载
+        const loader = new Image();
+        loader.src = d.portrait;
+
+        loader.onload = () => {
+            // 4. 防错位检查
+            if (pImg.dataset.waitingFor !== key) return;
+
+            // 5. 下载好了，直接显示
+            pImg.src = d.portrait;
+            pImg.style.display = 'block';
+            if(pText) pText.style.display = 'none';
             
-            // 先给图片加个“正在加载”的样式（变暗/模糊），告诉用户“我要变身了”
-            // (前提是你CSS里加了 #m-portrait.loading { opacity: 0.5; ... })
-            pImg.classList.add('loading');
+            // 这里删掉了所有的 classList.add('loading') 和 setTimeout
+            // 追求的就是快和干脆
+        };
 
-            // 核心魔法：在后台偷偷创建一个隐形图片去下载
-            const loader = new Image();
-            loader.src = d.portrait;
-
-            // 监听：等后台那个隐形图片真的下载好了...
-            loader.onload = () => {
-                // ...再把屏幕上的图片换成新的（因为已经下载在内存里了，所以是瞬间切换）
-                pImg.src = d.portrait;
-                
-                // 确保显示图片，隐藏文字
-                pImg.style.display = 'block';
-                if(pText) pText.style.display = 'none';
-
-                // 移除“正在加载”样式，让图片清晰地显示出来
-                // 加个微小的延时，让过渡动画更顺滑
-                setTimeout(() => {
-                    pImg.classList.remove('loading');
-                }, 50);
-            };
-
-            // 防御：万一图片链接坏了，就显示文字
-            loader.onerror = () => {
-                pImg.style.display = 'none';
-                if(pText) pText.style.display = 'block';
-                pImg.classList.remove('loading');
-            }
-
-        } else {
-            // B. 如果没图：直接隐藏图片，显示“立绘占位”文字
+        loader.onerror = () => {
             pImg.style.display = 'none';
             if(pText) pText.style.display = 'block';
-            pImg.classList.remove('loading');
         }
+    }
         
         const win = document.querySelector('.char-modal-window');
         if(d.color.includes('gradient')) { win.style.borderImage = d.color + ' 1'; win.style.borderWidth = '4px'; win.style.borderColor = 'transparent'; } else { win.style.borderColor = d.color; win.style.borderImage = 'none'; win.style.borderWidth = '4px'; }
@@ -3988,8 +4035,8 @@ const charModal = document.getElementById('char-modal');
         // 获取那个人的 ID
         const nextCharId = globalCharPlaylist[newIndex];
         
-        // 直接调用打开弹窗函数 (无缝切换)
-        openCharModal(nextCharId);
+        // 【修改点】把 direction (1 或 -1) 传进去！
+        openCharModal(nextCharId, direction);
     }
     
 // =========================================
@@ -4645,9 +4692,9 @@ function fitModalToMobile() {
         }, 600);
     });
 
-/* =========================================================================
-   PART 7: 人物档案页 自动化构建与导航系统 (新增)
-   ========================================================================= */
+    /* =========================================================================
+    PART 7: 人物档案页 自动化构建与导航系统 (新增)
+    ========================================================================= */
 
 // 1. 配置数据：将原来分散的 HTML 结构整理成数据
 //    type: 'header' 生成扁标题栏
@@ -4663,11 +4710,11 @@ const charPageConfig = [
     { 
         type: 'grid', 
         list: [
-            { id: 'list-friendly-store', name: '友谊百货', logo: Societies.FRIEND },
             { id: 'list-condensing-tower', name: '冷凝塔', logo: Societies.TOWER },
             { id: 'list-bad-kids', name: '坏蛋少年宫', logo: Societies.BAD },
             { id: 'list-refinery', name: '炼厂', logo: Societies.FACTORY },
-            { id: 'list-plaza', name: '蜂山广场', logo: Societies.PLAZA }
+            { id: 'list-plaza', name: '蜂山广场', logo: Societies.PLAZA },
+            { id: 'list-friendly-store', name: '友谊百货', logo: Societies.FRIEND }
         ]
     },
 
@@ -4735,21 +4782,21 @@ function renderCharPage() {
             // 塞入标题栏 (保持原样)
             htmlStructure += `
                 <div class="char-sticky-bar" 
-                     id="char-anchor-${item.key}"
-                     onclick="toggleCharMenu()"
-                     style="border-left-color: ${item.color};">
-                     
-                     <div style="width:12px; height:12px; background:${item.color}; border-radius:50%; box-shadow: 0 0 5px ${item.color};"></div>
-                     
-                     <span class="char-bar-title">${item.title} ▾</span>
+                    id="char-anchor-${item.key}"
+                    onclick="toggleCharMenu()"
+                    style="border-left-color: ${item.color};">
+                    
+                    <div style="width:12px; height:12px; background:${item.color}; border-radius:50%; box-shadow: 0 0 5px ${item.color};"></div>
+                    
+                    <span class="char-bar-title">${item.title} ▾</span>
                 </div>
             `;
 
             // 生成菜单项 (保持原样)
             menuHtml += `
                 <div class="jump-btn" 
-                     onclick="scrollToCharCat('${item.key}', event)"
-                     style="border-left-color: ${item.color}; text-align:left; display:flex; align-items:center; gap:10px;">
+                    onclick="scrollToCharCat('${item.key}', event)"
+                    style="border-left-color: ${item.color}; text-align:left; display:flex; align-items:center; gap:10px;">
                     <div style="width:10px; height:10px; background:${item.color}; border-radius:50%;"></div>
                     <span style="color:#fff; font-weight:bold;">${item.title}</span>
                 </div>
@@ -4841,7 +4888,7 @@ function fillCharLists() {
                         <span class="cc-realname">${d.real !== '-' ? d.real : ''}</span>
                     </div>
                     <div class="cc-job">${d.job}</div>
-                    <div class="cc-school">${d.school.replace(/大学附属高级中学|中学|学校/, '...')}</div>
+                    <div class="cc-school">${d.school}</div>
                 </div>`;
             
             container.appendChild(card);
