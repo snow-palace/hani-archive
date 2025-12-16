@@ -2156,53 +2156,45 @@ html, body {
 }
 
 
-    /* === 3. [终极修复] 大外号：手机端简化渲染模式 === */
+/* === [修复] 手机端大外号：只改位置，保留渐变特效 === */
     .broken-name {
-        /* 位置保持不变 */
+        /* 1. 位置：固定在左下角 */
         position: absolute !important;
-        bottom: 10px !important; 
-        left: 10px !important;
-        top: auto !important; right: auto !important;
-        z-index: 15 !important;
+        bottom: 20px !important;   /* 距离底部 */
+        left: 15px !important;     /* 距离左侧 */
+        top: auto !important; 
+        right: auto !important;
         
-        /* 允许换行 */
-        width: 350px !important; /* 限制宽度，逼它换行 */
-        white-space: normal !important;
+        /* 2. 字体大小 */
+        font-size: 55px !important; /* 手机上稍微小一点，太大容易换行 */
+        line-height: 1 !important;
+        
+        /* 3. 布局限制 */
+        width: auto !important;
+        max-width: 80vw !important; /* 限制宽度，防止顶到右边的立绘 */
+        
+        /* 4. 允许换行 (关键：配合伪元素继承) */
+        white-space: normal !important; 
         word-break: break-word !important;
-        line-height: 0.85 !important; /* 行高压紧一点，更好看 */
+        text-align: left !important;
         
-        /* === 【核心】关闭 PC 端的高级分层特效 === */
-        /* 1. 杀掉分身 (伪元素) */
-        content: none !important; 
-    }
-    
-    .broken-name::before, 
-    .broken-name::after {
-        display: none !important; /* 彻底隐藏 PC 端的那两个图层 */
+        /* 5. 确保图层显示 */
+        z-index: 15 !important;
+        opacity: 1 !important;
+        
+        /* 【关键】不要写 content: none，也不要写 display: none */
     }
 
-    /* === 【核心】启用手机端的简单渲染 === */
-    .broken-name {
-        /* 1. 直接上色 (不用透明了) */
-        color: var(--char-color) !important;
-        
-        /* 2. 确保背景裁剪关闭 (防止变成黑框) */
-        background: none !important;
-        -webkit-text-fill-color: var(--char-color) !important;
-        -webkit-background-clip: border-box !important;
-        
-        /* 3. 简单描边 (兼容性最好) */
-        /* 黑色描边，3px 粗 */
-        text-shadow: 
-            2px 2px 0 #000,
-            -1px -1px 0 #000,  
-            1px -1px 0 #000,
-            -1px 1px 0 #000,
-            1px 1px 0 #000;
-            
-        /* 或者使用 Webkit 描边 (更锐利) */
-        -webkit-text-stroke: 3px #000 !important;
+    /* 【关键修复】让渐变层和描边层也乖乖跟随换行 */
+    .broken-name::before,
+    .broken-name::after {
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        white-space: inherit !important; /* 继承本体的换行设置 */
     }
+
 }
 /* === 卡牌跳转菜单样式 === */
     .jump-menu-overlay {
@@ -3389,7 +3381,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_yumu.png', 
             battleArt: BattleArts.YUMU, 
             schoolLogo: Schools.XIWAN, societyLogo: Societies.FRIEND, 
-            attr1: Attrs.WATER, attr2: Attrs.STAR, 
+            attr1: Attrs.LIGHT, attr2: '', 
             bio: '总是笑眯眯的“姐姐”，西湾区实验中学的传说人物。<br>看似温柔，实则切开是黑的。' },
         'zhou': { name:'周周', nickname:'周周', real:'-', gender:'女', age:'17', 
             school:'江口铁道第三中学', join:'S2 (AA2010)', society:'友谊百货', job:'牧师', color:'#FFC0CB', 
@@ -3398,25 +3390,25 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_zhou.png', 
             battleArt: BattleArts.ZHOU, 
             schoolLogo: Schools.JIANGKOU, societyLogo: Societies.FRIEND, 
-            attr1: Attrs.LIGHT, attr2: Attrs.WOOD, 
+            attr1: Attrs.LIGHT, attr2: '', 
             bio: '友谊百货的治愈担当。<br>虽然平时话不多，但在关键时刻非常可靠。' },
         'cotton': { name:'棉发', nickname:'棉发', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'友谊百货', job:'商人', color:'#4169E1', 
-            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            hp:100, patk:200, pdef:150, matk:100, mdef:100, 
             cardImage: CardImages.COTTON, 
             portrait: 'images/charData/portraits/art_cotton.png', 
             battleArt: BattleArts.COTTON, 
             schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
-            attr1: '', attr2: '', 
+            attr1: Attrs.MOON, attr2: Attrs.LIGHT, 
             bio: '精明的商人，总是能搞到各种稀奇古怪的道具。' },
         'song': { name:'松松', nickname:'松松', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S1 第二届', society:'友谊百货', job:'商人', color:'#FFA500', 
-            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            hp:100, patk:100, pdef:100, matk:200, mdef:150, 
             cardImage: CardImages.SONG, 
             portrait: 'images/charData/portraits/art_song.png', 
             battleArt: BattleArts.SONG, 
             schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
-            attr1: '', attr2: '', 
+            attr1: Attrs.SUN, attr2: Attrs.LIGHT, 
             bio: '性格活泼的商人，和棉发是死党。' },
         'stone': { name:'石头', nickname:'石头', real:'袁君阳', gender:'男', age:'17', 
             school:'江口铁道第三中学', join:'S2 (AA2010)', society:'冷凝塔', job:'盾卫', color:'#FFD700', 
@@ -3425,7 +3417,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_stone.png', 
             battleArt: BattleArts.STONE, 
             schoolLogo: Schools.JIANGKOU, societyLogo: Societies.TOWER, 
-            attr1: Attrs.METAL, attr2: Attrs.EARTH, 
+            attr1: Attrs.EARTH, attr2: Attrs.FIRE, 
             bio: '外表粗犷内心细腻的硬汉。<br>做得一手好菜，特别是红烧肉。' },
         'master': { name:'小师傅', nickname:'小师傅', real:'江桂', gender:'女', age:'17', 
             school:'江口铁道第三中学', join:'S2 (AA2010)', society:'冷凝塔', job:'铁匠', color:'#9370DB', 
@@ -3434,7 +3426,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_master.png', 
             battleArt: BattleArts.MASTER, 
             schoolLogo: Schools.JIANGKOU, societyLogo: Societies.TOWER, 
-            attr1: Attrs.METAL, attr2: Attrs.FIRE, 
+            attr1: Attrs.FIRE, attr2: '', 
             bio: '话痨修理工，技术一流。<br>只要给她足够的零件，她能造出任何东西。' },
         'coco': { name:'可可', nickname:'可可', real:'徐可', gender:'女', age:'17', 
             school:'西湾区实验中学', join:'S2 (AA2010)', society:'冷凝塔', job:'格斗家', color:'#FF4500', 
@@ -3443,7 +3435,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_coco.png', 
             battleArt: BattleArts.COCO, 
             schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
-            attr1: Attrs.WIND, attr2: Attrs.WOOD, 
+            attr1: Attrs.METAL, attr2: '', 
             bio: '行动敏捷的猎人。<br>喜欢在城市的高处观察风景。' },
         'xiaobei': { name:'小北', nickname:'小北', real:'李小斐', gender:'女', age:'18', 
             school:'平仙市愚桥中学', join:'S1 (AA2009)', society:'冷凝塔', job:'刺客', color:'#40E0D0', 
@@ -3452,7 +3444,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_xiaobei.png', 
             battleArt: BattleArts.XIAOBEI, 
             schoolLogo: Schools.PINGXIAN, societyLogo: Societies.TOWER, 
-            attr1: Attrs.ICE, attr2: Attrs.WIND, 
+            attr1: Attrs.ICE, attr2: Attrs.MOON, 
             bio: '外表高冷，内心其实很柔软。<br>不太会照顾自己，经常忘记吃饭。' },
         'hei': { name:'小黑', nickname:'小黑', real:'彭程', gender:'男', age:'18', 
             school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'坏蛋少年宫', job:'狂战士', color:'#8A2BE2', 
@@ -3461,7 +3453,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_hei.png', 
             battleArt: BattleArts.HEI, 
             schoolLogo: Schools.LINZHOU, societyLogo: Societies.BAD, 
-            attr1: Attrs.THUNDER, attr2: Attrs.MOON, 
+            attr1: Attrs.MOON, attr2: Attrs.DUST, 
             bio: '坏蛋少年宫的领袖，充满狂气的战斗风格。<br>喜欢坐在高高的椅子上俯视一切。' },
         'ban': { name:'班长', nickname:'班长', real:'阮芳雨', gender:'女', age:'17', 
             school:'金谷市青松中学', join:'S2 (AA2010)', society:'坏蛋少年宫', job:'猎人', color:'#32CD32', 
@@ -3470,7 +3462,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_ban.png', 
             battleArt: BattleArts.BAN, 
             schoolLogo: Schools.JINGU, societyLogo: Societies.BAD, 
-            attr1: Attrs.WOOD, attr2: Attrs.EARTH, 
+            attr1: Attrs.WOOD, attr2: Attrs.CRYSTAL, 
             bio: '具有极强的组织能力和纪律性。<br>在混乱的坏蛋少年宫里维持着微妙的秩序。' },
         'hong': { name:'小红', nickname:'小红', real:'张笑', gender:'女', age:'18', 
             school:'中廖外国语学校', join:'S2 (AA2010)', society:'坏蛋少年宫', job:'狂战士', color:'#FF0000', 
@@ -3479,7 +3471,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_hong.png', 
             battleArt: BattleArts.HONG, 
             schoolLogo: Schools.ZHONGLIAO, societyLogo: Societies.BAD, 
-            attr1: Attrs.FIRE, attr2: Attrs.METAL, 
+            attr1: Attrs.SUN, attr2: Attrs.CRYSTAL, 
             bio: '战斗狂人，一旦打起来就停不下来。' },
         'piao': { name:'飘飘', nickname:'飘飘', real:'李菲', gender:'男', age:'18', 
             school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'炼厂', job:'裁缝', color:'#DC143C', 
@@ -3488,7 +3480,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_piao.png', 
             battleArt: BattleArts.PIAO, 
             schoolLogo: Schools.LINZHOU, societyLogo: Societies.FACTORY, 
-            attr1: Attrs.DUST, attr2: Attrs.MOON, 
+            attr1: Attrs.SUN, attr2: Attrs.EARTH, 
             bio: '炼厂的灵魂人物，手艺精湛的裁缝。<br>据说能用布料缝合任何东西，甚至是空间。' },
         'hua': { name:'小花', nickname:'小花', real:'刘晓坤', gender:'男', age:'17', 
             school:'金谷市青松中学', join:'S2 (AA2010)', society:'炼厂', job:'盗贼', color:'#FF8C00', 
@@ -3497,16 +3489,16 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_hua.png', 
             battleArt: BattleArts.HUA, 
             schoolLogo: Schools.JINGU, societyLogo: Societies.FACTORY, 
-            attr1: Attrs.WOOD, attr2: '', 
+            attr1: Attrs.METAL, attr2: '', 
             bio: '总是跟在小黑身后的忠实小弟。' },
         'wildcat': { name:'小野猫', nickname:'小野猫', real:'尹苗苗', gender:'女', age:'18', 
             school:'平仙市愚桥中学', join:'S1 (AA2009)', society:'炼厂', job:'剪刀手', color: 'linear-gradient(to right, #FFD700, #0000FF)', 
-            hp:0, patk:0, pdef:0, matk:0, mdef:0, isKing: false, 
+            hp:150, patk:160, pdef:100, matk:100, mdef:100, isKing: false, 
             cardImage: CardImages.CAT, 
             portrait: 'images/charData/portraits/art_cat.png', 
             battleArt: BattleArts.CAT, 
             schoolLogo: Schools.PINGXIAN, societyLogo: Societies.FACTORY, 
-            attr1: Attrs.WIND, attr2: '', 
+            attr1: Attrs.CRYSTAL, attr2: Attrs.WIND, 
             bio: '行踪诡秘，像猫一样难以捉摸。' },
         'dou': { name:'豆子', nickname:'豆子', real:'杜婉月', gender:'女', age:'17', 
             school:'花港市第十一中学', join:'S2 (AA2010)', society:'炼厂', job:'格斗家', color:'#1E90FF', 
@@ -3515,16 +3507,16 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_dou.png', 
             battleArt: BattleArts.DOU, 
             schoolLogo: Schools.HUAGANG, societyLogo: Societies.FACTORY, 
-            attr1: Attrs.METAL, attr2: '', 
+            attr1: Attrs.WIND, attr2: Attrs.ICE, 
             bio: '性格直率的格斗家。<br>相信拳头能解决大部分问题。' },
         'sb': { name:'草莓', nickname:'草莓', real:'-', gender:'女', age:'18', 
             school:'冲江市第五中学', join:'S3 (AA2011)', society:'蜂山广场', job:'剪刀手', color:'linear-gradient(to right, #00FF7F, #FF0055)', 
-            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            hp:40, patk:60, pdef:40, matk:60, mdef:40, 
             cardImage: CardImages.SB, 
             portrait: 'images/charData/portraits/art_sb.png', 
             battleArt: BattleArts.SB, 
             schoolLogo: Schools.CHONGJIANG, societyLogo: Societies.PLAZA, 
-            attr1: Attrs.CRYSTAL, attr2: '', 
+            attr1: '', attr2: '', 
             bio: '神秘的角色，资料甚少。' },
         'nao': { name:'闹闹', nickname:'闹闹', real:'顾子欣(18)', gender:'女', age:'17', 
             school:'冲江市第五中学', join:'S3 (AA2011)', society:'蜂山广场', job:'剑士', color:'#FFA500', 
@@ -3533,7 +3525,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_nao.png', 
             battleArt: BattleArts.NAO, 
             schoolLogo: Schools.CHONGJIANG, societyLogo: Societies.PLAZA, 
-            attr1: Attrs.FIRE, attr2: Attrs.METAL, 
+            attr1: Attrs.WOOD, attr2: '', 
             bio: '长大后的顾子欣，依旧保留着“小疯子”的特质。' },
         'kid': { name:'小孩', nickname:'小孩', real:'顾子欣(15)', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S0 (AA2008)', society:'哈尼哈尼', job:'大魔法师', color:'#FF1493', 
@@ -3551,7 +3543,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_xhani.png', 
             battleArt: BattleArts.XHANI, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
-            attr1: Attrs.FIRE, attr2: Attrs.LIGHT, 
+            attr1: Attrs.STAR, attr2: '', 
             bio: '人称“小疯子”的天才少女。<br>古灵精怪，破坏力极强。' },
         'nurse': { name:'杯杯头', nickname:'杯杯头', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S2 第五届', society:'哈尼哈尼', job:'剑士', color:'#4AB5FF',  
@@ -3560,7 +3552,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_nurse.png', 
             battleArt: BattleArts.NURSE, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
-            attr1: '', attr2: Attrs.WATER, 
+            attr1: Attrs.WATER, attr2: '', 
             bio: '人称“小疯子”的天才少女。<br>古灵精怪，破坏力极强。' },
         'dream': { name:'梦灵灵', nickname:'梦灵灵', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S2 第五届', society:'哈尼哈尼', job:'火魔法师', color:'#FF69B4', 
@@ -3569,7 +3561,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_dream.png', 
             battleArt: BattleArts.DREAM, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
-            attr1: Attrs.FIRE, attr2: Attrs.LIGHT, 
+            attr1: Attrs.FIRE, attr2: Attrs.EARTH, 
             bio: '擅长火系魔法的少女。<br>性格热情如火。' },
         'candy': { name:'晕晕糖', nickname:'晕晕糖', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S1 第三届', society:'哈尼哈尼', job:'双刀客', color:'#DC143C', 
@@ -3578,7 +3570,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_candy.png', 
             battleArt: BattleArts.CANDY, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
-            attr1: Attrs.METAL, attr2: Attrs.WIND, 
+            attr1: Attrs.CRYSTAL, attr2: '', 
             bio: '使用双刀的高手，战斗风格华丽。' },
         'king': { name:'能大王', nickname:'能大王', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S1 第二届', society:'哈尼哈尼', job:'音波法师', color:'#C0C0C0', 
@@ -3587,7 +3579,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_king.png', 
             battleArt: BattleArts.KING, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
-            attr1: Attrs.WIND, attr2: Attrs.THUNDER, 
+            attr1: Attrs.WAVE, attr2: Attrs.CRYSTAL, 
             bio: '能够利用音波进行攻击和控制。' },
         'wax': { name:'蜡沫子', nickname:'蜡沫子', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'哈尼哈尼', job:'死灵法师', color:'#FFA500', 
@@ -3596,7 +3588,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_wax.png', 
             battleArt: BattleArts.WAX, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
-            attr1: Attrs.DUST, attr2: Attrs.MOON, 
+            attr1: Attrs.WOOD, attr2: Attrs.DUST, 
             bio: '研究奇怪法术的死灵法师。' },
         'pigeon': { name:'白鸽泥', nickname:'白鸽泥', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S2 第五届', society:'哈尼哈尼', job:'重锤战士', color:'#32CD32', 
@@ -3605,7 +3597,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_pigeon.png', 
             battleArt: BattleArts.PIGEON, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
-            attr1: Attrs.EARTH, attr2: Attrs.METAL, 
+            attr1: Attrs.WOOD, attr2: '', 
             bio: '看起来娇小，却抡着巨大的重锤。' },
         'pika': { name:'皮皮卡', nickname:'皮皮卡', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'三子星', job:'驯兽师', color:'#FFFF00', 
@@ -3614,7 +3606,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_pika.png', 
             battleArt: BattleArts.PIKA, 
             schoolLogo: Schools.HANI, societyLogo: Societies.STARS, 
-            attr1: Attrs.WOOD, attr2: Attrs.EARTH, 
+            attr1: Attrs.THUNDER, attr2: '', 
             bio: '能和动物沟通的驯兽师。' },
         'ding': { name:'露钉', nickname:'露钉', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S2 第五届', society:'三子星', job:'骑士', color:'#00FFFF', 
@@ -3623,7 +3615,8 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_ding.png', 
             battleArt: BattleArts.DING, 
             schoolLogo: Schools.HANI, societyLogo: Societies.STARS, 
-            attr1: Attrs.METAL, attr2: Attrs.ICE, bio: '富有正义感的骑士。' },
+            attr1: Attrs.ICE, attr2: '', 
+            bio: '富有正义感的骑士。' },
         'buta': { name:'布挞米', nickname:'布挞米', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'三子星', job:'铁匠', color:'#FFB6C1', 
             hp:120, patk:70, pdef:110, matk:80, mdef:125, 
@@ -3631,7 +3624,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_buta.png', 
             battleArt: BattleArts.BUTA, 
             schoolLogo: Schools.HANI, societyLogo: Societies.STARS, 
-            attr1: Attrs.FIRE, attr2: Attrs.METAL, 
+            attr1: Attrs.WIND, attr2: '', 
             bio: '专注于打造装备的铁匠。' },
         'xdq': { name:'小冻青', nickname:'小冻青', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'毛毛毛毛毛', job:'刺客', color:'#FFD700', 
@@ -3640,7 +3633,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_xdq.png', 
             battleArt: BattleArts.XDQ, 
             schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
-            attr1: Attrs.WIND, attr2: Attrs.DUST, 
+            attr1: Attrs.CRYSTAL, attr2: Attrs.THUNDER, 
             bio: '潜行大师，来无影去无踪。' },
         'pao': { name:'泡糊涂', nickname:'泡糊涂', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S1 第三届', society:'毛毛毛毛毛', job:'舞者', color:'#00FF7F', 
@@ -3649,7 +3642,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_pao.png', 
             battleArt: BattleArts.PAO, 
             schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
-            attr1: Attrs.WIND, attr2: Attrs.WATER, 
+            attr1: Attrs.WOOD, attr2: Attrs.WIND, 
             bio: '用舞蹈迷惑敌人的舞者。' },
         'zhe': { name:'折公主', nickname:'折公主', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S1 第三届', society:'毛毛毛毛毛', job:'大召唤师', color:'#DA70D6', 
@@ -3658,7 +3651,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_zhe.png', 
             battleArt: BattleArts.ZHE, 
             schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
-            attr1: Attrs.STAR, attr2: Attrs.LIGHT, 
+            attr1: Attrs.SUN, attr2: Attrs.CRYSTAL, 
             bio: '拥有强大的召唤能力。' },
         'tie': { name:'铁锒铛', nickname:'铁锒铛', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'毛毛毛毛毛', job:'电磁法师', color:'#1E90FF', 
@@ -3667,7 +3660,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_tie.png', 
             battleArt: BattleArts.TIE, 
             schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
-            attr1: Attrs.THUNDER, attr2: Attrs.METAL, 
+            attr1: Attrs.MOON, attr2: Attrs.CRYSTAL, 
             bio: '操控电磁之力的元老级人物。' },
         'bu_lian': { name:'步可连', nickname:'步可连', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'毛毛毛毛毛', job:'大祭司', color:'#FFFFFF', 
@@ -3676,7 +3669,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_bulian.png', 
             battleArt: BattleArts.BULIAN, 
             schoolLogo: Schools.HANI, societyLogo: Societies.BUKLL, 
-            attr1: Attrs.LIGHT, attr2: Attrs.WOOD, 
+            attr1: Attrs.METAL, attr2: '', 
             bio: '负责治愈和辅助的大祭司。' },
         'yan': { name:'闫佳巧', nickname:'闫佳巧', real:'-', gender:'女', age:'18', 
             school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'白楼', job:'吟游诗人', color:'#FFFFFF', 
@@ -3685,7 +3678,7 @@ document.querySelectorAll('.card').forEach(card => {
             portrait: 'images/charData/portraits/art_yan.png', 
             battleArt: BattleArts.YAN, 
             schoolLogo: Schools.LINZHOU, societyLogo: Societies.WHITE, 
-            attr1: Attrs.SUN, attr2: Attrs.MOON, 
+            attr1: '', attr2: '', 
             bio: '传说中的存在，各项数值都已突破天际。' }
         
     };
