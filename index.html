@@ -896,6 +896,8 @@ html, body {
         
         /* 左侧：图片位 (1800:750 = 2.4:1) */
         .char-card-img {
+                border: none !important; 
+                border-bottom: none !important;
             width: 240px; 
             
             /* === [修改] 背景纹理：正交小圆点 === */
@@ -961,7 +963,7 @@ html, body {
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     
-    font-size: 10px !important;
+    font-size: 11px !important;
     color: #555 !important;
     background: none !important;
     pointer-events: none;
@@ -1224,7 +1226,7 @@ html, body {
 
             /* --- 内边距 --- */
             /* 文字离边框的距离 (上下 左右) */
-            padding: 10px 20px; 
+            padding: 60px 20px; 
             
             
             color: #c7c7c7; 
@@ -1234,7 +1236,7 @@ html, body {
             /* === Flexbox 强力居中 === */
             display: flex;
             flex-direction: column; /* 确保文字是块状排列 */
-            justify-content: center; /* 垂直居中 */
+            justify-content: normal; /* 垂直居中 */
             align-items: center;     /* 水平居中 */
             
             height: 100%; 
@@ -1243,7 +1245,7 @@ html, body {
         }      
         /* === 新增：针对文字内容的微调 === */
         #m-bio {
-            text-align: center; /* 确保每一行文字都居中 */
+            text-align: left; /* 确保每一行文字都居中 */
             line-height: 1.8;   /* 保持舒适的行间距 */
             width: 100%;        /* 占满宽度 */
             
@@ -1365,24 +1367,7 @@ html, body {
         
         /* 注意：删掉了之前的 ::before，现在改用 ::after 覆盖在上面 */
 
-        /* === [核心] 制造一个纯黑色的“分身”在背后负责描边 === */
-        .broken-name::before {
-            /* 读取 JS 传过来的文字内容 */
-            content: attr(data-text);
-            
-            /* 绝对定位，强制和本体重合 */
-            position: absolute;
-            left: 0;
-            top: 0;
-            z-index: -1; /* 放在本体后面 */
-            
-            /* 让分身变成 16px 的超粗黑色 (看起来就是 8px 的外描边) */
-            /* 原理：分身是实心的，所以描边怎么画都不会影响上面的渐变字 */
-            -webkit-text-stroke: 16px #000;
-            
-            /* 分身不需要渐变，纯黑即可 */
-            -webkit-text-fill-color: #000;
-        }
+
 
 /* === [修改] 破窗容器：扩大范围 + 强制右对齐 === */
         .broken-portrait-container {
@@ -3060,7 +3045,7 @@ html, body {
         <div class="modal-left">
             <div class="modal-portrait-placeholder" id="m-portrait-box">
                 <img id="m-portrait" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
-                <span id="m-portrait-text" style="color:#333;">立绘占位</span>
+                <span id="m-portrait-text" style="color:#333;">立绘暂缺</span>
             </div>
         </div>
 
@@ -3328,7 +3313,9 @@ document.querySelectorAll('.card').forEach(card => {
         ZHE: 'images/charData/cards/card_zhe.png', 
         TIE: 'images/charData/cards/card_tie.png', 
         BULIAN: 'images/charData/cards/card_bulian.png',
-        YAN: 'images/charData/cards/card_yan.png'
+        YAN: 'images/charData/cards/card_yan.png',
+        NOBODY: 'images/charData/cards/card_nobody.png',
+        NOHANI: 'images/charData/cards/card_nohani.png'
     };
 
     
@@ -3374,6 +3361,16 @@ document.querySelectorAll('.card').forEach(card => {
 
     // 角色信息
     const charData = {
+        'seat_empty_01': { 
+            name: '[轮空]', 
+            isVacant: true,     // <--- 加上这一句，开启极简样式！
+            clickable: false, // <--- 【关键】加上这句，就变成“只可远观不可亵玩”了
+            color: '#FF1493',   // 边框和名字的颜色
+            chairs:['rose'],
+            // 下面这些属性可以不填，或者留空
+            nickname: '', real: '', gender: '', age: '', 
+            school: '', join: '', society: '', job: '', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0 },
         'yumu': { name:'于沐川', nickname:'于沐川', real:'-', gender:'女', age:'17', 
             school:'西湾区实验中学', join:'S0 (AA2008)', society:'友谊百货', job:'召唤师', color:'#87CEEB', 
             hp:50, patk:50, pdef:50, matk:50, mdef:50, isKing: true, chairs:['yellow'], 
@@ -3382,7 +3379,7 @@ document.querySelectorAll('.card').forEach(card => {
             battleArt: BattleArts.YUMU, 
             schoolLogo: Schools.XIWAN, societyLogo: Societies.FRIEND, 
             attr1: Attrs.LIGHT, attr2: '', 
-            bio: '总是笑眯眯的“姐姐”，西湾区实验中学的传说人物。<br>看似温柔，实则切开是黑的。' },
+            bio: '<p>就是我，我在友谊百货中 负责抽卡和卖卡</p>可能时常在店里看不到我，因为我住得很远。' },
         'zhou': { name:'周周', nickname:'周周', real:'-', gender:'女', age:'17', 
             school:'江口铁道第三中学', join:'S2 (AA2010)', society:'友谊百货', job:'牧师', color:'#FFC0CB', 
             hp:200, patk:200, pdef:200, matk:200, mdef:200, 
@@ -3391,7 +3388,7 @@ document.querySelectorAll('.card').forEach(card => {
             battleArt: BattleArts.ZHOU, 
             schoolLogo: Schools.JIANGKOU, societyLogo: Societies.FRIEND, 
             attr1: Attrs.LIGHT, attr2: '', 
-            bio: '友谊百货的治愈担当。<br>虽然平时话不多，但在关键时刻非常可靠。' },
+            bio: '<p>在友谊百货中 负责体力回复</p>长得超级漂亮，她看起来总是在微笑，但其实是嘴唇的形状很特别。' },
         'cotton': { name:'棉发', nickname:'棉发', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'友谊百货', job:'商人', color:'#4169E1', 
             hp:100, patk:200, pdef:150, matk:100, mdef:100, 
@@ -3400,7 +3397,7 @@ document.querySelectorAll('.card').forEach(card => {
             battleArt: BattleArts.COTTON, 
             schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
             attr1: Attrs.MOON, attr2: Attrs.LIGHT, 
-            bio: '精明的商人，总是能搞到各种稀奇古怪的道具。' },
+            bio: '<p>在友谊百货中 负责零食</p>有点呆头呆脑，常常算不对送餐的人数，所以每天都会超额准备，每天也都会偷吃。' },
         'song': { name:'松松', nickname:'松松', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S1 第二届', society:'友谊百货', job:'商人', color:'#FFA500', 
             hp:100, patk:100, pdef:100, matk:200, mdef:150, 
@@ -3409,8 +3406,18 @@ document.querySelectorAll('.card').forEach(card => {
             battleArt: BattleArts.SONG, 
             schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
             attr1: Attrs.SUN, attr2: Attrs.LIGHT, 
-            bio: '性格活泼的商人，和棉发是死党。' },
-        'stone': { name:'石头', nickname:'石头', real:'袁君阳', gender:'男', age:'17', 
+            bio: '<p>在友谊百货中 负责娱乐物品</p>原本会给学生送漫画、电影，后来取消了这个业务，大多时候负责夜班<br>白天喜欢睡大觉，可总被我抓来替班。' },
+        'buzhi': { clickable: false,
+            name:'布织鸣', nickname:'布织鸣', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'裁缝',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        'stone': { name:'主席', nickname:'主席', real:'袁君阳', gender:'男', age:'17', 
             school:'江口铁道第三中学', join:'S2 (AA2010)', society:'冷凝塔', job:'盾卫', color:'#FFD700', 
             hp:155, patk:110, pdef:125, matk:55, mdef:110, isKing: true, chairs:['yellow'], 
             cardImage: CardImages.STONE, 
@@ -3418,7 +3425,7 @@ document.querySelectorAll('.card').forEach(card => {
             battleArt: BattleArts.STONE, 
             schoolLogo: Schools.JIANGKOU, societyLogo: Societies.TOWER, 
             attr1: Attrs.EARTH, attr2: Attrs.FIRE, 
-            bio: '外表粗犷内心细腻的硬汉。<br>做得一手好菜，特别是红烧肉。' },
+            bio: '<p>冷凝塔的创立人</p>负责保卫塔内不愿战斗的学生们，做事过分认真<br>因为对人太负责了，总被怀疑别有居心，讲话声音也很大...' },
         'master': { name:'小师傅', nickname:'小师傅', real:'江桂', gender:'女', age:'17', 
             school:'江口铁道第三中学', join:'S2 (AA2010)', society:'冷凝塔', job:'铁匠', color:'#9370DB', 
             hp:75, patk:125, pdef:80, matk:60, mdef:100, 
@@ -3427,13 +3434,33 @@ document.querySelectorAll('.card').forEach(card => {
             battleArt: BattleArts.MASTER, 
             schoolLogo: Schools.JIANGKOU, societyLogo: Societies.TOWER, 
             attr1: Attrs.FIRE, attr2: '', 
-            bio: '话痨修理工，技术一流。<br>只要给她足够的零件，她能造出任何东西。' },
+            bio: '冷凝塔的修理工<br>只要给她足够的零件，她能造出任何东西。' },
+        'lilmaster': { clickable: false,
+            name:'小小师傅', nickname:'小小师傅', real:'江湘', gender:'女', age:'17', 
+            school:'江口铁道第三中学', join:'S2 (AA2010)', society:'冷凝塔', job:'剑士', color:'#999', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOBODY, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.JIANGKOU, societyLogo: Societies.TOWER, 
+            attr1: Attrs.FIRE, attr2: '', 
+            bio: '冷凝塔的修理工<br>只要给她足够的零件，她能造出任何东西。' },
         'coco': { name:'可可', nickname:'可可', real:'徐可', gender:'女', age:'17', 
             school:'西湾区实验中学', join:'S2 (AA2010)', society:'冷凝塔', job:'格斗家', color:'#FF4500', 
             hp:70, patk:130, pdef:115, matk:85, mdef:95, 
             cardImage: CardImages.COCO, 
             portrait: 'images/charData/portraits/art_coco.png', 
             battleArt: BattleArts.COCO, 
+            schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
+            attr1: Attrs.METAL, attr2: '', 
+            bio: '行动敏捷的猎人。<br>喜欢在城市的高处观察风景。' },
+        'bai': { clickable: false,
+            name:'小白', nickname:'小白', real:'', gender:'男', age:'18', 
+            school:'西湾区实验中学', join:'S2 (AA2010)', society:'冷凝塔', job:'游侠', color:'#999', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOBODY, 
+            portrait: 'images/charData/portraits/art_coco.png', 
+            battleArt: '', 
             schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
             attr1: Attrs.METAL, attr2: '', 
             bio: '行动敏捷的猎人。<br>喜欢在城市的高处观察风景。' },
@@ -3446,12 +3473,22 @@ document.querySelectorAll('.card').forEach(card => {
             schoolLogo: Schools.PINGXIAN, societyLogo: Societies.TOWER, 
             attr1: Attrs.ICE, attr2: Attrs.MOON, 
             bio: '外表高冷，内心其实很柔软。<br>不太会照顾自己，经常忘记吃饭。' },
-        'hei': { name:'小黑', nickname:'小黑', real:'彭程', gender:'男', age:'18', 
+        'hei': { name:'黑爷', nickname:'黑爷', real:'彭程', gender:'男', age:'18', 
             school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'坏蛋少年宫', job:'狂战士', color:'#8A2BE2', 
             hp:65, patk:125, pdef:60, matk:165, mdef:60, isKing: false, chairs: [ 'cyan'], 
             cardImage: CardImages.HEI, 
             portrait: 'images/charData/portraits/art_hei.png', 
             battleArt: BattleArts.HEI, 
+            schoolLogo: Schools.LINZHOU, societyLogo: Societies.BAD, 
+            attr1: Attrs.MOON, attr2: Attrs.DUST, 
+            bio: '坏蛋少年宫的领袖，充满狂气的战斗风格。<br>喜欢坐在高高的椅子上俯视一切。' },
+        'bald': { clickable: false,
+            name:'光头', nickname:'光头', real:'李忠海', gender:'男', age:'17', 
+            school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'坏蛋少年宫', job:'苦行僧', color:'#999', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOBODY, 
+            portrait: '', 
+            battleArt: '', 
             schoolLogo: Schools.LINZHOU, societyLogo: Societies.BAD, 
             attr1: Attrs.MOON, attr2: Attrs.DUST, 
             bio: '坏蛋少年宫的领袖，充满狂气的战斗风格。<br>喜欢坐在高高的椅子上俯视一切。' },
@@ -3474,7 +3511,7 @@ document.querySelectorAll('.card').forEach(card => {
             attr1: Attrs.SUN, attr2: Attrs.CRYSTAL, 
             bio: '战斗狂人，一旦打起来就停不下来。' },
         'piao': { name:'飘飘', nickname:'飘飘', real:'李菲', gender:'男', age:'18', 
-            school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'炼厂', job:'裁缝', color:'#DC143C', 
+            school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'炼厂', job:'刺客', color:'#DC143C', 
             hp:80, patk:135, pdef:130, matk:90, mdef:90, isKing: false, chairs: [ 'green'], 
             cardImage: CardImages.PIAO, 
             portrait: 'images/charData/portraits/art_piao.png', 
@@ -3685,17 +3722,17 @@ document.querySelectorAll('.card').forEach(card => {
 
     const lists = {
         
-        'list-condensing-tower': ['stone', 'master', 'coco', 'xiaobei'],
-        'list-bad-kids': ['hei',  'ban', 'hong'],
+        'list-condensing-tower': ['stone', 'master', 'lilmaster','coco', 'bai','xiaobei'],
+        'list-bad-kids': ['hei','bald', 'ban', 'hong'],
         'list-refinery': ['piao', 'wildcat', 'dou', 'hua',],
         'list-plaza': ['sb', 'nao'],
-        'list-friendly-store': ['yumu', 'zhou', 'cotton', 'song'],
+        'list-friendly-store': ['yumu', 'zhou', 'cotton', 'song', 'buzhi'],
         'list-honey': ['kid', 'xhani',  'pigeon', 'nurse', 'dream', 'wax', 'candy', 'king',],
         'list-stars': ['pika', 'ding', 'buta'],
         'list-mao': ['xdq', 'pao', 'zhe', 'tie'],
         'list-white-building': ['yan'],
         'list-union-1': ['kid', 'yumu', 'hei', 'piao'],
-        'list-union-2': ['hei', 'stone', 'ban'], 
+        'list-union-2': ['seat_empty_01','stone','hei','ban'], 
         /* === 【新增】广播社名单 === */
         // 数组为空 [] 代表没人，等有甜锈了就写 ['tianxiu']
         'list-radio': [], 
@@ -3861,7 +3898,7 @@ const charModal = document.getElementById('char-modal');
         }
 
         // ... 下面是 bio 的代码 ...
-        document.getElementById('m-bio').innerHTML = d.bio ? d.bio : '暂无人物小计...';
+        document.getElementById('m-bio').innerHTML = d.bio ? d.bio : '简介暂缺';
         const setAttr = (boxId, imgSrc) => { const box = document.getElementById(boxId); if (imgSrc) { box.innerHTML = `<img src="${imgSrc}" style="width:100%; height:100%; object-fit:contain;">`; box.style.border = '1px solid rgba(255,255,255,0.2)'; box.style.background = 'rgba(255,255,255,0.08)'; } else { box.innerHTML = ''; box.style.border = 'none'; box.style.background = 'transparent'; } };
         setAttr('m-attr1', d.attr1); setAttr('m-attr2', d.attr2);
         const setLogo = (imgId, textId, src) => { const img = document.getElementById(imgId); const txt = document.getElementById(textId); if(src) { img.src = src; img.style.display = 'block'; if(txt) txt.style.display = 'none'; } else { img.style.display = 'none'; if(txt) txt.style.display = 'block'; } };
@@ -4804,16 +4841,13 @@ function renderCharPage() {
     fillCharLists();
 }
 
-
-// 3. 填充人物卡片函数 (把原来分散的逻辑封装起来)
+// === [升级版] 填充人物卡片：支持点击锁 (clickable) ===
 function fillCharLists() {
-    // 复用你原来的 lists 和 charData 数据
     for (const [id, keys] of Object.entries(lists)) {
         const container = document.getElementById(id);
         if(!container) continue;
 
-        // 清空容器，防止重复渲染
-        container.innerHTML = '';
+        container.innerHTML = ''; 
 
         keys.forEach(key => {
             const d = charData[key];
@@ -4823,6 +4857,7 @@ function fillCharLists() {
             const kingClass = d.isKing === true ? ' is-king' : '';
             card.className = 'char-card' + kingClass;
 
+            // --- 1. 颜色处理 ---
             let hoverColor = d.color;
             if (d.color.includes('gradient')) {
                 const match = d.color.match(/#[a-fA-F0-9]{6}/);
@@ -4837,28 +4872,80 @@ function fillCharLists() {
             } else { 
                 card.style.borderLeftColor = d.color; 
             }
-            
-            card.onclick = () => openCharModal(key);
-            
+
+            // === [新增] 点击控制逻辑 ===
+            // 默认情况下(undefined)是可点的，只有显式写了 clickable: false 才不可点
+            const canClick = d.clickable !== false;
+
+            if (canClick) {
+                // 如果可点，绑定事件
+                card.onclick = () => openCharModal(key);
+                card.style.cursor = 'pointer'; // 变成小手
+            } else {
+                // 如果不可点，不绑定事件
+                card.onclick = null;
+                card.style.cursor = 'default'; // 变成普通箭头
+                // 【核心修改】把悬浮光设为透明，这样鼠标放上去就不会亮了
+                card.style.setProperty('--hover-color', 'transparent');
+                // 可选：关掉过渡动画，让它看起来更“死板/静止”
+                card.style.transition = 'none';
+                card.style.pointerEvents = 'none';
+            }
+
+            // 预生成椅子 (所有卡片通用)
             const chairsList = d.chairs || []; 
             let chairsHtml = '';
             chairsList.forEach(color => { 
                 chairsHtml += `<div class="chair-icon chair-${color}">${chairSvg}</div>`; 
             });
-
-            // 你的原有卡片 HTML 结构
-            card.innerHTML = `
-                <div class="crown-badge">♛</div>
-                <div class="chair-container">${chairsHtml}</div>
-                <div class="char-card-img"><img src="${d.cardImage || ''}" onerror="this.style.display='none'"></div>
-                <div class="char-card-info">
-                    <div class="cc-names">
-                        <span class="cc-nickname" style="${d.color.includes('gradient') ? 'background:'+d.color+';-webkit-background-clip:text;color:transparent' : 'color:'+d.color}">${d.name}</span>
-                        <span class="cc-realname">${d.real !== '-' ? d.real : ''}</span>
+            
+            // ===============================================
+            // [分支 1] 暂缺席位样式 (isVacant: true)
+            // ===============================================
+            if (d.isVacant) {
+                // 结构简化：【只生成名字】，居中显示
+                card.innerHTML = `
+                    <div class="chair-container">${chairsHtml}</div>
+                    
+                    <div class="char-card-info" style="
+                        width: 100%; 
+                        align-items: center; 
+                        justify-content: center; 
+                        text-align: center;
+                        padding: 0;
+                    ">
+                        <div class="cc-nickname" style="
+                            font-size: 20px; 
+                            letter-spacing: 2px;
+                            opacity: 0.7; 
+                            ${d.color.includes('gradient') ? 'background:'+d.color+';-webkit-background-clip:text;color:transparent' : 'color:'+d.color}
+                        ">
+                            ${d.name}
+                        </div>
                     </div>
-                    <div class="cc-job">${d.job}</div>
-                    <div class="cc-school">${d.school}</div>
-                </div>`;
+                `;
+
+            } else {
+                // ===============================================
+                // [分支 2] 正常人物卡样式 (即便不可点，样子也是完整的)
+                // ===============================================
+                card.innerHTML = `
+                    <div class="crown-badge">♛</div>
+                    <div class="chair-container">${chairsHtml}</div>
+                    
+                    <div class="char-card-img">
+                        <img src="${d.cardImage || ''}" onerror="this.style.display='none'">
+                    </div>
+                    
+                    <div class="char-card-info">
+                        <div class="cc-names">
+                            <span class="cc-nickname" style="${d.color.includes('gradient') ? 'background:'+d.color+';-webkit-background-clip:text;color:transparent' : 'color:'+d.color}">${d.name}</span>
+                            <span class="cc-realname">${d.real !== '-' ? d.real : ''}</span>
+                        </div>
+                        <div class="cc-job">${d.job}</div>
+                        <div class="cc-school">${d.school}</div>
+                    </div>`;
+            }
             
             container.appendChild(card);
         });
