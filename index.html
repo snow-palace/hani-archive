@@ -3359,6 +3359,8 @@ document.querySelectorAll('.card').forEach(card => {
         WHITE: 'images/charData/soclogos/logo_white.png', 
         UNION: 'images/charData/soclogos/logo_union.png', 
         RADIO: 'images/charData/soclogos/logo_radio.png', 
+        TUCTUC: 'images/charData/soclogos/logo_tuctuc.png', 
+        SODA4: 'images/charData/soclogos/logo_soda4.png', 
         BUKLL: 'images/charData/soclogos/logo_bukll.png' 
 
     };
@@ -3863,7 +3865,7 @@ document.querySelectorAll('.card').forEach(card => {
             cardImage: CardImages.NOHANI, 
             portrait: '', 
             battleArt: '', 
-            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.TUCTUC, 
             attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
             bio: '' },
         'towuni': { clickable: false,
@@ -3873,7 +3875,7 @@ document.querySelectorAll('.card').forEach(card => {
             cardImage: CardImages.NOHANI, 
             portrait: '', 
             battleArt: '', 
-            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.TUCTUC, 
             attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
             bio: '' },
         'meizi': { clickable: false,
@@ -3983,18 +3985,20 @@ document.querySelectorAll('.card').forEach(card => {
         'list-condensing-tower': ['stone', 'master', 'lilmaster','coco', 'bai','xiaobei'],
         'list-bad-kids': ['hei','bald', 'ban', 'hong','jiao'],
         'list-refinery': ['piao', 'wildcat', 'dou', 'hua','niuj','gua'],
-        'list-plaza': ['sb', 'nao'],
         'list-friendly-store': ['yumu', 'zhou', 'cotton', 'song', 'buzhi'],
+        'list-plaza': ['sb', 'nao'],
+
         'list-honey': ['kid', 'xhani',  'pigeon', 'nurse', 'dream', 'wax', 'candy', 'king','flyh','moji','2loud','etc',],
-        'list-stars': ['pika', 'ding', 'buta'],
+        'list-bukll': ['bu_lian'] ,
         'list-mao': ['xdq','penguin', 'pao', 'zhe', 'tie'],
+        'list-stars': ['pika', 'ding', 'buta'],
+        'list-radio': ['sweet','kflower','secretm'], 
+        'list-tuctuc': ['totally','towuni'] ,
+        'list-soda4': ['meizi','peach','choco','cream'] ,
+
         'list-white-building': ['yan'],
         'list-union-1': ['kid', 'yumu', 'hei', 'piao'],
         'list-union-2': ['seat_empty_01','stone','hei','ban'], 
-        'list-radio': ['sweet','kflower','secretm'], 
-        'list-bukll': ['bu_lian'] ,
-        'list-tuctuc': ['totally','towuni'] ,
-        'list-soda4': ['meizi','peach','choco','cream'] ,
 
     };
 
@@ -4012,7 +4016,9 @@ document.querySelectorAll('.card').forEach(card => {
         'list-union-1': Societies.UNION, 
         'list-union-2': Societies.UNION, 
         'list-radio': Societies.RADIO, 
-        'list-bukll': Societies.BUKLL 
+        'list-soda4': Societies.SODA4, 
+        'list-bukll': Societies.BUKLL,
+        'list-tuctuc': Societies.TUCTUC
     };
 
     // [新增] “椅子”图标 SVG
@@ -4970,8 +4976,8 @@ const charPageConfig = [
             { id: 'list-mao', name: '毛毛毛毛毛', logo: Societies.MAO },
             { id: 'list-stars', name: '三子星', logo: Societies.STARS },
             { id: 'list-radio', name: '蜂山广播社', logo: Societies.RADIO },
-            { id: 'list-soda4', name: '苏打四', logo: '' },
-            { id: 'list-tuctuc', name: '托托飞车党', logo: '' }
+            { id: 'list-soda4', name: '苏打四', logo: Societies.SODA4 },
+            { id: 'list-tuctuc', name: '托托飞车党', logo: Societies.TUCTUC }
             
             
         ]
