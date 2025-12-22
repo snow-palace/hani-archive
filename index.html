@@ -43,9 +43,21 @@
             --g-wildcat: linear-gradient(to right, #FFD700 40%, #0000FF 60%);
             
             /* === 【新增】人物档案专用变量 (必须补全！) === */
-            --bg-card: #666;        /* 社团大框背景 */
-            --bg-char: #242424;        /* 人物条背景 */
+            --bg-card: #00000055;        /* 社团大框背景 */
+            --bg-char: #1a1a1a;        /* 人物条背景 */
             --border-color: #666;   /* 通用边框色 */
+
+            /* --- 斑丘景色全局參數 --- */
+            --bqv-dot-size: 1.5px;       /* 小點點大小 */
+            --bqv-dot-gap: 12px;         /* 小點點間距 */
+            --bqv-dot-color: rgba(255, 255, 255, 0.1);
+            
+            --bqv-photo-border: 4px;     /* 相片黑邊寬度 */
+            --bqv-photo-shadow: 0 10px 30px rgba(0,0,0,0.8); /* 統一陰影 */
+            --bqv-tilt-limit: 3deg;      /* 最大傾斜角度限制 */
+            
+            --bqv-glass-bg: rgba(255, 255, 255, 0.05);
+            --bqv-glass-blur: 12px;
         }
 
         * { box-sizing: border-box; }
@@ -147,22 +159,21 @@ html, body {
 }
 
 
-/* 视图切换控制 */
+/* === [合併修復版] 通用頁面容器樣式 === */
 .view-section { 
-    display: none; 
-    
-    /* 确保占满 .main-view 的剩余空间 */
-    width: 100%;
+    display: none;       /* 必須保留：用於切換頁面 */
+    width: 100%; 
     height: 100%; 
-    
     flex-direction: column; 
-    
-    /* 【关键】开启内部滚动 */
-    overflow-y: auto; 
-    overflow-x: hidden;
-    
-    /* 【关键】iOS 惯性滚动支持 (让滑动有丝滑感，像原生APP) */
-    -webkit-overflow-scrolling: touch; 
+    overflow-y: auto;    /* 必須保留：允許縱向滾動 */
+    overflow-x: hidden;  /* 必須保留：防止橫向溢出 */
+    -webkit-overflow-scrolling: touch; /* 必須保留：iOS 絲滑感 */
+
+    /* --- [新增] 你要的正交點點背景 --- */
+    background-color: #1a1a1a; 
+    background-image: radial-gradient(rgba(255,255,255,0.12) 1.2px, transparent 1.2px);
+    background-size: 10px 10px;
+    background-attachment: local; /* 讓點點跟隨內容滾動，更有層次感 */
 }
 .view-section.active { display: flex; }
         .view-section.active { display: flex; }
@@ -702,15 +713,7 @@ html, body {
     .m-desc::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
 
 
-        /* === 通用页面容器样式 === */
-    .view-section { 
-        display: none; /* 默认隐藏 */
-        height: 100%; 
-        width: 100%;
-        flex-direction: column; 
-        overflow-y: auto; /* 允许纵向滚动 */
-        background: #000; /* 默认黑底 */
-    }
+
     
     /* 激活状态 (JS控制显示) */
     .view-section.active { 
@@ -748,16 +751,10 @@ html, body {
         }
 /* [修改] 人物档案背景：同步规则页样式 */
         #view-chars {
-            /* 1. 背景色：改成规则页同款的深灰色 (#242424) */
-            background: #353535; 
-            
-            /* 2. 网格纹理：完全复用规则页的参数 (0.03透明度的白线) */
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            
-            /* 3. 网格大小：使用全局定义的尺寸 (15px) */
-            background-size: var(--grid-size) var(--grid-size);
+background-color: #353535;
+    background-image: radial-gradient(var(--bqv-dot-color) var(--bqv-dot-size), transparent var(--bqv-dot-size));
+    background-size: var(--bqv-dot-gap) var(--bqv-dot-gap);
+    scroll-behavior: smooth;
         }
         /* === 分割线 === */
         .section-header {
@@ -790,7 +787,7 @@ html, body {
 /* --- 通用的社团卡片基础样式 --- */
 .society-card {
     background: var(--bg-card);
-    border: 4px solid var(--border-color);
+
     border-radius: 8px;
     display: block;             /* 改為 block 確保瀑布流相容性 */
     overflow: hidden;
@@ -816,10 +813,10 @@ html, body {
 }
 
         .society-header {
-            background: #666;
+            background: #070707;
             padding: 0px;
             display: flex; align-items: center; gap: 15px;
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 2px solid var(--bg-card);
         }
         .society-logo {
             width: 80px; height: 80px;
@@ -1964,17 +1961,11 @@ html, body {
 
     /* 1. 给外层页面穿上“人物页同款”皮肤 */
     #view-cards {
-        /* 背景色：深灰 (和 view-chars 一样) */
-        background-color: #353535; 
-        
-        /* 网格纹理：0.03透明度的白线 (和 view-chars 一样) */
-        background-image: 
-            linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-        
-        /* 网格尺寸 */
-        background-size: var(--grid-size) var(--grid-size);
-    }
+    background-color: #353535;
+    background-image: radial-gradient(var(--bqv-dot-color) var(--bqv-dot-size), transparent var(--bqv-dot-size));
+    background-size: var(--bqv-dot-gap) var(--bqv-dot-gap);
+    scroll-behavior: smooth;
+}
 
     /* 2. 让里面的卡牌容器变透明 (去掉那块奇怪的黑色/深灰) */
     .bqc-main-container {
@@ -2323,6 +2314,160 @@ html, body {
         cursor: pointer !important; 
     }
 
+
+/* [修改] 景色頁總容器：只保留點點紋理，去掉底色 */
+#view-scenery {
+    background-image: radial-gradient(var(--bqv-dot-color) var(--bqv-dot-size), transparent var(--bqv-dot-size));
+    background-size: var(--bqv-dot-gap) var(--bqv-dot-gap);
+    background-attachment: local; /* 確保點點隨頁面滾動 */
+    background-color: #353535;      /* 給個全黑底色防止閃爍 */
+}
+
+/* [修改] 每個板塊的分組容器：添加過渡效果 */
+.bqv-group-section {
+    position: relative; 
+    width: 100%; 
+    padding-bottom: 80px;
+    /* 這裡的 background-color 會被 JS 動態注入的漸變覆蓋 */
+    transition: background 0.5s ease; 
+}
+
+/* 景色專用 Sticky Bar (復用人物頁邏輯) */
+.bqv-sticky-bar {
+    width: 100%; height: 40px;
+    display: flex; align-items: center; gap: 15px;
+    padding: 0 40px;
+    background: linear-gradient(90deg, #121212 0%, #000 100%);
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #000;
+    border-left: 8px solid; /* 顏色由渲染動態注入 */
+    position: sticky; top: 0; z-index: 100;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.bqv-bar-title {
+    font-size: 16px; font-weight: 900; letter-spacing: 2px;
+    color: #fff; text-transform: uppercase;
+}
+
+/* 分組容器 */
+.bqv-group-section {
+    position: relative; width: 100%; padding-bottom: 80px;
+}
+
+/* 16:9 海報圖片 (頭尾) */
+.bqv-poster {
+    width: 100%; aspect-ratio: 32 / 9;
+    object-fit: cover; display: block;
+}
+
+/* 內容約束層 (80% 寬度) */
+.bqv-content-wrap {
+    width: 80%; margin: 0 auto; padding-top: 40px;
+}
+
+/* 毛玻璃文字卡 (1/3 寬度) */
+.bqv-glass-card {
+    width: 33.33%; min-width: 300px;
+    background: var(--bqv-glass-bg);
+    backdrop-filter: blur(var(--bqv-glass-blur));
+    -webkit-backdrop-filter: blur(var(--bqv-glass-blur));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px; padding: 25px;
+    color: #ccc; line-height: 1.8; font-size: 14px;
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.05);
+    margin-bottom: 50px;
+    margin: 0 auto; max-width: 90%;
+}
+
+/* 照片網格 */
+.bqv-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+/* 單張照片擬物化 */
+.bqv-photo-item {
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border: var(--bqv-photo-border) solid #000;
+    box-shadow: var(--bqv-photo-shadow);
+    transition: transform 0.3s ease;
+    overflow: hidden;
+    /* === [新增] 讓鼠標懸停時變成小手 === */
+    cursor: pointer;
+}
+
+.bqv-photo-item img {
+    width: 100%; height: 100%; object-fit: cover;
+}
+
+/* 懸停效果 */
+.bqv-photo-item:hover {
+    transform: scale(1.05) rotate(0deg) !important;
+    z-index: 10;
+}
+
+/* 手機端適配 */
+@media (max-width: 1000px) {
+    .bqv-content-wrap { width: 90%; }
+    .bqv-glass-card { width: 100%; }
+    .bqv-photo-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .bqv-sticky-bar { padding: 0 20px; }
+}
+
+/* 斑丘景色浮窗遮罩 */
+.bqv-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(85, 85, 85, 0.9);
+    backdrop-filter: blur(10px);
+    z-index: 15000; display: none;
+    flex-direction: column; align-items: center;
+}
+
+/* 左上角板块 Logo */
+.bqv-modal-logo-box {
+    position: absolute; top: 20px; left: 20px;
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(0,0,0,0.5); padding: 8px 15px;
+    border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);
+}
+.bqv-modal-logo-box img { width: 30px; height: 30px; object-fit: contain; }
+.bqv-modal-logo-box span { color: #fff; font-size: 14px; font-weight: bold; letter-spacing: 1px; }
+
+/* 关闭按钮 */
+.bqv-modal-close {
+    position: absolute; top: 15px; right: 25px;
+    font-size: 40px; color: #666; cursor: pointer; transition: 0.2s;
+}
+.bqv-modal-close:hover { color: #fff; }
+
+/* 图片容器：占据屏幕中上方 70% 空间 */
+.bqv-modal-content {
+    width: 90%; height: 80vh; /* 屏幕高度的 70% */
+    margin-top: vh; /* 顶部留白 */
+    display: flex; align-items: center; justify-content: center;
+}
+.bqv-modal-content img {
+    max-width: 100%; max-height: 100%;
+    object-fit: contain;
+    border: 5px solid #000;
+    box-shadow: 0 0 50px rgba(0,0,0,1);
+}
+
+/* 底部居中导航按钮 */
+.bqv-modal-controls {
+    margin-top: 30px;
+    display: flex; gap: 80px;
+    justify-content: center;
+}
+.bqv-ctrl {
+    width: 60px !important; height: 60px !important;
+    background: rgba(40, 40, 40, 0.8) !important;
+    font-size: 24px !important;
+}
 
 
 </style>
@@ -3100,12 +3245,18 @@ html, body {
         </div>
     </div>
 
-    <div id="view-scenery" class="view-section">
-        <div class="paste-zone" style="padding:50px; text-align:center; color:#666;">
-            <h2>斑丘景色</h2>
-            <p>🚧施工中🚧</p>
-        </div>
+<div id="view-scenery" class="view-section">
+    <div id="bqv-overview-wrap"></div>
+    
+    <div id="bqv-dynamic-root"></div>
+</div>
+
+<div id="bqv-jump-menu" class="jump-menu-overlay" onclick="toggleBqvMenu()">
+    <div class="jump-menu-content">
+        <div class="jump-title">景色索引</div>
+        <div class="jump-list" id="bqv-jump-list"></div>
     </div>
+</div>
 
     <div id="view-gallery" class="view-section">
         <div class="paste-zone" style="padding:50px; text-align:center; color:#666;">
@@ -3205,6 +3356,26 @@ html, body {
         <div id="btn-card-prev" class="nav-btn-char" onclick="navigateCard(-1)">❮</div>
         <div id="btn-card-next" class="nav-btn-char" onclick="navigateCard(1)">❯</div>
     </div>
+</div>
+
+<div class="bqv-modal-overlay" id="bqvModal">
+    <div class="bqv-modal-logo-box">
+        <img id="bqv-modal-logo" src="" alt="Chapter Logo">
+        <span id="bqv-modal-chapter-name"></span>
+    </div>
+
+    <div class="bqv-modal-close" onclick="closeBqvModal()">&times;</div>
+
+    <div class="bqv-modal-content">
+        <img id="bqv-modal-img" src="" alt="View Large">
+    </div>
+
+    <div class="bqv-modal-controls">
+        <div class="nav-btn-char bqv-ctrl" onclick="navigateBqv(-1)">❮</div>
+        <div class="nav-btn-char bqv-ctrl" onclick="navigateBqv(1)">❯</div>
+    </div>
+
+
 </div>
 
 <script>
@@ -3758,7 +3929,7 @@ document.querySelectorAll('.card').forEach(card => {
             battleArt: BattleArts.KING, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
             attr1: Attrs.WAVE, attr2: Attrs.CRYSTAL, 
-            bio: '能够利用音波进行攻击和控制。' },
+            bio: '<p>哈尼哈尼的法术指导 失踪</p>从那以后她好像就疯了，一直拿着几根天线到处挥舞，嘴里说的也是听不懂的语言' },
         'wax': { name:'蜡沫子', nickname:'蜡沫子', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'哈尼哈尼', job:'死灵法师', color:'#FFA500', 
             hp:50, patk:50, pdef:50, matk:150, mdef:150, 
@@ -3821,7 +3992,7 @@ document.querySelectorAll('.card').forEach(card => {
             battleArt: BattleArts.penguin, 
             schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
             attr1: Attrs.SUN, attr2: Attrs.ICE, 
-            bio: '潜行大师，来无影去无踪。' },
+            bio: '' },
         'pao': { name:'泡糊涂', nickname:'泡糊涂', real:'-', gender:'女', age:'15', 
             school:'哈尼哈尼快乐园中学', join:'S1 第三届', society:'毛毛毛毛毛', job:'舞者', color:'#00FF7F', 
             hp:60, patk:180, pdef:130, matk:60, mdef:44, 
@@ -4508,16 +4679,22 @@ function navigateChar(direction) {
             const fileList = bqCardData[cat.key];
             if (!fileList) return;
             
-            // A. 渲染页面上的大标题 (注意 onclick 加了 event 参数)
+// --- 1. 計算背景漸變 (抓取當前卡牌分類的印象色 cat.color) ---卡牌背景渐变
+            const sectionBg = `linear-gradient(180deg, ${cat.color}22 0%, rgba(26,26,26,0) 100%)`;
+
+            // --- 2. 渲染頁面上的內容，並加上 [bqc-group-section] 作為彩色背板 ---
             htmlContent += `
-                <div class="bqc-chapter-bar" 
-                    id="cat-anchor-${cat.key}"
-                    onclick="toggleBqcMenu()" 
-                    style="border-left-color: ${cat.color}; cursor: pointer;">
-                    <img src="${cat.logo}" class="bqc-bar-logo" alt="${cat.key}" onerror="this.style.display='none'">
-                    <span class="bqc-bar-title" style="color:${cat.color}">${cat.name} ▾</span>
-                </div>
-                <div class="bqc-grid">`;
+                <div class="bqc-group-section" id="bqc-group-${cat.key}" style="background: ${sectionBg};">
+                    
+                    <div class="bqc-chapter-bar" 
+                        id="cat-anchor-${cat.key}"
+                        onclick="toggleBqcMenu()" 
+                        style="border-left-color: ${cat.color}; cursor: pointer;">
+                        <img src="${cat.logo}" class="bqc-bar-logo" alt="${cat.key}" onerror="this.style.display='none'">
+                        <span class="bqc-bar-title" style="color:${cat.color}">${cat.name} ▾</span>
+                    </div>
+
+                    <div class="bqc-grid">`;
             
             // B. 生成菜单项 (注意 onclick 加了 event 参数)
             // 这里的 event 是关键，防止点击按钮穿透到遮罩层
@@ -4541,7 +4718,7 @@ function navigateChar(direction) {
                         <img src="${imgSrc}" class="bqc-card-img" loading="lazy" alt="${fileName}">
                     </div>`;
             });
-            htmlContent += `</div>`;
+            htmlContent += `</div></div>`;
         });
         
         container.innerHTML = htmlContent;
@@ -4988,7 +5165,7 @@ const charPageConfig = [
         type: 'header', 
         title: '管理社团', 
         key: 'ADMIN', 
-        color: '#aaaaaa' // 银灰色
+        color: '#ffffff' // 银灰色
     },
     { 
         type: 'grid', 
@@ -5023,9 +5200,13 @@ function renderCharPage() {
                 htmlStructure += `</div>`; 
             }
             
-            // 【核心逻辑】开启一个新的分组容器
-            htmlStructure += `<div class="char-group-section" id="group-${item.key}">`;
-
+        // 1. 先计算渐变：用当前板块的颜色 (item.color) 加上 22 (13%透明度)  人物背景渐变
+// 注意：transparent 85% 大约等于 hex 的 22 (约13%不透明度)
+const sectionBg = `linear-gradient(180deg, color-mix(in srgb, 
+${item.color}, transparent 75%) 0%, rgba(26,26,26,0) 100%)`;
+        // 2. 修改原来的 div 标签，把 background 注入进去
+            htmlStructure += `<div class="char-group-section" id="group-${item.key}" style="background: ${sectionBg};">`;
+            
             // 塞入标题栏 (保持原样)
             htmlStructure += `
                 <div class="char-sticky-bar" 
@@ -5265,6 +5446,206 @@ document.querySelector('.navbar').addEventListener('click', function(e) {
             top: 0,
             behavior: 'smooth'
         });
+    }
+});
+
+// --- 1. 斑丘景色數據字典 ---景色主题色
+const bqViewData = {
+    overview: { poster: "images/BQviews/posters/0-1.png" },
+    chapters: [
+        {
+            id: 1, title: "炼厂", color: "#DC143C",
+            bio: "煉廠是斑丘世界中最為繁忙的資源加工區。這裡終日被暗紅色的煙雲籠罩，巨大的鋼鐵煙囪矗立在荒漠之中。學生們在這裡收集並處理殘留的數據切片，是獲取高階屬性塊的重要地點。雖然環境惡劣，但這裡卻有一種工業廢土特有的殘缺美感。",
+            photos: 9 // 自動生成 01-12 的編號
+        },
+        {
+            id: 2, title: "冷凝塔", color: "#FFD700",
+            bio: "冷凝塔是躲避沙暴與騷亂的避風港。巨大的金屬塔身內部採用了特殊的冷卻結構，氣溫始終保持在宜人的22度。塔內的迴廊盤旋而上，每一層都居住著尋求和平的學生。從塔頂望去，可以俯瞰整個斑丘的黃昏景觀。",
+            photos: 6
+        },
+        {
+            id: 3, title: "冲江市第五中学", color: "#00FF7F",
+            bio: "被完整複製進斑丘的校區。這裡保留了現實世界中五中的所有細節：斑駁的教學樓、爬滿藤蔓的籃球場、以及永遠停留在放學前五分鐘的掛鐘。這裡是學生們情感的寄託之地，也是多場關鍵衝突的爆發點。",
+            photos: 9
+        },
+        {
+            id: 4, title: "蜂山广场", color: "#b8461c",
+            bio: "斑丘最大的交易與集會中心。巨大的圓形廣場中心矗立著哈尼的雕像，周圍遍布著友誼百貨的自動販賣機。這裡是各種情報流轉的中心，也是所有人進入斑丘的第一站。",
+            photos: 9
+        }
+    ]
+};
+
+// --- 2. 渲染函數 ---
+function renderBqScenery() {
+    const overviewRoot = document.getElementById('bqv-overview-wrap');
+    const dynamicRoot = document.getElementById('bqv-dynamic-root');
+    
+    const jumpList = document.getElementById('bqv-jump-list');
+    
+    
+    if(!dynamicRoot) return;
+
+    // A. 渲染總覽 (無章節欄，16:9海報)
+    overviewRoot.innerHTML = `<img src="${bqViewData.overview.poster}" class="bqv-poster" alt="Overview">`;
+
+    let html = '';
+    let menuHtml = '';
+
+    // B. 遍歷渲染 4 個板塊
+    bqViewData.chapters.forEach(ch => {
+        // 渲染導航菜單
+        menuHtml += `<div class="jump-btn" onclick="scrollToBqvCat('${ch.id}', event)" style="border-left-color: ${ch.color}; text-align:left; padding-left:20px;">
+            <span style="color:${ch.color}">${ch.title}</span>
+        </div>`;
+
+
+        // --- 1. 新增：計算背景漸變顏色 (ch.color 是印象色，22 代表 13% 的透明度) ---景色背景渐变
+// 注意：transparent 85% 大约等于 hex 的 22 (约13%不透明度)
+const sectionBg = `linear-gradient(180deg, color-mix(in srgb, ${ch.color}, transparent 70%) 0%, rgba(26,26,26,0) 100%)`;
+        // --- 2. 修改：在 div 標籤裡注入這個 style="background: ..." ---
+        html += `
+        <div class="bqv-group-section" id="bqv-group-${ch.id}" style="background: ${sectionBg};">
+            
+            <div class="bqv-sticky-bar" onclick="toggleBqvMenu()" style="border-left-color: ${ch.color}">
+                <div style="width:12px; height:12px; background:${ch.color}; border-radius:50%; margin-right:10px;"></div>
+                <span class="bqv-bar-title" style="color:#fff">${ch.title} ▾</span>
+            </div>
+            
+
+            <img src="images/BQviews/posters/${ch.id}-1.png" class="bqv-poster">
+
+            <div class="bqv-content-wrap">
+                <div class="bqv-glass-card">${ch.bio}</div>
+
+                <div class="bqv-photo-grid">`;
+                
+                // 循環生成 12 張照片
+                for(let i=1; i<=ch.photos; i++) {
+                    const num = i < 10 ? '0'+i : i;
+                    // 計算隨機傾斜 (以索引為種子保證渲染結果一致)
+                    const tiltLimit = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bqv-tilt-limit')) || 5;
+                    const seed = (ch.id * 100) + i;
+                    const tilt = ((Math.sin(seed) * tiltLimit)).toFixed(2);
+                    
+// === [修正版] 加上 onclick 點擊事件 ===
+html += `
+<div class="bqv-photo-item" 
+    style="transform: rotate(${tilt}deg)" 
+    onclick="openBqvModal(${ch.id}, ${i})">
+    <img src="images/BQviews/photographs/${ch.id}-${num}.png" loading="lazy">
+</div>`;
+                }
+
+        html += `</div></div>
+        </div>`;
+    });
+
+    dynamicRoot.innerHTML = html;
+    jumpList.innerHTML = menuHtml;
+}
+
+// --- 3. 交互函數 ---
+function toggleBqvMenu() {
+    const menu = document.getElementById('bqv-jump-menu');
+    menu.classList.toggle('active');
+}
+
+function scrollToBqvCat(id, e) {
+    if(e) e.stopPropagation();
+    toggleBqvMenu();
+    const target = document.getElementById(`bqv-group-${id}`);
+    const container = document.getElementById('view-scenery');
+    if(container && target) {
+        container.scrollTo({ top: target.offsetTop, behavior: "smooth" });
+    }
+}
+
+// 啟動渲染
+setTimeout(renderBqScenery, 300);
+
+// --- 景色浮窗全局状态 ---
+let bqvCurrentChapter = null;
+let bqvCurrentIndex = 1;
+
+// 修改之前的渲染函数，在照片生成时绑定点击事件
+// 请找到之前 renderBqScenery 里的照片循环，改为：
+/*
+    html += `
+    <div class="bqv-photo-item" style="transform: rotate(${tilt}deg)" onclick="openBqvModal(${ch.id}, ${i})">
+        <img src="images/BQviews/photographs/${ch.id}-${num}.png" loading="lazy">
+    </div>`;
+*/
+
+function openBqvModal(chapterId, index) {
+    bqvCurrentChapter = bqViewData.chapters.find(c => c.id === chapterId);
+    bqvCurrentIndex = index;
+    
+    updateBqvModalContent();
+    document.getElementById('bqvModal').style.display = 'flex';
+}
+
+function updateBqvModalContent() {
+    const num = bqvCurrentIndex < 10 ? '0' + bqvCurrentIndex : bqvCurrentIndex;
+    const imgSrc = `images/BQviews/photographs/${bqvCurrentChapter.id}-${num}.png`;
+    
+    // 更新大图
+    document.getElementById('bqv-modal-img').src = imgSrc;
+    // 更新左上角 Logo 和 名字
+    document.getElementById('bqv-modal-logo').src = bqvCurrentChapter.logo || '';
+    document.getElementById('bqv-modal-chapter-name').innerText = bqvCurrentChapter.title;
+    document.getElementById('bqv-modal-chapter-name').style.color = bqvCurrentChapter.color;
+}
+
+function navigateBqv(dir) {
+    if (!bqvCurrentChapter) return;
+    
+    bqvCurrentIndex += dir;
+    
+    // 循环逻辑：1-12 循环
+    if (bqvCurrentIndex > bqvCurrentChapter.photos) bqvCurrentIndex = 1;
+    if (bqvCurrentIndex < 1) bqvCurrentIndex = bqvCurrentChapter.photos;
+    
+    updateBqvModalContent();
+}
+
+function closeBqvModal() {
+    document.getElementById('bqvModal').style.display = 'none';
+    document.getElementById('bqv-modal-img').src = '';
+}
+
+// 随机倾斜逻辑：使用 Math.sin 配合种子，保证每次刷新倾斜角度一致但不单调
+function generatePhotos(chId) {
+    let pte = '';
+    const limit = 2; // 可调限制度数
+    for(let i=1; i<=12; i++) {
+        const num = i < 10 ? '0'+i : i;
+        const tilt = (Math.sin(chId * 10 + i) * limit).toFixed(2);
+        pte += `
+        <div class="bqv-photo-item" style="transform: rotate(${tilt}deg)" onclick="openBqvModal(${chId}, ${i})">
+            <img src="images/BQviews/photographs/${chId}-${num}.png">
+        </div>`;
+    }
+    return pte;
+}
+
+// --- [核心修复] 键盘支持：Esc 退出 & 左右键翻页 ---
+document.addEventListener('keydown', function(e) {
+    const bqvModal = document.getElementById('bqvModal');
+    if (bqvModal.style.display === 'flex') {
+        if (e.key === 'Escape') closeBqvModal();
+        if (e.key === 'ArrowLeft') navigateBqv(-1);
+        if (e.key === 'ArrowRight') navigateBqv(1);
+    }
+});
+
+// 修改点击遮罩层关闭的逻辑
+document.getElementById('bqvModal').addEventListener('click', function(e) {
+    // 逻辑：如果点的是遮罩层本体 (this)
+    // 或者点的是包裹图片的那个透明盒子容器 (classList.contains('bqv-modal-content'))
+    // 就关闭浮窗。这样可以确保点击图片以外的任何“阴影/空白”区域都能关闭。
+    if (e.target === this || e.target.classList.contains('bqv-modal-content')) {
+        closeBqvModal();
     }
 });
 
