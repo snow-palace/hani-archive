@@ -156,6 +156,7 @@ html, body {
     display: flex; 
     flex-direction: column;
     background: #000;
+    
 }
 
 
@@ -167,13 +168,12 @@ html, body {
     flex-direction: column; 
     overflow-y: auto;    /* 必須保留：允許縱向滾動 */
     overflow-x: hidden;  /* 必須保留：防止橫向溢出 */
-/* 必須保留：iOS 絲滑感 */
+    -webkit-overflow-scrolling: touch; /* 必須保留：iOS 絲滑感 */
 
     /* --- [新增] 你要的正交點點背景 --- */
     background-color: #1a1a1a; 
     background-image: radial-gradient(rgba(255,255,255,0.12) 1.2px, transparent 1.2px);
     background-size: 10px 10px;
-    background-attachment: local; /* 讓點點跟隨內容滾動，更有層次感 */
 }
 .view-section.active { display: flex; }
         .view-section.active { display: flex; }
@@ -2319,7 +2319,7 @@ background-color: #353535;
 #view-scenery {
     background-image: radial-gradient(var(--bqv-dot-color) var(--bqv-dot-size), transparent var(--bqv-dot-size));
     background-size: var(--bqv-dot-gap) var(--bqv-dot-gap);
-    background-attachment: local; /* 確保點點隨頁面滾動 */
+
     background-color: #353535;      /* 給個全黑底色防止閃爍 */
 }
 
