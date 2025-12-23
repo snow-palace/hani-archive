@@ -43,7 +43,7 @@
             --g-wildcat: linear-gradient(to right, #FFD700 40%, #0000FF 60%);
             
             /* === 【新增】人物档案专用变量 (必须补全！) === */
-            --bg-card: #00000055;        /* 社团大框背景 */
+            --bg-card: #ffffff55;        /* 社团大框背景 */
             --bg-char: #1a1a1a;        /* 人物条背景 */
             --border-color: #666;   /* 通用边框色 */
 
@@ -2358,7 +2358,7 @@ background-color: #353535;
 
 /* 16:9 海報圖片 (頭尾) */
 .bqv-poster {
-    width: 100%; aspect-ratio: 32 / 9;
+    width: 100%; aspect-ratio: 2.828 / 1;
     object-fit: cover; display: block;
 }
 
@@ -4680,7 +4680,7 @@ function navigateChar(direction) {
             if (!fileList) return;
             
 // --- 1. 計算背景漸變 (抓取當前卡牌分類的印象色 cat.color) ---卡牌背景渐变
-            const sectionBg = `linear-gradient(180deg, ${cat.color}22 0%, rgba(26,26,26,0) 100%)`;
+            const sectionBg = `linear-gradient(180deg, ${cat.color}11 0%, rgba(26,26,26,0) 100%)`;
 
             // --- 2. 渲染頁面上的內容，並加上 [bqc-group-section] 作為彩色背板 ---
             htmlContent += `
@@ -5203,7 +5203,7 @@ function renderCharPage() {
         // 1. 先计算渐变：用当前板块的颜色 (item.color) 加上 22 (13%透明度)  人物背景渐变
 // 注意：transparent 85% 大约等于 hex 的 22 (约13%不透明度)
 const sectionBg = `linear-gradient(180deg, color-mix(in srgb, 
-${item.color}, transparent 75%) 0%, rgba(26,26,26,0) 100%)`;
+${item.color}, transparent 90%) 0%, rgba(26,26,26,0) 100%)`;
         // 2. 修改原来的 div 标签，把 background 注入进去
             htmlStructure += `<div class="char-group-section" id="group-${item.key}" style="background: ${sectionBg};">`;
             
@@ -5454,17 +5454,18 @@ const bqViewData = {
     overview: { poster: "images/BQviews/posters/0-1.png" },
     chapters: [
         {
-            id: 1, title: "炼厂", color: "#DC143C",
+            id: 1, title: "炼厂", color: "#daf08e",
             bio: "煉廠是斑丘世界中最為繁忙的資源加工區。這裡終日被暗紅色的煙雲籠罩，巨大的鋼鐵煙囪矗立在荒漠之中。學生們在這裡收集並處理殘留的數據切片，是獲取高階屬性塊的重要地點。雖然環境惡劣，但這裡卻有一種工業廢土特有的殘缺美感。",
-            photos: 9 // 自動生成 01-12 的編號
+            photos: 11 // 自動生成 01-12 的編號
         },
         {
-            id: 2, title: "冷凝塔", color: "#FFD700",
+            id: 2, title: "冷凝塔", color: "#ecb563",
             bio: "冷凝塔是躲避沙暴與騷亂的避風港。巨大的金屬塔身內部採用了特殊的冷卻結構，氣溫始終保持在宜人的22度。塔內的迴廊盤旋而上，每一層都居住著尋求和平的學生。從塔頂望去，可以俯瞰整個斑丘的黃昏景觀。",
-            photos: 6
+            photos: 12
+        
         },
         {
-            id: 3, title: "冲江市第五中学", color: "#00FF7F",
+            id: 3, title: "冲江市第五中学", color: "#345ca1",
             bio: "被完整複製進斑丘的校區。這裡保留了現實世界中五中的所有細節：斑駁的教學樓、爬滿藤蔓的籃球場、以及永遠停留在放學前五分鐘的掛鐘。這裡是學生們情感的寄託之地，也是多場關鍵衝突的爆發點。",
             photos: 9
         },
@@ -5502,7 +5503,7 @@ function renderBqScenery() {
 
         // --- 1. 新增：計算背景漸變顏色 (ch.color 是印象色，22 代表 13% 的透明度) ---景色背景渐变
 // 注意：transparent 85% 大约等于 hex 的 22 (约13%不透明度)
-const sectionBg = `linear-gradient(180deg, color-mix(in srgb, ${ch.color}, transparent 70%) 0%, rgba(26,26,26,0) 100%)`;
+const sectionBg = `linear-gradient(180deg, color-mix(in srgb, ${ch.color}, transparent 11%) 0%, rgba(26,26,26,0) 100%)`;
         // --- 2. 修改：在 div 標籤裡注入這個 style="background: ..." ---
         html += `
         <div class="bqv-group-section" id="bqv-group-${ch.id}" style="background: ${sectionBg};">
