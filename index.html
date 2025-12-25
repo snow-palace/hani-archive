@@ -368,8 +368,8 @@ html, body {
         /* 2. 图片框 */
         .card-img-box {
             width: 60px; height: 60px;
-            background: #222; 
-            border: 1px solid #444;
+            background: #22222200; 
+            border: 0px solid #444;
             border-radius: 4px;
             display: flex; align-items: center; justify-content: center;
             overflow: hidden;
@@ -410,7 +410,7 @@ html, body {
         /* 1. 表头容器 */
         .card-table-header {
             display: flex; 
-            background: #333; 
+            background: #1e1e1e; 
             border-top-left-radius: 4px; border-top-right-radius: 4px;
             border: 1px solid #333; border-bottom: none;
             font-weight: bold; font-size: 13px; color: #ccc;
@@ -419,8 +419,8 @@ html, body {
         /* 2. 内容行容器 */
         .card-row {
             display: flex; align-items: stretch; 
-            border: 1px solid #333; border-top: none;
-            background: #222; transition: 0.2s;
+            border: 1px dashed #333; border-top: none;
+            background: #777; transition: 0.2s;
             min-height: 60px; /* 给个最小高度 */
         }
         .card-row:hover { background: #2a2a2a; }
@@ -433,7 +433,7 @@ html, body {
             width: 90px; flex-shrink: 0;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             border-right: 1px solid #444; 
-            padding: 10px; background: #1e1e1e;
+            padding: 4px; background: #1e1e1e;
             text-align: center;
         }
         /* 表头的第一列不需要背景色，微调一下 */
@@ -459,7 +459,7 @@ html, body {
             padding: 8px 5px; 
             display: flex; align-items: center; justify-content: center; text-align: center;
             border-right: 1px dashed #333;
-            font-size: 12px; color: #aaa;
+            font-size: 12px; color: #ffffff;
             word-break: break-word; /* 防止文字撑开 */
         }
         /* 表头的单元格边框是实线 */
@@ -471,7 +471,7 @@ html, body {
 
         /* 状态色 */
         .yes { color: #00FF7F; } 
-        .no { color: #666; } 
+        .no { color: #a1a1a1; } 
         .warn { color: #ffcc00; }
 
         /* 图标微调 */
@@ -974,18 +974,29 @@ background-color: #353535;
                 border-bottom: none !important;
             width: 240px; 
             
-            /* === [修改] 背景纹理：正交小圆点 === */
-            
-            /* 1. 底色：深灰色 (比纯黑稍微亮一点，让点能显示出来) */
+
+
+            /* === [修改] 背景纹理：45度斜线 === */
+
+            /* 1. 底色：保持你原来的深灰色 */
             background-color: #a8a8a8; 
-            
-            /* 2. 纹理核心：用径向渐变画一个个小圆点 */
-            /* 参数解释：圆点颜色(#444) 半径(1.5px), 超过1.5px变成透明 */
-            background-image: radial-gradient(#ffffff2a 1.7px, transparent 1.7px);
-            
-            /* 3. 排列间距：每 10px 重复画一个点 */
-            background-size: 9px 9px;
-            
+
+            /* 2. 纹理核心：使用重复线性渐变画斜线 */
+            /* 45deg = 角度 */
+            /* rgba(255, 255, 255, 0.2) = 线条颜色 (白色半透明) */
+            /* 0px 到 1px = 线条的粗细 (这里是 1px 细线) */
+            /* 1px 到 8px = 线条之间的透明间距 (间距 7px) */
+            background-image: repeating-linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.25) 0px, 
+                rgba(255, 255, 255, 0.25) 1px, 
+                transparent 3px, 
+                transparent 8px
+            );
+
+/* 3. 注意：原来的 background-size 需要删掉或者设为 auto */
+/* 因为 repeating-linear-gradient 不需要 size 来重复，它自己会铺满 */
+background-size: auto;
             /* === [结束] === */
 
             border-right: 1px solid #333;
@@ -2362,6 +2373,22 @@ background-color: #353535;
     object-fit: cover; display: block;
 }
 
+/* 2.828 : 1 比例的宽海报 (用于列表头部) */
+.header-poster-28 {
+    width: 100%;
+    /* 核心：锁定比例 */
+    aspect-ratio: 2.828 / 1; 
+    /* 图片填充方式：裁剪两边，保证填满不变形 */
+    object-fit: cover; 
+    display: block;
+    /* 紧贴下方的标题栏，不要留白 */
+    margin-bottom: 0; 
+    
+    /* 可选：如果你想让海报也有个小阴影 */
+    position: relative;
+    z-index: 1;
+}
+
 /* 內容約束層 (80% 寬度) */
 .bqv-content-wrap {
     width: 80%; margin: 0 auto; padding-top: 40px;
@@ -2430,11 +2457,11 @@ background-color: #353535;
 /* 左上角板块 Logo */
 .bqv-modal-logo-box {
     position: absolute; top: 20px; left: 20px;
-    display: flex; align-items: center; gap: 10px;
-    background: rgba(0,0,0,0.5); padding: 8px 15px;
+    display: flex; align-items: center; gap: 0px;
+    background: rgba(0,0,0,0.5); padding: 8px 8px;
     border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);
 }
-.bqv-modal-logo-box img { width: 30px; height: 30px; object-fit: contain; }
+.bqv-modal-logo-box img { width: 80px; height: 80px; object-fit: contain; }
 .bqv-modal-logo-box span { color: #fff; font-size: 14px; font-weight: bold; letter-spacing: 1px; }
 
 /* 关闭按钮 */
@@ -2469,6 +2496,31 @@ background-color: #353535;
     font-size: 24px !important;
 }
 
+/* === 卡牌页表格专用容器 (与卡牌网格宽度对齐) === */
+.bqc-table-wrapper {
+    width: 100%;
+    /* 【核心】这里必须和 .bqc-grid 的 max-width 一模一样 */
+    max-width: 1400px; 
+    
+    margin: 0 auto;      /* 居中 */
+    padding: 0 20px;     /* 左右留白 (和卡牌网格一致) */
+    box-sizing: border-box;
+    margin-bottom: 60px; /* 把之前的下边距搬到这里来 */
+}
+
+/* 手机端适配 (保持同步) */
+@media (max-width: 768px) {
+    .bqc-table-wrapper {
+        padding: 0 10px; /* 手机上留白变小 */
+    }
+}
+
+
+/* 
+        <div class="nav-btn" onclick="switchView('attrs', this, '属性块')">属性块🚧施工中🚧</div> 
+        <div class="nav-btn" onclick="switchView('gallery', this, '战斗画廊')">战斗画廊🚧施工中🚧</div> 
+        <div class="nav-btn" onclick="switchView('rules', this, '斑丘规则')">斑丘规则</div> 
+*/
 
 </style>
 </head>
@@ -2498,12 +2550,14 @@ background-color: #353535;
 
     <div class="nav-menu" id="nav-menu">
         <div class="nav-btn active" onclick="switchView('chars', this, '人物档案')">人物档案</div>
-        <div class="nav-btn" onclick="switchView('cards', this, '斑丘卡')">斑丘卡</div>
-        <div class="nav-btn" onclick="switchView('attrs', this, '属性块')">属性块🚧施工中🚧</div> 
-        <div class="nav-btn" onclick="switchView('rules', this, '斑丘规则')">斑丘规则</div> 
+        <div class="nav-btn" onclick="switchView('scenery', this, '斑丘景色')">斑丘景色</div>
+        <div class="nav-btn" onclick="switchView('cards', this, '斑丘卡')">斑丘卡牌</div>
         <div class="nav-btn" onclick="switchView('timeline', this, '时间线')">时间线</div>
-        <div class="nav-btn" onclick="switchView('scenery', this, '斑丘景色')">斑丘景色🚧施工中🚧</div>
-        <div class="nav-btn" onclick="switchView('gallery', this, '战斗画廊')">战斗画廊🚧施工中🚧</div>    
+
+
+
+   
+        
     </div>
 </div>
 
@@ -3051,7 +3105,7 @@ background-color: #353535;
 
                 <div class="attr-pyramid-container">
                     
-                    <div class="attr-tier-label">一阶 (基础)</div>
+                    <div class="attr-tier-label">一阶</div>
                     <div class="attr-row">
                         <div class="attr-unit">
                             <div class="attr-img-box"><img src="images/icon/UI_StatCube_iron_color_01.png" alt="图"></div>
@@ -3075,7 +3129,7 @@ background-color: #353535;
                         </div>
                     </div>
 
-                    <div class="attr-tier-label">二阶 (进阶)</div>
+                    <div class="attr-tier-label">二阶</div>
                     <div class="attr-row">
                         <div class="attr-unit">
                             <div class="attr-img-box"><img src="images/icon/UI_StatCube_wind_color_01.png" alt="图"></div>
@@ -3095,7 +3149,7 @@ background-color: #353535;
                         </div>
                     </div>
 
-                    <div class="attr-tier-label">三阶 (稀有)</div>
+                    <div class="attr-tier-label">三阶</div>
                     <div class="attr-row">
                         <div class="attr-unit">
                             <div class="attr-img-box"><img src="images/icon/UI_StatCube_sun_color_01.png" alt="图"></div>
@@ -3111,26 +3165,26 @@ background-color: #353535;
                         </div>
                     </div>
 
-                    <div class="hidden-attr-container hidden-rule-style">
-                        <div class="hidden-stamp">隐藏</div>
+                    <div class="hidden-attr-container">
                         
-                        <div class="attr-tier-label hidden-text">四阶 (隐藏)</div>
+                        
+                        <div class="attr-tier-label hidden-text">四阶 </div>
                         <div class="attr-row">
-                            <div class="attr-unit special light">
+                            <div class="attr-unit">
                                 <div class="attr-img-box"><img src="images/icon/UI_StatCube_light_color_01.png" alt="光"></div>
-                                <div class="attr-label-box">光</div>
+                                <div class="attr-label-box" style="--tag-bg: #feff00;">光</div>
                             </div>
-                            <div class="attr-unit special star">
+                            <div class="attr-unit">
                                 <div class="attr-img-box"><img src="images/icon/UI_StatCube_star_color_01.png" alt="星"></div>
-                                <div class="attr-label-box">星</div>
+                                <div class="attr-label-box" style="--tag-bg: #ff32b9;">星</div>
                             </div>
                         </div>
 
-                        <div class="attr-tier-label hidden-text">五阶 (观测者)</div>
+                        <div class="attr-tier-label hidden-text">五阶</div>
                         <div class="attr-row">
-                            <div class="attr-unit special wave">
+                            <div class="attr-unit">
                                 <div class="attr-img-box"><img src="images/icon/UI_StatCube_wave_color_01.png" alt="波"></div>
-                                <div class="attr-label-box">波</div>
+                                <div class="attr-label-box" style="--tag-bg: #54f6d1;">波</div>
                             </div>
                         </div>
                     </div>
@@ -4573,7 +4627,7 @@ function navigateChar(direction) {
         {
             key: 'RW', name: '人物卡', color: '#2f5fff',
             c1: '击杀 / 赠予',
-            c2: '获取属性块 / 通讯前提',
+            c2: '获取属性块 / 通讯',
             c3: '永久', c3Class: '', // c3Class用于控制颜色 (比如 warn)
             c4: '不可', c4Class: 'no',
             c5: '可',   c5Class: 'yes'
@@ -4589,19 +4643,19 @@ function navigateChar(direction) {
         {
             key: 'WP', name: '物品卡', color: '#23c75a',
             c1: '探索 / 商店',
-            c2: '加成 / 恢复 / <strong>召唤怪物</strong>',
+            c2: '加成 / 恢复 / 召唤怪物',
             c3: '一次性', c3Class: 'warn',
             c4: '不可',  c4Class: 'no',
             c5: '可',    c5Class: 'yes'
         },
         {
             key: 'JK', name: '纪念卡', color: '#eeff00',
-            c1: '探索彩蛋 / 特定NPC',
-            c2: '集齐直接获胜 (无需战斗)', c2Style: 'color:var(--c-kid); font-weight:bold;', // 特殊样式
+            c1: '击杀 / 特定人物 / 探索',
+            c2: '集齐直接获胜', 
             c3: '永久', c3Class: '',
             c4: '不可', c4Class: 'no',
             c5: '可',   c5Class: 'yes',
-            isHidden: true // [标记] 这是一个隐藏规则
+            isHidden: false // [标记] 这是一个隐藏规则
         }
     ];
 
@@ -4659,10 +4713,10 @@ function navigateChar(direction) {
 
     // 2. 配置
     const bqCategories = [
-        { key: 'RW', name: '人物卡', logo: RuleIcons.RW , color: '#2f5fff' },
-        { key: 'JN', name: '技能卡', logo: RuleIcons.JN , color: '#ff3422' },
-        { key: 'WP', name: '物品卡', logo: RuleIcons.WP , color: '#23c75a' },
-        { key: 'JK', name: '纪念卡', logo: RuleIcons.JK , color: '#eeff00' }
+        { key: 'RW', name: '人物卡', logo: RuleIcons.RW , color: '#2f5fff' ,poster: ''},
+        { key: 'JN', name: '技能卡', logo: RuleIcons.JN , color: '#ff3422' ,poster: ''},
+        { key: 'WP', name: '物品卡', logo: RuleIcons.WP , color: '#23c75a' ,poster: ''},
+        { key: 'JK', name: '纪念卡', logo: RuleIcons.JK , color: '#eeff00' ,poster: ''}
     ];
     const bqBasePath = 'images/BQcards/cards_front/';
 
@@ -4672,59 +4726,109 @@ function navigateChar(direction) {
         const jumpListEl = document.getElementById('bqc-jump-list');
         if(!container) return; 
         
-        let htmlContent = '';
-        let jumpMenuHtml = ''; 
+// === 【新增】在最顶部加入卡牌页的大头图 ===
+    // 请替换 src 为你的真实图片路径
+    let htmlContent = `<img src="images/headers/page_header_card.png" class="header-poster-28" style="margin-bottom: 30px;">`;
+    let jumpMenuHtml = ''; 
+// 2. 【新增】在这里插入规则表格 (搬运过来的)
+    // 使用 archive-block 确保宽度和页边距与页面其他内容一致
+    htmlContent += `<div class="archive-block" style="margin-bottom: 60px;">`;
+    
+    // 2.1 表头 (直接复制 HTML 结构)
+    htmlContent += `
+        <div class="card-table-header">
+            <div class="col-icon-fixed">卡牌种类</div>
+            <div class="col-data-flex">
+                <div class="cell-common c-1">获取方式</div>
+                <div class="cell-common c-2">功能/用途</div>
+                <div class="cell-common c-3">次数</div>
+                <div class="cell-common c-4">垄断</div>
+                <div class="cell-common c-5">交换</div>
+            </div>
+        </div>
+    `;
 
+    // 2.2 表格内容 (遍历 ruleTableData 生成)
+    ruleTableData.forEach(row => {
+        const rowClass = row.isHidden ? 'card-row hidden-rule-style' : 'card-row';
+        const stampHtml = row.isHidden ? '<div class="hidden-stamp">隐藏</div>' : '';
+        const c2Style = row.c2Style ? `style="${row.c2Style}"` : '';
+        
+        // 获取图标 (确保 RuleIcons 存在)
+        const iconSrc = RuleIcons[row.key] || '';
+
+// === [修改] 加了 onclick 跳转事件，加了 cursor 手型鼠标 ===
+    htmlContent += `
+    <div class="${rowClass}" 
+        onclick="jumpToCardCategory('${row.key}')" 
+        style="cursor: pointer;">
+        ${stampHtml}
+            <div class="col-icon-fixed">
+                <div class="card-type-unit">
+                    <div class="card-img-box">
+                        <img src="${iconSrc}" alt="${row.name}">
+                    </div>
+                    <div class="card-label-box" style="--tag-bg: ${row.color};">${row.name}</div>
+                </div>
+            </div>
+            <div class="col-data-flex">
+                <div class="cell-common c-1">${row.c1}</div>
+                <div class="cell-common c-2" ${c2Style}>${row.c2}</div>
+                <div class="cell-common c-3 ${row.c3Class}">${row.c3}</div>
+                <div class="cell-common c-4 ${row.c4Class}">${row.c4}</div>
+                <div class="cell-common c-5 ${row.c5Class}">${row.c5}</div>
+            </div>
+        </div>`;
+    });
+
+    htmlContent += `</div>`; // 闭合 archive-block 容器
         bqCategories.forEach(cat => {
             const fileList = bqCardData[cat.key];
             if (!fileList) return;
             
 // --- 1. 計算背景漸變 (抓取當前卡牌分類的印象色 cat.color) ---卡牌背景渐变
             const sectionBg = `linear-gradient(180deg, ${cat.color}11 0%, rgba(26,26,26,0) 100%)`;
+// 生成海报代码
+        const posterHtml = cat.poster ? `<img src="${cat.poster}" class="header-poster-28">` : '';
 
-            // --- 2. 渲染頁面上的內容，並加上 [bqc-group-section] 作為彩色背板 ---
+        htmlContent += `
+            <div class="bqc-group-section" id="bqc-group-${cat.key}" style="background: ${sectionBg};">
+                
+                <div class="bqc-chapter-bar" 
+                    id="cat-anchor-${cat.key}"
+                    onclick="toggleBqcMenu()" 
+                    style="border-left-color: ${cat.color}; cursor: pointer;">
+                    <img src="${cat.logo}" class="bqc-bar-logo" alt="${cat.key}" onerror="this.style.display='none'">
+                    <span class="bqc-bar-title" style="color:${cat.color}">${cat.name} ▾</span>
+                </div>
+
+                ${posterHtml}
+
+                <div class="bqc-grid" style="margin-top: 0;">`;
+        
+        // 生成菜单项 (不变)
+        jumpMenuHtml += `
+            <div class="jump-btn" 
+                onclick="scrollToCat('${cat.key}', event)"
+                style="border-left-color: ${cat.color};"> 
+                <img src="${cat.logo}" class="jump-icon">
+                <span class="jump-text" style="color:${cat.color}">${cat.name}</span>
+            </div>`;
+
+        // 生成卡片 (不变)
+        fileList.forEach(fileName => {
+            const imgSrc = `${bqBasePath}${fileName}.png`; 
             htmlContent += `
-                <div class="bqc-group-section" id="bqc-group-${cat.key}" style="background: ${sectionBg};">
-                    
-                    <div class="bqc-chapter-bar" 
-                        id="cat-anchor-${cat.key}"
-                        onclick="toggleBqcMenu()" 
-                        style="border-left-color: ${cat.color}; cursor: pointer;">
-                        <img src="${cat.logo}" class="bqc-bar-logo" alt="${cat.key}" onerror="this.style.display='none'">
-                        <span class="bqc-bar-title" style="color:${cat.color}">${cat.name} ▾</span>
-                    </div>
-
-                    <div class="bqc-grid">`;
-            
-            // B. 生成菜单项 (注意 onclick 加了 event 参数)
-            // 这里的 event 是关键，防止点击按钮穿透到遮罩层
-            jumpMenuHtml += `
-                <div class="jump-btn" 
-                    onclick="scrollToCat('${cat.key}', event)"
-                    style="border-left-color: ${cat.color};"> 
-                    
-                    <img src="${cat.logo}" class="jump-icon">
-                    
-                    <span class="jump-text" style="color:${cat.color}">
-                        ${cat.name}
-                    </span>
+                <div class="bqc-card-item" onclick="openBqcModal('${imgSrc}')">
+                    <img src="${imgSrc}" class="bqc-card-img" loading="lazy" alt="${fileName}">
                 </div>`;
-
-            // C. 渲染卡牌
-            fileList.forEach(fileName => {
-                const imgSrc = `${bqBasePath}${fileName}.png`; 
-                htmlContent += `
-                    <div class="bqc-card-item" onclick="openBqcModal('${imgSrc}')">
-                        <img src="${imgSrc}" class="bqc-card-img" loading="lazy" alt="${fileName}">
-                    </div>`;
-            });
-            htmlContent += `</div></div>`;
         });
-        
-        container.innerHTML = htmlContent;
-        
-        if(jumpListEl) jumpListEl.innerHTML = jumpMenuHtml;
-    }
+        htmlContent += `</div></div>`;
+    });
+    
+    container.innerHTML = htmlContent;
+    if(jumpListEl) jumpListEl.innerHTML = jumpMenuHtml;
+}
 
     // 切换卡牌函数 (修复PNG)
     function navigateCard(dir) {
@@ -5125,7 +5229,8 @@ const charPageConfig = [
         type: 'header', 
         title: '学生社团', 
         key: 'STUDENT', 
-        color: '#4169E1' // 皇家蓝
+        color: '#4169E1' ,// 皇家蓝
+        poster: '' // <--- 新增
     },
     { 
         type: 'grid', 
@@ -5143,7 +5248,8 @@ const charPageConfig = [
         type: 'header', 
         title: '哈尼社团', 
         key: 'HANI', 
-        color: '#FF1493' // 深粉色
+        color: '#FF1493', // 深粉色
+        poster: ''
     },
     { 
         type: 'grid', 
@@ -5179,48 +5285,53 @@ const charPageConfig = [
 
 // 2. 渲染主函数
 // 3. JS 逻辑重写 (修复 Logo 换回圆点)
-// === [修复版] 渲染主函数：增加分组包裹 ===
+// === [修复完整版] 渲染主函数 ===
 function renderCharPage() {
     const root = document.getElementById('char-root-container');
     const menuList = document.getElementById('char-jump-list');
     if (!root || !menuList) return;
 
-    let htmlStructure = '';
+// === 【新增】在最顶部加入人物页的大头图 ===
+    // 请替换 src 为你的真实图片路径
+    let htmlStructure = `<img src="images/headers/page_header_char.png" class="header-poster-28" style="margin-bottom: 0px;">`;
     let menuHtml = '';
 
     // 1. 遍历配置
     charPageConfig.forEach((item, index) => {
         
-        // === 遇到标题：开启新分组 ===
+        // ==========================
+        // 情况 A: 遇到标题 (Header)
+        // ==========================
         if (item.type === 'header') {
             
-            // 【核心逻辑】如果不是第一个，先闭合上一个分组的 </div>
-            // 这样就保证了上一组的代码是完整的： <div class="group"> 标题... 内容... </div>
+            // 如果不是第一个，先闭合上一个分组的 </div>
             if (index > 0) {
                 htmlStructure += `</div>`; 
             }
             
-        // 1. 先计算渐变：用当前板块的颜色 (item.color) 加上 22 (13%透明度)  人物背景渐变
-// 注意：transparent 85% 大约等于 hex 的 22 (约13%不透明度)
-const sectionBg = `linear-gradient(180deg, color-mix(in srgb, 
-${item.color}, transparent 90%) 0%, rgba(26,26,26,0) 100%)`;
-        // 2. 修改原来的 div 标签，把 background 注入进去
-            htmlStructure += `<div class="char-group-section" id="group-${item.key}" style="background: ${sectionBg};">`;
+            // 计算背景渐变
+            const sectionBg = `linear-gradient(180deg, color-mix(in srgb, ${item.color}, transparent 90%) 0%, rgba(26,26,26,0) 100%)`;
             
-            // 塞入标题栏 (保持原样)
+            // 开启新分组容器
+            htmlStructure += `<div class="char-group-section" id="group-${item.key}" style="background: ${sectionBg};">`;
+
+            // 1. 先放标题栏 (Sticky Bar)
             htmlStructure += `
                 <div class="char-sticky-bar" 
                     id="char-anchor-${item.key}"
                     onclick="toggleCharMenu()"
                     style="border-left-color: ${item.color};">
-                    
                     <div style="width:12px; height:12px; background:${item.color}; border-radius:50%; box-shadow: 0 0 5px ${item.color};"></div>
-                    
                     <span class="char-bar-title">${item.title} ▾</span>
                 </div>
             `;
+            
+            // 2. 再放海报 (Poster) - 紧贴标题栏下方
+            if (item.poster) {
+                htmlStructure += `<img src="${item.poster}" class="header-poster-28" alt="${item.title}">`;
+            }
 
-            // 生成菜单项 (保持原样)
+            // 生成菜单项
             menuHtml += `
                 <div class="jump-btn" 
                     onclick="scrollToCharCat('${item.key}', event)"
@@ -5231,14 +5342,15 @@ ${item.color}, transparent 90%) 0%, rgba(26,26,26,0) 100%)`;
             `;
         }
 
-        // === 遇到网格：直接塞入当前分组 ===
-        // 因为上面已经开启了 <div class="char-group-section">，这里直接往里塞就行
+        // ==========================
+        // 情况 B: 遇到网格 (Grid)  <--- 你之前漏掉了这一大段！
+        // ==========================
         if (item.type === 'grid') {
-            htmlStructure += `<div class="archive-block"><div class="society-grid">`;
+            // style="padding-top: 0;" 是为了让网格紧贴上面的海报，不要有缝隙
+            htmlStructure += `<div class="archive-block" style="padding-top: 0;"><div class="society-grid">`;
             
-
-        item.list.forEach(soc => {
-                // [新增判断] 如果是哈尼哈尼社团(list-honey)，就给它一个专门的 ID 方便 CSS 控制
+            item.list.forEach(soc => {
+                // 哈尼社团特殊 ID 处理
                 const haniId = (soc.id === 'list-honey') ? 'id="society-card-honeyhoney"' : '';
                 
                 htmlStructure += `
@@ -5258,12 +5370,14 @@ ${item.color}, transparent 90%) 0%, rgba(26,26,26,0) 100%)`;
         }
     });
 
-    // 【核心逻辑】循环结束，别忘了闭合最后一个分组的 </div>
+    // 循环结束，闭合最后一个分组的 div
     htmlStructure += `</div>`;
 
+    // 2. 将生成的 HTML 注入页面
     root.innerHTML = htmlStructure;
     menuList.innerHTML = menuHtml;
 
+    // 3. 开始填充具体的人物卡片
     fillCharLists();
 }
 
@@ -5456,23 +5570,27 @@ const bqViewData = {
         {
             id: 1, title: "炼厂", color: "#daf08e",
             bio: "煉廠是斑丘世界中最為繁忙的資源加工區。這裡終日被暗紅色的煙雲籠罩，巨大的鋼鐵煙囪矗立在荒漠之中。學生們在這裡收集並處理殘留的數據切片，是獲取高階屬性塊的重要地點。雖然環境惡劣，但這裡卻有一種工業廢土特有的殘缺美感。",
-            photos: 11 // 自動生成 01-12 的編號
+            photos: 15 ,// 自動生成 01-12 的編號
+            logo: Societies.FACTORY,
         },
         {
-            id: 2, title: "冷凝塔", color: "#ecb563",
+            id: 2, title: "冷凝塔", color: "#f3c14a",
             bio: "冷凝塔是躲避沙暴與騷亂的避風港。巨大的金屬塔身內部採用了特殊的冷卻結構，氣溫始終保持在宜人的22度。塔內的迴廊盤旋而上，每一層都居住著尋求和平的學生。從塔頂望去，可以俯瞰整個斑丘的黃昏景觀。",
-            photos: 12
+            photos: 12,
+            logo: Societies.TOWER,
         
         },
         {
             id: 3, title: "冲江市第五中学", color: "#345ca1",
             bio: "被完整複製進斑丘的校區。這裡保留了現實世界中五中的所有細節：斑駁的教學樓、爬滿藤蔓的籃球場、以及永遠停留在放學前五分鐘的掛鐘。這裡是學生們情感的寄託之地，也是多場關鍵衝突的爆發點。",
-            photos: 9
+            photos: 12,
+            logo: Schools.CHONGJIANG,
         },
         {
-            id: 4, title: "蜂山广场", color: "#b8461c",
+            id: 4, title: "蜂山广场", color: "#eb9653",
             bio: "斑丘最大的交易與集會中心。巨大的圓形廣場中心矗立著哈尼的雕像，周圍遍布著友誼百貨的自動販賣機。這裡是各種情報流轉的中心，也是所有人進入斑丘的第一站。",
-            photos: 9
+            photos: 15,
+            logo: Societies.PLAZA,
         }
     ]
 };
@@ -5594,8 +5712,7 @@ function updateBqvModalContent() {
     document.getElementById('bqv-modal-img').src = imgSrc;
     // 更新左上角 Logo 和 名字
     document.getElementById('bqv-modal-logo').src = bqvCurrentChapter.logo || '';
-    document.getElementById('bqv-modal-chapter-name').innerText = bqvCurrentChapter.title;
-    document.getElementById('bqv-modal-chapter-name').style.color = bqvCurrentChapter.color;
+
 }
 
 function navigateBqv(dir) {
@@ -5649,7 +5766,15 @@ document.getElementById('bqvModal').addEventListener('click', function(e) {
         closeBqvModal();
     }
 });
-
+// === [新增] 卡牌表格专用跳转 (只滚动，不弹菜单) ===
+function jumpToCardCategory(key) {
+    // 找到对应的分类区块 (id="bqc-group-RW" 等)
+    const target = document.getElementById(`bqc-group-${key}`);
+    if (target) {
+        // 平滑滚动到该位置
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
 </script>
 
 </body>
