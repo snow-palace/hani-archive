@@ -4753,8 +4753,7 @@ function navigateChar(direction) {
         container.innerHTML = html;
     }
 
-    // 4. 别忘了在最后运行它
-    renderRuleTable();
+
 
     // 1. 数据字典
     const bqCardData = {
@@ -5263,10 +5262,6 @@ function fitModalToMobile() {
             shineLayer.style.transition = 'opacity 0.6s ease';
             shineLayer.style.opacity = 0;
         }
-        setTimeout(() => {
-            if(tiltCard) tiltCard.style.transition = ''; 
-            if(shineLayer) shineLayer.style.transition = '';
-        }, 600);
     });
 
 /* =========================================================================
@@ -5597,20 +5592,6 @@ document.addEventListener('click', function(event) {
     }
 });
 
-/* === [新增] 點擊導航欄回滾頂部 === */
-/* === [修正] 点击导航栏回滚顶部 (排除汉堡按钮) === */
-document.querySelector('.navbar').addEventListener('click', function(e) {
-    // 【关键修正】：使用 closest 确保点到按钮或图标都能被排除
-    if (e.target.closest('.nav-toggle-btn')) return;
-
-    const activeSection = document.querySelector('.view-section.active');
-    if (activeSection) {
-        activeSection.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
-});
 
 // --- 1. 斑丘景色數據字典 ---景色主题色
 const bqViewData = {
@@ -7905,16 +7886,17 @@ function renderStory() {
 
 /* ================= 剧情目录：独占展开 + 精准末级高亮 (修正版) ================= */
 
+/* ================= 劇情目錄：獨佔展開 + 精準末級高亮 (終極修正版) ================= */
+
 function generateTOC(contentRoot, listRoot) {
-    // 【关键修正 1】：真正的滚动容器是 view-story，因为它的 CSS 设有 overflow-y: auto
+    // 1. 鎖定滾動容器為 view-story
     const scrollContainer = document.getElementById('view-story');
     if(!listRoot || !contentRoot || !scrollContainer) return;
     
     listRoot.innerHTML = '';
-    // 获取 1, 2, 3 级标题
     const allHeaders = Array.from(contentRoot.querySelectorAll('h1, h2, h3'));
     
-    // 1. 将标题结构化（建立 H1 与其下属 H2,H3 的映射）
+    // 2. 結構化標題組
     const groups = [];
     allHeaders.forEach((header, index) => {
         const id = 'story-ref-' + index;
@@ -7929,7 +7911,7 @@ function generateTOC(contentRoot, listRoot) {
         }
     });
 
-    // 2. 渲染目录 HTML 结构
+    // 3. 渲染目錄 HTML
     groups.forEach(group => {
         const groupEl = document.createElement('div');
         groupEl.className = 'toc-group';
@@ -7939,20 +7921,17 @@ function generateTOC(contentRoot, listRoot) {
         btn.className = 'toc-h1-btn';
         btn.innerText = group.header.innerText;
 
-        // 点击逻辑：智能跳转或独占开关
-        if (group.subs.length === 0) {
-            btn.onclick = () => {
+        // 點擊邏輯：排他性展開
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            if (group.subs.length === 0) {
                 scrollContainer.scrollTo({ top: group.header.offsetTop - 20, behavior: 'smooth' });
-            };
-        } else {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                const isAlreadyOpen = groupEl.classList.contains('expanded');
-                // 【独占逻辑】：先关闭所有
+            } else {
+                const isOpen = groupEl.classList.contains('expanded');
                 document.querySelectorAll('.toc-group').forEach(g => g.classList.remove('expanded'));
-                if (!isAlreadyOpen) groupEl.classList.add('expanded');
-            };
-        }
+                if (!isOpen) groupEl.classList.add('expanded');
+            }
+        };
 
         const subItemsDiv = document.createElement('div');
         subItemsDiv.className = 'toc-sub-items';
@@ -7961,8 +7940,7 @@ function generateTOC(contentRoot, listRoot) {
             const link = document.createElement('a');
             link.className = `toc-link ${sub.tagName === 'H3' ? 'level-3' : 'level-2'}`;
             link.innerText = sub.innerText;
-            link.dataset.targetId = sub.id; // 用于滚动监听时的匹配
-
+            link.dataset.targetId = sub.id; 
             link.onclick = (e) => {
                 e.preventDefault();
                 scrollContainer.scrollTo({ top: sub.offsetTop - 20, behavior: 'smooth' });
@@ -7975,122 +7953,115 @@ function generateTOC(contentRoot, listRoot) {
         listRoot.appendChild(groupEl);
     });
 
-// 3. 【精准修正】：滚动监听逻辑 (针对末级高亮与自动展开)
+    // 4. 【核心修復】精準高亮判定邏輯
     scrollContainer.onscroll = () => {
-        let currentHeader = null;
-        // 判定线：容器顶端往下 120px 处，建议稍微多一点，让用户看到标题过线就亮
-        const triggerPos = scrollContainer.scrollTop + 120;
+        let currentActive = null;
+        const containerRect = scrollContainer.getBoundingClientRect();
 
-        // 倒序查找第一个“过线”的标题
-        for (let i = allHeaders.length - 1; i >= 0; i--) {
-            // 注意：如果 offsetTop 计算不准，尝试使用 allHeaders[i].offsetTop
-            if (triggerPos >= allHeaders[i].offsetTop) {
-                currentHeader = allHeaders[i];
-                break;
+        // 遍歷所有標題，尋找當前最靠近容器頂部的標題
+        for (let i = 0; i < allHeaders.length; i++) {
+            const rect = allHeaders[i].getBoundingClientRect();
+            // 如果標題進入視口頂部 150px 範圍內
+            if (rect.top - containerRect.top < 150) {
+                currentActive = allHeaders[i];
+            } else {
+                break; 
             }
         }
 
-        if (currentHeader) {
-            // --- A. 全局清理：移除所有旧的高亮状态 ---
+        if (currentActive) {
+            // 清理舊狀態
             document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
             document.querySelectorAll('.toc-group').forEach(g => g.classList.remove('active'));
 
-            // --- B. 判定当前标题等级 ---
-            if (currentHeader.tagName === 'H1') {
-                // 如果是 H1：高亮组
-                const gIdx = currentHeader.id.split('-').pop();
-                const targetGroup = document.getElementById('toc-group-' + gIdx);
-                if (targetGroup) {
-                    targetGroup.classList.add('active');
-                    // 独占展开：滚到哪章，开哪章，关其他
-                    if (!targetGroup.classList.contains('expanded')) {
+            if (currentActive.tagName === 'H1') {
+                const gIdx = currentActive.id.split('-').pop();
+                const targetG = document.getElementById('toc-group-' + gIdx);
+                if (targetG) {
+                    targetG.classList.add('active');
+                    // 獨佔展開
+                    if (!targetG.classList.contains('expanded')) {
                         document.querySelectorAll('.toc-group').forEach(g => g.classList.remove('expanded'));
-                        targetGroup.classList.add('expanded');
+                        targetG.classList.add('expanded');
                     }
                 }
             } else {
-                // 如果是 H2 或 H3：精准高亮【末级】
-                // 使用属性选择器精确匹配 data-target-id
-                const activeLink = document.querySelector(`.toc-link[data-target-id="${currentHeader.id}"]`);
-                
-                if (activeLink) {
-                    activeLink.classList.add('active'); // <--- 这里是亮起金色的关键
-                    
-                    const parentGroup = activeLink.closest('.toc-group');
-                    if (parentGroup) {
-                        parentGroup.classList.add('active'); // 父级按钮也加亮
-                        // 独占自动展开：进入子项时，确保其父章节是唯一展开的
-                        if (!parentGroup.classList.contains('expanded')) {
+                // 【精確高亮末級】
+                const activeL = document.querySelector(`.toc-link[data-target-id="${currentActive.id}"]`);
+                if (activeL) {
+                    activeL.classList.add('active'); 
+                    const parentG = activeL.closest('.toc-group');
+                    if (parentG) {
+                        parentG.classList.add('active'); 
+                        // 滾動自動觸發獨佔展開
+                        if (!parentG.classList.contains('expanded')) {
                             document.querySelectorAll('.toc-group').forEach(g => g.classList.remove('expanded'));
-                            parentGroup.classList.add('expanded');
+                            parentG.classList.add('expanded');
                         }
                     }
                 }
             }
         }
+        // 同步回到頂部按鈕狀態
+        checkScroll();
     };
 }
-// 4. 啟動腳本 (確保 Markdown 內容先渲染)
-setTimeout(() => {
-    // 渲染 Markdown
-    if(typeof renderStory === 'function') {
-        renderStory();
+
+/* === [新增整合] 導航欄全局點擊邏輯 === */
+document.querySelector('.navbar').addEventListener('click', function(e) {
+    if (e.target.closest('.nav-toggle-btn')) return; // 如果點的是漢堡，不回滾
+
+    const activeSection = document.querySelector('.view-section.active');
+    if (activeSection) {
+        activeSection.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    // 額外保險：如果 renderStory 內部沒調用 generateTOC，這裡手動補一下
-    const area = document.getElementById('story-render-area');
-    const list = document.getElementById('story-toc-list');
-    if(area && list) generateTOC(area, list);
-}, 300);
+});
 
-/* ================= iOS 下拉海报弹性缩放 (纯 JS 版) ================= */
+/* === [新增整合] 點擊空白處關閉菜單 === */
+document.addEventListener('click', function(event) {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const navToggle = document.querySelector('.nav-toggle-btn');
+    if (!mobileMenu || !mobileMenu.classList.contains('open')) return;
+    if (!mobileMenu.contains(event.target) && !navToggle.contains(event.target)) {
+        mobileMenu.classList.remove('open');
+    }
+});
 
+/* === iOS 下拉海報彈性縮放 === */
 function applyElasticPoster(containerId) {
     const scrollContainer = document.getElementById(containerId);
     if (!scrollContainer) return;
-
-    // 1. 自动寻找容器内的第一张海报图片 (假设它是第一个 img)
-    const posterImg = scrollContainer.querySelector('img'); 
+    const posterImg = scrollContainer.querySelector('.header-poster-28'); // 針對你的海報類名
     if (!posterImg) return;
 
-    // 2. 用 JS 直接注入必要的临时样式，不改 CSS 文件
-    const parent = posterImg.parentElement;
-    parent.style.overflow = 'hidden';         // 必须隐藏溢出，否则放大后会盖住导航栏
-    parent.style.position = 'relative'; 
-    
-    posterImg.style.transformOrigin = 'top center'; // 从顶部开始缩放
-    posterImg.style.transition = 'transform 0.1s ease-out'; // 平滑回弹
-    posterImg.style.display = 'block';
-    posterImg.style.width = '100%';
-    posterImg.style.height = '100%';
-    posterImg.style.objectFit = 'cover';
+    posterImg.style.transformOrigin = 'top center';
+    posterImg.style.transition = 'transform 0.1s ease-out';
 
-    // 3. 监听滚动事件
     scrollContainer.addEventListener('scroll', () => {
         const st = scrollContainer.scrollTop;
-
-        // 当 scrollTop < 0 时（iOS 橡皮筋下拉效果触发）
         if (st < 0) {
-            // 计算缩放比例，300 是阻尼值，越大放大越慢
             const factor = 1 + (Math.abs(st) / 300);
             posterImg.style.transform = `scale(${factor})`;
         } else {
-            // 正常滚动，恢复原状
-            if (posterImg.style.transform !== 'scale(1)') {
-                posterImg.style.transform = 'scale(1)';
-            }
+            posterImg.style.transform = 'scale(1)';
         }
     });
 }
 
-/* --- 替换你脚本最末尾的启动部分 --- */
+/* === 統一啟動流程 (解決 iOS Safari 刷新白屏) === */
 window.addEventListener('load', () => {
-    // 延迟一小会儿确保插件初始化完毕
-    setTimeout(() => {
-        console.log("页面已完全加载，开始渲染档案...");
-        if (typeof renderStory === 'function') {
-            renderStory();
-        }
-    }, 100);
+    // 1. 渲染人物檔案
+    renderCharPage();
+    // 2. 渲染卡牌
+    renderBqCards();
+    // 3. 渲染景色
+    renderBqScenery();
+    // 4. 渲染劇情 (Markdown)
+    renderStory();
+    // 5. 套用彈性海報效果
+    applyElasticPoster('view-story');
+    applyElasticPoster('view-chars');
+    applyElasticPoster('view-cards');
 });
 </script>
 
