@@ -5572,7 +5572,7 @@ function scrollToCharCat(key, event) {
 
 // 5. 初始化
 // 页面加载完后执行
-setTimeout(renderCharPage, 100);
+
 
 // 【注意】如果你原来的代码里有 `for (const [id, keys] of Object.entries(lists))` 这一段自动执行的代码，
 // 请将其注释掉或删除，因为现在由 `renderCharPage` -> `fillCharLists` 统一接管了。
@@ -7860,15 +7860,7 @@ function renderStory() {
 
     // B. 让 Mermaid 重新寻找并画图
     // 加个小延时，确保 DOM 已经完全塞进去了
-    setTimeout(() => {
-        try {
-            mermaid.run({
-                nodes: document.querySelectorAll('.mermaid')
-            });
-        } catch (err) {
-            console.error("Mermaid 渲染失败:", err);
-        }
-    }, 100);
+
 
     // C. 生成目录
     generateTOC(container, tocContainer);
@@ -8048,20 +8040,33 @@ function applyElasticPoster(containerId) {
     });
 }
 
-/* === 統一啟動流程 (解決 iOS Safari 刷新白屏) === */
+/* === 统一启动与首屏修复 (解决 iOS 初始化不显示问题) === */
 window.addEventListener('load', () => {
-    // 1. 渲染人物檔案
-    renderCharPage();
-    // 2. 渲染卡牌
-    renderBqCards();
-    // 3. 渲染景色
-    renderBqScenery();
-    // 4. 渲染劇情 (Markdown)
-    renderStory();
-    // 5. 套用彈性海報效果
-    applyElasticPoster('view-story');
-    applyElasticPoster('view-chars');
-    applyElasticPoster('view-cards');
+    // 1. 按照逻辑顺序渲染所有动态内容
+    try {
+        renderCharPage();   // 渲染人物
+        renderBqCards();    // 渲染卡牌
+        renderBqScenery();  // 渲染景色
+        renderStory();      // 渲染剧情
+    } catch (e) {
+        console.error("渲染过程中出错:", e);
+    }
+
+    // 2. 核心补丁：针对 iOS Safari
+    // 即使 HTML 里写了 active，在动态内容生成后，我们需要显式调用一次 switchView
+    // 强制浏览器重新计算布局并显示内容
+    setTimeout(() => {
+        const defaultTab = document.querySelector('.nav-tab.tab-chars');
+        // 显式切换到人物档案页，确保内容被“推”到屏幕上
+        switchView('chars', defaultTab);
+        
+        // 3. 应用视觉增强效果
+        applyElasticPoster('view-story');
+        applyElasticPoster('view-chars');
+        applyElasticPoster('view-cards');
+        
+        console.log("iOS 首屏唤醒成功");
+    }, 100); 
 });
 </script>
 
