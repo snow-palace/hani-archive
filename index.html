@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>不公正的哈尼 - 最终完整全景档案</title>
@@ -50,7 +49,7 @@
             --border-color: #666;   /* 通用边框色 */
 
             /* --- 斑丘景色全局參數 --- */
-            --bqv-dot-size: 1.7px;       /* 小點點大小 */
+            --bqv-dot-size: 1.2px;       /* 小點點大小 */
             --bqv-dot-gap: 13px;         /* 小點點間距 */
             --bqv-dot-color: rgba(255, 255, 255, 0.11);
             
@@ -3443,7 +3442,8 @@ background-size: auto;
 
 
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <script>
 /* ================= 导航与交互逻辑 ================= */
 
@@ -8082,12 +8082,16 @@ function applyElasticPoster(containerId) {
     });
 }
 
-// 4. 在页面加载完成后执行 (针对你的 view-story 视图)
-setTimeout(() => {
-    // 专门给剧情页面开启这个效果
-    applyElasticPoster('view-story');
-}, 500);
-
+/* --- 替换你脚本最末尾的启动部分 --- */
+window.addEventListener('load', () => {
+    // 延迟一小会儿确保插件初始化完毕
+    setTimeout(() => {
+        console.log("页面已完全加载，开始渲染档案...");
+        if (typeof renderStory === 'function') {
+            renderStory();
+        }
+    }, 100);
+});
 </script>
 
 </body>
