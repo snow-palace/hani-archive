@@ -287,6 +287,40 @@ html, body {
         display: none !important;
     }  
 } 手机端显示回到顶部按钮*/
+
+/* 针对手机端的样式调整 */
+@media (max-width: 768px) {
+    .back-to-top {
+        /* 1. 调整位置：距离边缘更近一些 */
+        bottom: 20px; 
+        right: 20px;
+        
+        /* 2. 缩小尺寸：80px 在手机上太大了，建议 45-50px */
+        width: 50px; 
+        height: 50px;
+        
+        /* 3. 调整圆角：按比例缩小 */
+        border-radius: 8px; 
+        
+        /* 4. 针对 iOS 底部横条的安全区域适配（可选） */
+        bottom: calc(20px + env(safe-area-inset-bottom));
+        
+        /* 5. 玻璃拟态增强：手机上背景可以稍微深一点，方便看清 */
+        background: rgba(0, 0, 0, 0.5); 
+    }
+
+    /* 6. 同时缩小内部图标的大小 */
+    .back-to-top svg {
+        width: 24px; 
+        height: 24px;
+        fill: #ffffff; /* 手机端纯白通常对比度更好 */
+    }
+    
+    /* 7. 手机端通常没有 hover 态，可以取消或简化 hover 效果 */
+    .back-to-top:hover {
+        background: rgba(0, 0, 0, 0.7);
+    }
+}
 /* ================= 2. [修正] 主视图区域 (绝对定位版) ================= */
 .main-view {
     /* 绝对定位，撑满除导航栏以外的区域 */
