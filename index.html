@@ -8019,26 +8019,7 @@ document.addEventListener('click', function(event) {
     }
 });
 
-/* === iOS 下拉海報彈性縮放 === */
-function applyElasticPoster(containerId) {
-    const scrollContainer = document.getElementById(containerId);
-    if (!scrollContainer) return;
-    const posterImg = scrollContainer.querySelector('.header-poster-28'); // 針對你的海報類名
-    if (!posterImg) return;
 
-    posterImg.style.transformOrigin = 'top center';
-    posterImg.style.transition = 'transform 0.1s ease-out';
-
-    scrollContainer.addEventListener('scroll', () => {
-        const st = scrollContainer.scrollTop;
-        if (st < 0) {
-            const factor = 1 + (Math.abs(st) / 300);
-            posterImg.style.transform = `scale(${factor})`;
-        } else {
-            posterImg.style.transform = 'scale(1)';
-        }
-    });
-}
 
 /* === 统一启动与首屏修复 (解决 iOS 初始化不显示问题) === */
 window.addEventListener('load', () => {
@@ -8060,11 +8041,7 @@ window.addEventListener('load', () => {
         // 显式切换到人物档案页，确保内容被“推”到屏幕上
         switchView('chars', defaultTab);
         
-        // 3. 应用视觉增强效果
-        applyElasticPoster('view-story');
-        applyElasticPoster('view-chars');
-        applyElasticPoster('view-cards');
-        
+
         console.log("iOS 首屏唤醒成功");
     }, 100); 
 });
