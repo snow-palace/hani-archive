@@ -2884,13 +2884,19 @@ background-size: auto;
 @media (max-width: 1000px) {
     .story-wrapper {
         flex-direction: column; /* 上下排列 */
-        padding: 20px; /* 减少留白 */
+        padding: 10px; /* 减少留白 */
     }
     .story-sidebar {
         display: none; /* 手机太窄，直接隐藏右侧目录 */
     }
-    .story-content {
-        width: 100%; /* 全宽 */
+.story-content {
+        /* 修改这里：原先可能是 30px 或 40px */
+        /* 建议改为 15px 或 10px，让文字尽量撑满底框 */
+        padding: 20px 15px !important; 
+        
+        width: 100% !important;
+        margin: 0 auto;
+        border-radius: 8px; /* 圆角也可以稍微调小一点 */
     }
 }
 /* 让 aside 看起来像 Notion 的备忘块 */
