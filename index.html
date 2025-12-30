@@ -3695,7 +3695,10 @@ position: absolute;
 }
 /* --- 手机端适配 --- */
 @media (max-width: 768px) {
-    .equip-container { gap: 60px; } 
+/* 1. 统一间距：装备页和导游页的大间距都设为 60px */
+    .equip-container, .guide-container { 
+        gap: 60px !important; 
+    }
     .equip-img, .equip-row-full { width: 95% !important; }
     .equip-glass-card { width: 90% !important; }
     .equip-card-body { padding: 15px 20px !important; font-size: 13px; }
@@ -4010,13 +4013,14 @@ position: absolute;
     width: 100%;
 }
 
+/* 导游页每一行（Row）内部的间距（图片与文字框之间）保持小间距 */
 .guide-row {
     position: relative;
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    overflow: visible;
+    gap: 20px; /* 行内小间距，保持和你要求的 20px 一致 */
 }
 
 /* 抽屉包装器 */
@@ -4027,6 +4031,18 @@ position: absolute;
     width: 18%; /* 约主图 1/4 */
     aspect-ratio: 1 / 1.5;
     transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+/* 【核心修改】 */
+    pointer-events: none; /* 必须加！否则图片滑入后，你点不到下面的文字和按钮 */
+}
+/* 底层图：现在也浮在上面，设为 11 */
+.drawer-back {
+    z-index: 11 !important; 
+}
+
+/* 顶层图：设为 12 */
+.drawer-front {
+    z-index: 12 !important; 
 }
 .drawer-left { left: 0; transform: translate(-100%, -50%); }
 .drawer-right { right: 0; transform: translate(100%, -50%); }
@@ -4040,7 +4056,7 @@ position: absolute;
     position: absolute;
     width: 100%; height: 100%;
     z-index: 1; /* 在主图下方 */
-    object-fit: cover;
+    object-fit:contain !important; /* 確保整張圖都能看見，不被裁切 */
     animation: wobble 6s ease-in-out infinite;
 }
 
@@ -4109,6 +4125,7 @@ position: absolute;
 /* 1. 確保章節容器底部沒有內邊距 */
 .ov-section {
     padding-bottom: 0 !important;
+    
 }
 
 /* 2. 確保貼底圖片沒有任何邊距 */
@@ -4368,7 +4385,7 @@ position: absolute;
     <div class="jump-menu-content">
         <div class="jump-title">總覽章節</div>
         <div class="jump-list">
-            <div class="jump-btn" onclick="scrollToOv('guide', event)" style="border-left-color: #FFD700; color: #FFD700">导游</div>
+            <div class="jump-btn" onclick="scrollToOv('guide', event)" style="border-left-color: #FFD700; color: #FFD700">开始吧！</div>
             <div class="jump-btn" onclick="scrollToOv('combat', event)" style="border-left-color: var(--tab-scenery); color: var(--tab-scenery)">战斗吧！</div>
             <div class="jump-btn" onclick="scrollToOv('equip', event)" style="border-left-color: var(--tab-cards); color: var(--tab-cards)">装备吧！</div>
             <div class="jump-btn" onclick="scrollToOv('justice', event)" style="border-left-color: var(--tab-chars); color: var(--tab-chars)">不公正吧！</div>
@@ -9104,16 +9121,19 @@ function renderOverview() {
     html += `<div class="ov-section ov-section-full" id="ov-guide" style="background: ${guideBg}; margin-top: 0;">
         <div class="bqc-chapter-bar" onclick="toggleOvMenu()" style="border-left-color: ${guideColor}; margin-top: 0 !important;">
             <div style="width:12px; height:12px; background:${guideColor}; border-radius:50%; box-shadow: 0 0 5px ${guideColor};"></div>
-            <span class="bqc-bar-title" style="color:#fff">导游 ▾</span>
+            <span class="bqc-bar-title" style="color:#fff">开始吧！ ▾</span>
         </div>
         <div class="guide-container">`;
 
     // 辅助：生成抽屉HTML
     const makeDrawer = (side, data) => `
-        <div class="drawer-wrapper drawer-${side}">
-            <img src="${data.bottom}" class="comment-img-bottom">
-            <img src="${data.top}" class="comment-img-top">
-        </div>`;
+<div class="drawer-wrapper drawer-back drawer-${side}">
+        <img src="${data.bottom}" class="comment-img-bottom">
+    </div>
+    <div class="drawer-wrapper drawer-front drawer-${side}">
+        <img src="${data.top}" class="comment-img-top">
+    </div>
+`;
 
     // 1. 渲染前两行
     OverviewAssets.guide.rows.forEach(row => {
@@ -9385,7 +9405,7 @@ html += `
                     })}
 
                     ${renderBqMindmap('JK', '？？？', '#eeff00', '#000', {
-                        get: `有这种卡吗？`,
+                        get: `？？？`,
                         effect: `？？？`,
                         monopoly: `？？？`
                     })}
