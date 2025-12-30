@@ -3633,7 +3633,7 @@ position: absolute;
 
 /* 2. 玻璃框：在你提供的基础上增加更透亮、外发光 */
 .equip-glass-card {
-    width: 50% !important;
+    width: 50% ;
     background: rgb(54, 54, 54) !important; 
     backdrop-filter: blur(15px) saturate(150%) !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
@@ -3857,8 +3857,8 @@ position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
-    padding: 8px;
+    gap: 4px;
+    padding: 3px;
     border-radius: 6px;
     transition: transform 0.2s;
 }
@@ -3947,6 +3947,234 @@ position: absolute;
 
 @media (max-width: 1024px) {
     .bq-mm-content { flex-direction: column; } /* 平板手机变为堆叠 */
+}
+
+
+/* ================= 导游章节专用样式 ================= */
+
+/* 章节大容器：全屏宽 */
+.ov-section-full {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+}
+
+/* --- 显摆图片：尺寸与反向动画 --- */
+.show-off-img {
+    position: absolute;
+    width: 300px; /* 网页端变大2倍 */
+    height: 300px;
+    z-index: 50;
+    pointer-events: none;
+    filter: drop-shadow(0 0 20px var(--glow-color, #fff));
+}
+
+/* 显摆图片左侧：向左偏开始 */
+.wobble-L {
+    animation: slowWobbleL 4s ease-in-out infinite;
+}
+
+/* 显摆图片右侧：向右偏开始 */
+.wobble-R {
+    animation: slowWobbleR 4s ease-in-out infinite;
+}
+
+@keyframes slowWobbleL {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+}
+
+@keyframes slowWobbleR {
+    0%, 100% { transform: rotate(3deg); }
+    50% { transform: rotate(-3deg); }
+}
+/* 第三行专用：中间对齐容器 */
+.show-off-center-box {
+    display: flex;
+    justify-content: center;
+    gap: 40px; /* 两个显摆图之间的间距 */
+    width: 100%;
+    margin-top: -20px; /* 向上微调，使其靠近文字框底部 */
+}
+
+
+
+/* 导游章节总容器 - 间距同步装备页 */
+.guide-container {
+    display: flex;
+    flex-direction: column;
+    gap: 100px; /* 同步装备页间距 */
+    align-items: center;
+    width: 100%;
+}
+
+.guide-row {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+}
+
+/* 抽屉包装器 */
+.drawer-wrapper {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18%; /* 约主图 1/4 */
+    aspect-ratio: 1 / 1.5;
+    transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.drawer-left { left: 0; transform: translate(-100%, -50%); }
+.drawer-right { right: 0; transform: translate(100%, -50%); }
+
+/* 激活抽屉 */
+.guide-row.active .drawer-left,
+.guide-row.active .drawer-right { transform: translate(0, -50%); }
+
+/* 【核心层级】评论图片样式 */
+.comment-img-bottom {
+    position: absolute;
+    width: 100%; height: 100%;
+    z-index: 1; /* 在主图下方 */
+    object-fit: cover;
+    animation: wobble 6s ease-in-out infinite;
+}
+
+.comment-img-top {
+    position: absolute;
+    width: 100%; height: 100%;
+    z-index: 20; /* 在主图上方 */
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.8s ease 1s; /* 抽屉拉出后渐显 */
+}
+.guide-row.active .comment-img-top { opacity: 1; }
+
+/* 主内容层级 */
+.guide-row .equip-unit, 
+.guide-row .justice-grid {
+    position: relative;
+    z-index: 10; /* 夹在中间 */
+}
+
+/* 專門針對第三行的抽屜圖片進行位移 */
+.guide-row.row-comparison .drawer-wrapper {
+    /* 原本是 50%，數值越大越靠下 */
+    top: 50% !important; 
+    
+    /* 如果你希望更精確地移動，也可以用 calc */
+    /* top: calc(50% + 100px) !important; */
+}
+
+/* 如果你之前採用了將 back 和 front 拆開的方案，則使用這個： */
+.guide-row.row-comparison .drawer-back,
+.guide-row.row-comparison .drawer-front {
+    top: 65% !important;
+}
+/* --- 專門微調第三行（對比行）的左右位置 --- */
+
+/* 1. 左側抽屜 (L3_back & L3_front) */
+.row-comparison .drawer-left {
+    /* 原本是 0。如果你想讓它往右移一點（縮進去），就改成正數（如 20px） */
+    /* 如果想讓它往左移一點（更靠邊），就改成負數（如 -20px） */
+    left: 0px !important; 
+}
+
+/* 2. 右側抽屜 (R3_back & R3_front) */
+.row-comparison .drawer-right {
+    /* 原本是 0。如果你想讓它往左移一點（縮進去），就改成正數（如 20px） */
+    /* 如果想讓它往右移一點（更靠邊），就改成負數（如 -20px） */
+    right: 0px !important; 
+}
+
+/* 显摆图片样式 ( Showing-off ) */
+.show-off-img {
+    position: absolute;
+    width: 100px; height: 100px;
+    z-index: 50; /* 最高层级 */
+    animation: wobble 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 15px var(--glow-color)); /* 按照图片边缘发光 */
+    pointer-events: none;
+}
+
+@keyframes wobble {
+    0%, 100% { transform: rotate(-1.5deg); }
+    50% { transform: rotate(1.5deg); }
+}
+
+/* 1. 確保章節容器底部沒有內邊距 */
+.ov-section {
+    padding-bottom: 0 !important;
+}
+
+/* 2. 確保貼底圖片沒有任何邊距 */
+.guide-final-full, .equip-final-full {
+    margin-bottom: 0 !important;
+    display: block; /* 消除圖片下方的行內間隙 */
+}
+
+/* 3. 確保下一個章節緊貼上來 */
+#ov-combat, #ov-justice {
+    margin-top: 0 !important;
+}
+/* ============================================================
+   手機端 (Mobile) 導遊頁第三行：強制並排且佔 90%
+   ============================================================ */
+@media (max-width: 768px) {
+    
+    /* 1. 強制網格為兩列並排，寬度 90% */
+    #ov-guide .row-comparison .justice-grid {
+        width: 90% !important; /* 佔屏幕 90% */
+        display: grid !important; 
+        grid-template-columns: 1fr 1fr !important; /* 強制兩列並排 */
+        gap: 8px !important;    /* 縮小中間間距，節省空間 */
+        margin: 0 auto !important;
+    }
+
+    /* 2. 壓縮內部的玻璃框細節，防止內容溢出 */
+    #ov-guide .row-comparison .equip-glass-card {
+        width: 100% !important;
+        padding: 0 !important; /* 去掉多餘邊距 */
+    }
+
+    #ov-guide .row-comparison .equip-card-header {
+        font-size: 11px !important; /* 標題縮小 */
+        padding: 5px !important;
+    }
+
+    /* 3. 核心內容壓縮：讓文字和塊變小 */
+    #ov-guide .row-comparison .equip-card-body {
+        padding: 10px 5px !important; /* 縮減內邊距 */
+        font-size: 10px !important;   /* 字體縮小到極限 */
+        line-height: 1.2 !important;
+    }
+
+    /* 縮小文字背景塊 */
+    #ov-guide .row-comparison .equip-card-body div[style*="background"] {
+        padding: 4px 2px !important;
+        margin: 2px 0 !important;
+        font-size: 9px !important;
+    }
+
+    /* 4. 強制縮小垂直箭頭，否則會拉得非常長 */
+    #ov-guide .row-comparison .flow-arrow {
+        font-size: 24px !important; /* 箭頭從 60px 縮小到 24px */
+        height: 30px !important; 
+        line-height: 1 !important;
+        margin: 2px 0 !important;
+    }
+
+    /* 5. 下方的公正膠囊也要同步變小 */
+    #ov-guide .row-comparison .justice-capsule {
+        font-size: 9px !important;
+        padding: 4px 0 !important;
+        border-width: 1px !important;
+        margin-top: 8px !important;
+    }
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -4140,6 +4368,7 @@ position: absolute;
     <div class="jump-menu-content">
         <div class="jump-title">總覽章節</div>
         <div class="jump-list">
+            <div class="jump-btn" onclick="scrollToOv('guide', event)" style="border-left-color: #FFD700; color: #FFD700">导游</div>
             <div class="jump-btn" onclick="scrollToOv('combat', event)" style="border-left-color: var(--tab-scenery); color: var(--tab-scenery)">战斗吧！</div>
             <div class="jump-btn" onclick="scrollToOv('equip', event)" style="border-left-color: var(--tab-cards); color: var(--tab-cards)">装备吧！</div>
             <div class="jump-btn" onclick="scrollToOv('justice', event)" style="border-left-color: var(--tab-chars); color: var(--tab-chars)">不公正吧！</div>
@@ -4584,15 +4813,42 @@ document.querySelectorAll('.card').forEach(card => {
     // 战斗截图
     const OverviewAssets = {
     banner: 'images/overview/header_banner.png', // 21:9 头图
+
+    // === [新增] 导游章节数据 ===
+// 在 OverviewAssets 对象内添加
+// 导游字典 //
+guide: {
+    rows: [
+        {
+            // 第一行
+            main: { img: 'images/guide/main1.png', title: '章节标题1', desc: '描述文字1' },
+            left:  { bottom: 'images/guide/L1_back.png', top: 'images/guide/L1_front.png' },
+            right: { bottom: 'images/guide/R1_back.png', top: 'images/guide/R1_front.png' }
+        },
+        {
+            // 第二行
+            main: { img: 'images/guide/main2.png', title: '章节标题2', desc: '描述文字2' },
+            left:  { bottom: 'images/guide/L2_back.png', top: 'images/guide/L2_front.png' },
+            right: { bottom: 'images/guide/R2_back.png', top: 'images/guide/R2_front.png' }
+        }
+    ],
+    comparison: {
+        // 第三行对比
+        left:  { bottom: 'images/guide/L3_back.png', top: 'images/guide/L3_front.png' },
+        right: { bottom: 'images/guide/R3_back.png', top: 'images/guide/R3_front.png' },
+        showOffL: 'images/guide/star.png', 
+        showOffR: 'images/guide/crown.png'
+    },
+    finalImg: 'images/guide/final.png'
+},
     
     // 战斗章节：16行（示例提供4组循环逻辑）
     battle: [
-        { img: 'images/overview/b1_combat.png', info: 'images/overview/b1_desc.png', side: 'left' },
         { img: 'images/overview/b2_combat.png', info: 'images/overview/b2_desc.png', side: 'right' },
         { img: 'images/overview/b3_combat.png', info: 'images/overview/b3_desc.png', side: 'left' },
-        { img: 'images/overview/b4_combat.png', info: 'images/overview/b4_desc.png', side: 'right' },
+        { img: 'images/overview/b14_combat.png', info: 'images/overview/b14_desc.png', side: 'right' },
         { img: 'images/overview/b5_combat.png', info: 'images/overview/b5_desc.png', side: 'left' },
-        { img: 'images/overview/b6_combat.png', info: 'images/overview/b6_desc.png', side: 'right' },
+        { img: 'images/overview/b16_combat.png', info: 'images/overview/b16_desc.png', side: 'right' },
         { img: 'images/overview/b7_combat.png', info: 'images/overview/b7_desc.png', side: 'left' },
         { img: 'images/overview/b8_combat.png', info: 'images/overview/b8_desc.png', side: 'right' },
         { img: 'images/overview/b9_combat.png', info: 'images/overview/b9_desc.png', side: 'left' },
@@ -4600,9 +4856,6 @@ document.querySelectorAll('.card').forEach(card => {
         { img: 'images/overview/b11_combat.png', info: 'images/overview/b11_desc.png', side: 'left' },
         { img: 'images/overview/b12_combat.png', info: 'images/overview/b12_desc.png', side: 'right' },
         { img: 'images/overview/b13_combat.png', info: 'images/overview/b13_desc.png', side: 'left' },
-        { img: 'images/overview/b14_combat.png', info: 'images/overview/b14_desc.png', side: 'right' },
-        { img: 'images/overview/b15_combat.png', info: 'images/overview/b15_desc.png', side: 'left' },
-        { img: 'images/overview/b16_combat.png', info: 'images/overview/b16_desc.png', side: 'right' },
         // ... 你可以根据这个格式写满16行
     ],
 
@@ -7737,15 +7990,13 @@ const notionContent = `
 
 [校徽卡]是[物品卡]的一种，其特殊之处在于，单种[校徽卡]，其数量仅有1张。会在[回合年]开始之初，由[社联组]自动分配到，某位宣誓成为[学校代表]的玩家身上，若始终无人宣誓，则会被分发到最后一名，未被击杀的[一般玩家]身上。
 
-4.[怪物卡]
+4.[？？？]
 
-获取方式：玩家可以通过击杀一定数量的怪物获得，或交易获得；
+获取方式：？？？有这种卡吗？
 
-作用：作与[物品卡]类似，皆为可以在战斗中获得各种加成，在某种条件下，也可以在战斗中放出，辅助战斗，该卡不是一次性的；
+作用：？？？
 
-数量与垄断：单张卡的总数没有限制，不可以垄断。
-
-请大家熟练掌握，并灵活应用这些神奇地[斑丘卡]！并在战斗、生活中，享受其带来的乐趣无穷的效果吧！
+数量与垄断：？？？
 
 ## 5-2.属性块
 
@@ -8610,14 +8861,13 @@ R2的主要战场，是熊猫带领的新[不良少年宫]与主席带领的[冷
 
 - 后续计划
 
-草莓在校园夺回战中，结识了各方势力，并渐渐对整个世界的表面战局有了些许判断。
+草莓在校园夺回战中，结施了各方势力，并渐渐对整个世界的表面战局有了些许判断。
 
 在于沐川的表面指引下，草莓将会轮转与各个社团，表面是帮忙其战斗，实际为收回，藏于各社团中的，老[炼厂]成员所携带的[纪念卡]
 
 此部分作为后续主要游戏内容。
 
 另一方面，闹闹在相对早期，便被[广播社]所挟持，目的是组织于沐川获得[隐藏属性块]。[广播社]将拥有[哈尼]权限的闹闹，直接丢到了[哈尼哈尼快乐园]中，闹闹将冲另一视角，了解整个事情的真相。
-
 
 `;
 
@@ -8845,8 +9095,80 @@ function renderOverview() {
     const root = document.getElementById('view-overview');
     if (!root) return;
 
-    // 1. 21:9 頭圖 Banner
     let html = `<img src="${OverviewAssets.banner}" class="ov-header-banner">`;
+
+    // 导游章节开始
+    const guideColor = 'var(--tab-overview)';
+    const guideBg = `linear-gradient(180deg, color-mix(in srgb, ${guideColor}, transparent 90%) 0%, rgba(26,26,26,0) 100%)`;
+    
+    html += `<div class="ov-section ov-section-full" id="ov-guide" style="background: ${guideBg}; margin-top: 0;">
+        <div class="bqc-chapter-bar" onclick="toggleOvMenu()" style="border-left-color: ${guideColor}; margin-top: 0 !important;">
+            <div style="width:12px; height:12px; background:${guideColor}; border-radius:50%; box-shadow: 0 0 5px ${guideColor};"></div>
+            <span class="bqc-bar-title" style="color:#fff">导游 ▾</span>
+        </div>
+        <div class="guide-container">`;
+
+    // 辅助：生成抽屉HTML
+    const makeDrawer = (side, data) => `
+        <div class="drawer-wrapper drawer-${side}">
+            <img src="${data.bottom}" class="comment-img-bottom">
+            <img src="${data.top}" class="comment-img-top">
+        </div>`;
+
+    // 1. 渲染前两行
+    OverviewAssets.guide.rows.forEach(row => {
+        html += `
+        <div class="guide-row" data-animate="guide">
+            ${makeDrawer('left', row.left)}
+            <div class="equip-unit">
+                <img src="${row.main.img}" class="equip-img">
+                <div class="equip-glass-card">
+                    <div class="equip-card-header">${row.main.title}</div>
+                    <div class="equip-card-body">${row.main.desc}</div>
+                </div>
+            </div>
+            ${makeDrawer('right', row.right)}
+        </div>`;
+    });
+
+// 2. 渲染第三行对比 (已删除显摆图)
+const comp = OverviewAssets.guide.comparison;
+html += `
+<div class="guide-row row-comparison" data-animate="guide"> ${makeDrawer('left', comp.left)}
+    <div class="justice-grid" style="width:70%;">
+            <div class="justice-unit" style="position:relative;">
+                <div class="equip-glass-card" style="width:100% !important;">
+                    <div class="equip-card-header">你以为要这么玩</div>
+                    <div class="equip-card-body" style="text-align:center; padding: 40px 20px !important;">
+                        <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:4px;">加入社团一起战斗</div>
+                        <div class="flow-arrow" style="font-size:60px; line-height:1;">↓</div>
+                        <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:4px;">收集、抢夺[校徽卡]</div>
+                        <div class="flow-arrow" style="font-size:60px; line-height:1;">↓</div>
+                        <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:4px; border:1px solid gold;">所有人一起获胜离开</div>
+                    </div>
+                </div>
+                <div class="justice-capsule" style="--border-color: #3f72ff; margin-top:20px; text-align:center;">友谊、合作、共赢</div>
+            </div>
+            <div class="justice-unit" style="position:relative;">
+                <div class="equip-glass-card" style="width:100% !important;">
+                    <div class="equip-card-header">其实还可以这么玩</div>
+                    <div class="equip-card-body" style="text-align:center; padding: 40px 20px !important;">
+                        <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:4px;">一个人单打独斗</div>
+                        <div class="flow-arrow" style="font-size:60px; line-height:1;">↓</div>
+                        <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:4px;">收集、抢夺[???]</div>
+                        <div class="flow-arrow" style="font-size:60px; line-height:1;">↓</div>
+                        <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:4px; border:1px solid #FF00FF;">只有自己获胜离开</div>
+                    </div>
+                </div>
+                <div class="justice-capsule" style="--border-color: #ff258b; margin-top:20px; text-align:center;">孤独、掠夺、唯一</div>
+            </div>
+        </div>
+        ${makeDrawer('right', comp.right)}
+    </div>`;
+
+    // 3. 全宽尾图
+    html += `<img src="${OverviewAssets.guide.finalImg}" class="equip-final-full" style="margin-top:50px;">`;
+    html += `</div></div>`; // 闭合 guide-container 和 ov-section
 
     // --- 1. 戰鬥章節 (藍色) ---
     const combatColor = 'var(--tab-scenery)';
@@ -8964,7 +9286,7 @@ function renderOverview() {
             html += `
             <div class="equip-glass-card">
                 <div class="equip-card-header">属性块种类</div>
-                <div class="equip-card-body" style="padding:15px; display:grid; grid-template-columns:repeat(5, 1fr); gap:10px;">
+                <div class="equip-card-body attr-grid-container">
                     ${renderAttrUnit('金', Attrs.METAL, '#5D9CCF', 1)}
                     ${renderAttrUnit('木', Attrs.WOOD, '#83D44A', 1)}
                     ${renderAttrUnit('水', Attrs.WATER, '#40B3FF', 1)}
@@ -9123,7 +9445,7 @@ function startOverviewObserver() {
     });
 
     // 观察所有的战斗行
-    document.querySelectorAll('[data-animate="battle"]').forEach(el => observer.observe(el));
+    document.querySelectorAll('[data-animate="battle"], [data-animate="guide"]').forEach(el => observer.observe(el));
 }
 
 
