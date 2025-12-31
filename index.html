@@ -4171,7 +4171,10 @@ position: absolute;
     z-index: 20; /* 在主图上方 */
     object-fit: cover;
     opacity: 0;
-    transition: opacity 0.8s ease 1s; /* 抽屉拉出后渐显 */
+    /* 核心修改点： */
+    /* 第一个数字 0.8s 是“变不透明”的过程耗时 */
+    /* 第二个数字 1s 是“等多久才开始变” */
+    transition: opacity 0.6s ease 0.7s; /* 抽屉拉出后渐显 */
 }
 .guide-row.active .comment-img-top { opacity: 1; }
 
