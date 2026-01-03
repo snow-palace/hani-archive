@@ -4009,8 +4009,8 @@ position: absolute;
 }
 /* 还原明黄色高亮 */
 .mm-highlight { color: #feff00; font-weight: bold; }
-.mm-justice1 { color: #00d2ff; font-weight: bold; font-size: 20px; }
-.mm-justice2 { color: #ff258b; font-weight: bold; font-size: 20px; }
+.mm-justice1 { color: #00d2ff; font-weight: bold; font-size: 17px; }
+.mm-justice2 { color: #ff258b; font-weight: bold; font-size: 17px; }
 
 
 @media (max-width: 768px) {
@@ -5086,6 +5086,7 @@ document.querySelectorAll('.card').forEach(card => {
     banner: 'images/overview/header_banner.png', // 21:9 头图
     // === [新增] 必须补上这个路径 ===
     combatHeader: 'images/overview/combat_header.png',
+    equipHeader: 'images/overview/equip_header.png',
     // === [新增] 导游章节数据 ===
 // 在 OverviewAssets 对象内添加
 guide: {
@@ -9464,11 +9465,11 @@ html += `
                 <div class="equip-glass-card" style="width:100% !important;">
                     <div class="equip-card-header">告诉你只能要这么玩</div>
                     <div class="equip-card-body" style="text-align:center; padding: 40px 20px !important;">
-                        <div style="background:rgba(120,120,120); padding:10px; border-radius:4px;border:2px solid #aaa;">加入社团一起战斗</div>
+                        <div style="background:#585858; padding:10px; border-radius:4px;border:2px solid #ccc;">加入社团 <span class="mm-justice1">一起战斗</span></div>
                         <div class="flow-arrow" style="font-size:60px; line-height:1;">↓</div>
-                        <div style="background:rgba(120,120,120); padding:10px; border-radius:4px;border:2px solid #aaa">收集全部[校徽卡]</div>
+                        <div style="background:#585858; padding:10px; border-radius:4px;border:2px solid #ccc">收集全部 <span class="mm-justice1">[校徽卡]</span></div>
                         <div class="flow-arrow" style="font-size:60px; line-height:1;">↓</div>
-                        <div style="background:rgba(10,10,10); padding:10px; border-radius:4px; border:3px solid #3f72ff;">所有人一起获胜离开</div>
+                        <div style="background:rgba(10,10,10); padding:10px; border-radius:4px; border:3px solid #3f72ff;"><span class="mm-justice1">所有人</span> 一起获胜离开</div>
                     </div>
                 </div>
                 <div class="justice-capsule" style="--border-color: #3f72ff; margin-top:20px; text-align:center;">一般路线</div>
@@ -9477,11 +9478,11 @@ html += `
                 <div class="equip-glass-card" style="width:100% !important;">
                     <div class="equip-card-header">其实还可以这么玩</div>
                     <div class="equip-card-body" style="text-align:center; padding: 40px 20px !important;">
-                        <div style="background:rgba(120,120,120); padding:10px; border-radius:4px;border:2px solid #aaa">一个人单打独斗</div>
+                        <div style="background:#585858; padding:10px; border-radius:4px;border:2px solid #ccc">一个人 <span class="mm-justice2">单打独斗</span></div>
                         <div class="flow-arrow" style="font-size:60px; line-height:1;">↓</div>
-                        <div style="background:rgba(120,120,120); padding:10px; border-radius:4px;border:2px solid #aaa">抢夺全部[纪念卡]</div>
+                        <div style="background:#585858; padding:10px; border-radius:4px;border:2px solid #ccc">抢夺全部 <span class="mm-justice2">[纪念卡]</span></div>
                         <div class="flow-arrow" style="font-size:60px; line-height:1;">↓</div>
-                        <div style="background:rgba(10,10,10); padding:10px; border-radius:4px; border:3px solid #FF00FF;">只有自己获胜离开</div>
+                        <div style="background:rgba(10,10,10); padding:10px; border-radius:4px; border:3px solid #FF00FF;">只有<span class="mm-justice1">自己</span> 获胜离开</div>
                     </div>
                 </div>
                 <div class="justice-capsule" style="--border-color: #ff258b; margin-top:20px; text-align:center;">隐藏路线</div>
@@ -9549,13 +9550,17 @@ html += `
     const equipBg = `linear-gradient(180deg, color-mix(in srgb, ${equipColor}, transparent 90%) 0%, rgba(26,26,26,0) 100%)`;
     
     html += `
+    
     <div class="ov-section" id="ov-equip" style="background: ${equipBg}; margin-top: 60px; padding-bottom:0 !important;">
         <div class="bqc-chapter-bar" onclick="toggleOvMenu()" style="border-left-color: ${equipColor}">
             <div style="width:12px; height:12px; background:${equipColor}; border-radius:50%; box-shadow: 0 0 5px ${equipColor};"></div>
             <span class="bqc-bar-title" style="color:#fff">装备吧！ ▾</span>
         </div>
+        <img src="${OverviewAssets.equipHeader}" class="combat-intro-header">
         
-        <div class="equip-container">`;
+        <div class="equip-container">
+            
+            `;
 
 // 1. 定义卡牌数据
     const RuleIcons = {
