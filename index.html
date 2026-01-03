@@ -115,6 +115,8 @@ html, body {
     background: #22222200;
     display: flex; align-items: center; justify-content: center;
     border-right: 0px solid #333;
+    cursor: pointer; /* 鼠标放上去变小手 */
+    transition: opacity 0.2s ease; /* 增加一个轻微的反馈感 */
 }
 .nav-logo-box img {
     width: 100%; height: 100%; object-fit: contain;
@@ -123,6 +125,8 @@ html, body {
 .nav-title-box {
     display: flex; flex-direction: column; justify-content: center;
     padding-left: 15px;
+    cursor: pointer; /* 鼠标放上去变小手 */
+    transition: opacity 0.2s ease; /* 增加一个轻微的反馈感 */
 }
 .nav-title-main {
     color: #fff; font-weight: 900; font-size: 16px; line-height: 1.2; letter-spacing: 1px;
@@ -2890,7 +2894,7 @@ background-size: auto;
 .story-content h1 { font-size: 2.5em; color: #fff; border-bottom: 1px solid #333; padding-bottom: 0.3em; margin-top: 1em; }
 .story-content h2 { font-size: 1.8em; color: #eee; margin-top: 1.5em; border-left: 5px solid #DC143C; padding-left: 15px; }
 .story-content h3 { font-size: 1.4em; color: #ddd; margin-top: 1.2em; }
-.story-content p { margin-bottom: 1em; font-size: 16px; color: #dbdbdb; }
+.story-content p { margin-bottom: 1em; font-size: 16px; color: #f7f7f7; }
 .story-content strong { color: #fff; font-weight: 900; }
 .story-content blockquote { border-left: 4px solid #555; padding-left: 15px; color: #888; background: #1a1a1a; padding: 10px 15px; border-radius: 4px;}
 .story-content code { background: #333; padding: 2px 5px; border-radius: 3px; color: #ff7b72; font-family: monospace; }
@@ -3225,11 +3229,11 @@ position: absolute;
     /* 增加瞬间爆发的故障感 */
     animation: glitch-advanced 4s infinite; 
 }
-/* === 双翼背景层核心样式 === */
+/* === 翅膀-双翼背景层核心样式 === */
 .home-bg-wings-wrapper {
     position: absolute;
     top: 0; left: 0;
-    width: 100%; height: 100%;
+    width: 0%; height: 0%; /* 暂时取消了 */
     display: flex;
     z-index: 1.2; /* 夹在基础背景(z:1)与主视觉(z:2)之间 */
     perspective: 1200px; /* 3D 深度感 */
@@ -3241,6 +3245,8 @@ position: absolute;
     width: 50%; height: 100%;
     background-size: cover;
     background-position: center;
+
+    
 
     /* === 【新增：變暗參數】 === */
     /* 0.5 代表 50% 亮度。若要更暗請設為 0.3，若要亮一點請設為 0.7 */
@@ -3759,6 +3765,35 @@ position: absolute;
     margin-right: auto;    /* 自动分配右侧间距 */
     text-align: center;    /* 让内部文字居中 */
 }
+/* =========================================
+   [修正] 公正章节手机端比例缩小补丁
+   ========================================= */
+@media (max-width: 768px) {
+    /* 1. 锁定公正章节网格：保持3列并使用相对单位间距 */
+    #ov-justice .justice-grid {
+        width: 95% !important; /* 扩大容器利用率 */
+        grid-template-columns: 1fr 1fr 1fr !important; /* 强制保持3列比例 */
+        gap: 2vw !important; /* 间距随屏幕宽度缩小，原 10px */
+        padding: 0 !important;
+    }
+
+    /* 2. 核心：让胶囊文字也随着屏幕比例缩小 */
+    #ov-justice .justice-capsule {
+        width: 95% !important; /* 胶囊宽度随列宽变化 */
+        /* 使用 vw 单位：确保在 320px 屏幕和 768px 屏幕下文字占列宽的比例一致 */
+        font-size: 2.2vw !important; 
+        padding: 0.8vw 0 !important; /* 内边距同步缩小 */
+        height: auto !important;
+        line-height: 1.4 !important;
+        border-width: 1px !important;
+        margin-top: 5px !important;
+    }
+
+    /* 3. 调整单元格内的间距比例 */
+    #ov-justice .justice-unit {
+        gap: 1vw !important; 
+    }
+}
 
 /* --- 1. 缩略图交互效果 (Hover 变正) --- */
 /* 给图片容器加上鼠标手势和过渡动画 */
@@ -4009,8 +4044,8 @@ position: absolute;
 }
 /* 还原明黄色高亮 */
 .mm-highlight { color: #feff00; font-weight: bold; }
-.mm-justice1 { color: #00d2ff; font-weight: bold; font-size: 17px; }
-.mm-justice2 { color: #ff258b; font-weight: bold; font-size: 17px; }
+.mm-justice1 { color: #00d2ff; font-weight: bold; font-size: 15px; }
+.mm-justice2 { color: #ff258b; font-weight: bold; font-size: 15px; }
 
 
 @media (max-width: 768px) {
@@ -4458,10 +4493,10 @@ position: absolute;
 
 <div class="navbar">
     <div class="nav-left-zone">
-        <div class="nav-logo-box">
+        <div class="nav-logo-box" onclick="switchView('home', null)">
             <img src="images/icon/website_logo.png" alt="LOGO"> 
         </div>
-        <div class="nav-title-box">
+        <div class="nav-title-box" onclick="switchView('home', null)">
             <div class="nav-title-main">不公正的哈尼</div>
             <div class="nav-title-sub">斑丘资料库</div>
         </div>
@@ -5093,7 +5128,7 @@ guide: {
     rows: [
         {
             // 第一行
-            main: { img: 'images/guide/main1.png', title: '章节标题1', desc: '描述文字1' },
+            main: { img: 'images/guide/main1.png', title: '章节标题1', desc: '一阵晕眩过后，你已身处一片诡异沙漠的中央，远处伫立着你的学校，身旁站着被吓哭的好友' },
             left:  { bottom: 'images/guide/L1_back.png', top: 'images/guide/L1_front.png' },
             right: { bottom: 'images/guide/R1_back.png', top: 'images/guide/R1_front.png' }
         },
@@ -5102,6 +5137,12 @@ guide: {
             main: { img: 'images/guide/main2.png', title: '章节标题2', desc: '描述文字2' },
             left:  { bottom: 'images/guide/L2_back.png', top: 'images/guide/L2_front.png' },
             right: { bottom: 'images/guide/R2_back.png', top: 'images/guide/R2_front.png' }
+        },
+                {
+            // 第二行
+            main: { img: 'images/guide/main3.png', title: '章节标题2', desc: '描述文字2' },
+            left:  { bottom: 'images/guide/L3_back.png', top: 'images/guide/L3_front.png' },
+            right: { bottom: 'images/guide/R3_back.png', top: 'images/guide/R3_front.png' }
         }
     ],
     comparison: {
@@ -5173,9 +5214,9 @@ guide: {
             imgR: 'images/overview/j4_r.png', textR1: '可以使用 <span class="mm-justice2">15</span> 个槽位' 
         },
         { 
-            imgL: 'images/overview/j5_l.png', textL1: '收集所有 <span class="mm-justice1">校徽卡</span> 来通关', 
+            imgL: 'images/overview/j5_l.png', textL1: '收集所有 <span class="mm-justice1">校徽卡</span>', 
             imgM: 'images/overview/j5_m.png', textM1: '占位', 
-            imgR: 'images/overview/j5_r.png', textR1: '收集所有 <span class="mm-justice2">纪念卡</span> 来通关' 
+            imgR: 'images/overview/j5_r.png', textR1: '收集所有 <span class="mm-justice2">纪念卡</span>' 
         },
         { 
             imgL: 'images/overview/j6_l.png', textL1: '与 <span class="mm-justice1">其余学生</span> 战斗', 
@@ -7070,26 +7111,26 @@ const bqViewData = {
     chapters: [
         {
             id: 1, title: "炼厂", color: "#daf08e",
-            bio: "煉廠是斑丘世界中最為繁忙的資源加工區。這裡終日被暗紅色的煙雲籠罩，巨大的鋼鐵煙囪矗立在荒漠之中。學生們在這裡收集並處理殘留的數據切片，是獲取高階屬性塊的重要地點。雖然環境惡劣，但這裡卻有一種工業廢土特有的殘缺美感。",
+            bio: "身处斑丘少有的绿地群山中，由无数直耸天际的烟囱和错落的老式居民楼组成",
             photos: 15 ,// 自動生成 01-12 的編號
             logo: Societies.FACTORY,
         },
         {
             id: 2, title: "冷凝塔", color: "#f3c14a",
-            bio: "冷凝塔是躲避沙暴與騷亂的避風港。巨大的金屬塔身內部採用了特殊的冷卻結構，氣溫始終保持在宜人的22度。塔內的迴廊盤旋而上，每一層都居住著尋求和平的學生。從塔頂望去，可以俯瞰整個斑丘的黃昏景觀。",
+            bio: "外形是冷凝塔，内里却是大型住宿区，底部架空，中心是电梯，由廊架连接至外圈的居住空间",
             photos: 12,
             logo: Societies.TOWER,
         
         },
         {
             id: 3, title: "冲江市第五中学", color: "#345ca1",
-            bio: "被完整複製進斑丘的校區。這裡保留了現實世界中五中的所有細節：斑駁的教學樓、爬滿藤蔓的籃球場、以及永遠停留在放學前五分鐘的掛鐘。這裡是學生們情感的寄託之地，也是多場關鍵衝突的爆發點。",
+            bio: "被完整复制的整个校区，被哈尼占领后正在被改造",
             photos: 12,
             logo: Schools.CHONGJIANG,
         },
         {
             id: 4, title: "蜂山广场", color: "#eb9653",
-            bio: "斑丘最大的交易與集會中心。巨大的圓形廣場中心矗立著哈尼的雕像，周圍遍布著友誼百貨的自動販賣機。這裡是各種情報流轉的中心，也是所有人進入斑丘的第一站。",
+            bio: "斑丘中心区，社联组大楼前的大型广场，属于非战斗区域，是平常休闲娱乐、饮食购物的区域",
             photos: 15,
             logo: Societies.PLAZA,
         }
