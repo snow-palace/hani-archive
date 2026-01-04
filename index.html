@@ -2120,47 +2120,83 @@ background-size: auto;
             font-weight: bold;
         }
 
+        
 
-/* === [修改] 动态反光层 (柔光 + 遮罩版) === */
-        .bqc-card-shine {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            
-            /* 1. [解决分割线] 改用径向渐变 (圆形光斑) */
-            /* 这种光中间亮、四周慢慢变透明，没有任何硬边缘 */
-            background: radial-gradient(
-                circle at center, 
-                rgba(255, 255, 255, 0.85) 0%, 
-                rgba(255, 255, 255, 0.2) 40%, 
-                transparent 70%
-            );
-            
-            /* 2. 把光斑放大，保证移动时能覆盖全身 */
-            background-size: 300% 300%;
-            background-repeat: repeat;
-            
-            /* 3. 混合模式：Soft Light (柔光) 比 Overlay 更自然，不容易过曝 */
-            mix-blend-mode: soft-light; 
-            /* 如果觉得不够亮，可以改回 soft-light、hard-light、overlay、color-dodge、screen */
-            
-            /* 4. [解决圆角问题] 遮罩基础设置 */
-            /* 我们稍后会在 JS 里把卡牌图片填进去，让光只显示在有像素的地方 */
-            -webkit-mask-size: contain;
-            mask-size: contain;
-            -webkit-mask-repeat: no-repeat;
-            mask-repeat: no-repeat;
-            -webkit-mask-position: center;
-            mask-position: center;
+/* === 终极镭射反光层：参数说明书 === */
+.bqc-card-shine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* 核心：多层背景叠加逻辑 */
+    background: 
+        /* 【第一层：彩虹光谱】 */
+        /* 110deg: 光谱倾斜角度。0deg是垂直，90deg是水平 */
+        /* transparent: 只有光扫过的地方有色，平时是透明的 */
+        /* rgba的 0.2: 控制色彩饱和度，数字越大颜色越浓（妖艳），越小越清透 */
+        linear-gradient(135deg, 
+            transparent 20%, 
+            rgba(255, 0, 0, 0.2) 25%, 
+            rgba(255, 255, 0, 0.2) 35%, 
+            rgba(0, 255, 0, 0.2) 45%, 
+            rgba(0, 255, 255, 0.25) 55%, 
+            rgba(0, 0, 255, 0.2) 65%, 
+            rgba(255, 0, 255, 0.2) 75%, 
+            transparent 80%
+        ),
+        /* 【第二层：核心高亮光斑】 */
+        /* 模拟手电筒打在卡片上的聚光感，增加 3D 立体视觉 */
+        /* 0.8: 中心的亮度；0.2: 边缘的亮度 */
+        radial-gradient(
+            circle at center, 
+            rgba(255, 255, 255, 0.10) 0%, 
+            rgba(255, 255, 255, 0.2) 40%, 
+            transparent 70%
+        );
 
-            opacity: 0; 
-            pointer-events: none !important; 
-            z-index: 10;
-            transition: opacity 0.2s; 
-            
-        }
+    /* 【背景尺寸设置】 */
+    /* 200% 200%: 让彩虹层比卡片大两倍，移动时才会有“流动”感 */
+    /* 300% 300%: 让中心光斑极大，防止边缘出现硬切线条 */
+    background-size: 300% 300%, 300% 300%;
+    
+    /* 【背景平铺设置】 */
+    /* 彩虹层设为 repeat，这样在旋转角度很大时，色彩能循环出现 */
+    background-repeat: repeat, no-repeat;
+    
+    /* 【内层混合模式】 */
+    /* color-dodge 让两层背景互相叠加时亮度爆表，不显脏 */
+    background-blend-mode: overlay; 
+
+    /* 【外层混合模式：灵魂所在】 */
+    /* color-dodge (颜色减淡): 模拟真实的物理反光，底色越深反光越弱，底色越亮反光越强 */
+    /* 可选修改：'screen' (更温和), 'overlay' (对比度高), 'hard-light' (更有金属感) */
+    mix-blend-mode: color-dodge; 
+
+    /* 【遮罩逻辑：防溢出关键】 */
+    /* 这是你 JS 注入卡牌原图的地方，确保光影只在卡片像素范围内显示 */
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+
+    /* 【基础控制】 */
+    opacity: 0;                /* 初始透明，由 JS 控制随倾斜角度变亮 */
+    pointer-events: none !important; /* 确保不挡住点击事件 */
+    z-index: 20;               /* 必须在卡牌内容之上 */
+    transition: opacity 0.3s ease; /* 进场和退场的淡入淡出速度 */
+    display: none; /* 默認隱藏，由 JS 的 checkReflection 函數控制 */
+}
+
+/* 调整手机端性能 */
+@media (max-width: 768px) {
+    .bqc-card-shine {
+        mix-blend-mode: color-dodge; /* 手机端 color-dodge 可能太耗电，用 screen 代替 */
+    }
+}
 
         /* =========================================
         [美化] 统一卡牌页面背景 (与人物页一致)
@@ -4462,6 +4498,7 @@ position: absolute;
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="cardData.js"></script>
 </head>
 <body>
 
@@ -6257,12 +6294,6 @@ function navigateChar(direction) {
 
 
     // 1. 数据字典
-    const bqCardData = {
-        "RW": [ "RW-A01a-PGa", "RW-A01a-QSa", "RW-A01a-QSb", "RW-A02a-PGa", "RW-A03a-PGa", "RW-B04a-QSa", "RW-B05a-PGa", "RW-C11a-PGa", "RW-C11a-QGa", "RW-C12a-PGa", "RW-C12a-PGb", "RW-C12a-QGa", "RW-C12a-QSa", "RW-C12a-QSb", "RW-D01a-QSb", "RW-D15a-QSa", "RW-D21a-QSa", "RW-D22a-QSa", "RW-D23a-QSa", "RW-D25a-QSa", "RW-D32a-QSa", "RW-D33a-QSc", "RW-D34a-QSa", "RW-D39a-QSb", "RW-D39a-QSc", "RW-D47a-QSa", "RW-D47a-QSd", "RW-D48a-QSa", "RW-D48a-QSb", "RW-D95a-QSb", "RW-DE08a-PGa", "RW-DE08a-QGa", "RW-DE08a-QSa", "RW-DF02a-PGa", "RW-DF02b-PGa", "RW-DF05b-PGa", "RW-DF05b-QGa", "RW-E05a-PGa", "RW-E05a-QGa", "RW-E07a-PGa", "RW-E07a-QGa", "RW-E07a-QSa", "RW-K02a-PGa", "RW-W02a-PGa" ],
-        "JN": [ "JN-C011a-PGa", "JN-C012a-PGa", "JN-C013a-PGa", "JN-C014a-PGa", "JN-C015a-PGa", "JN-C016a-PGa", "JN-C017a-PGa", "JN-C018a-PGa", "JN-C019a-PGa", "JN-C020a-PGa", "JN-C021a-PGa", "JN-C022a-PGa", "JN-C023a-PGa", "JN-C024a-PGa", "JN-C025a-PGa", "JN-C026a-PGa", "JN-C027a-PGa", "JN-C028a-PGa", "JN-C029a-PGa", "JN-C030a-PGa", "JN-C031a-PGa", "JN-C032a-PGa", "JN-C033a-PGa", "JN-C034a-PGa", "JN-C035a-PGa", "JN-C036a-PGa", "JN-C037a-PGa", "JN-C038a-PGa", "JN-C039a-PGa", "JN-C040a-PGa", "JN-C041a-PGa" ],
-        "WP": [ "WP-A009a-PGa", "WP-C021a-PGa", "WP-C022a-PGa", "WP-C023a-PGa", "WP-C024a-PGa", "WP-C025a-PGa", "WP-C026a-PGa", "WP-C027a-PGa", "WP-C028a-PGa", "WP-C029a-PGa", "WP-C030a-PGa", "WP-C031a-PGa", "WP-C032a-PGa", "WP-C033a-PGa", "WP-C034a-PGa", "WP-C035a-PGa", "WP-C036a-PGa", "WP-C037a-PGa", "WP-C038a-PGa", "WP-C039a-PGa", "WP-C040a-PGa", "WP-X001a-PGa", "WP-X002a-PGa", "WP-X003a-PGa", "WP-X004a-PGa", "WP-X005a-PGa", "WP-X011a-PGa", "WP-X012a-PGa", "WP-X024a-PGa", "WP-X046a-PGa", "WP-Y021a-PGa", "WP-Y022a-PGa", "WP-Y023a-PGa", "WP-Y024a-PGa", "WP-Y025a-PGa", "WP-Y026a-PGa", "WP-Y027a-PGa", "WP-Y064a-PGa", "WP-Y065a-PGa", "WP-Y104a-PGa" ],
-        "JK": [ "JK-011a-QSa", "JK-012a-QSa", "JK-013a-QSa", "JK-014a-QSa", "JK-015a-QSa", "JK-016a-QSa", "JK-017a-QSa", "JK-031a-QSa", "JK-032a-QSa", "JK-033a-QSa", "JK-034a-QSa", "JK-035a-QSa", "JK-071a-QSa", "JK-072a-QSa", "JK-073a-QSa", "JK-074a-QSa", "JK-075a-QSa", "JK-076a-QSa" ]
-    };
 
     // 2. 配置
     const bqCategories = [
@@ -6487,12 +6518,15 @@ function navigateChar(direction) {
         tiltCard.style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg)`;
         
         // 设置遮罩
-        const shineLayer = document.getElementById('bqcShine');
-        if(shineLayer) {
-            shineLayer.style.webkitMaskImage = `url('${src}')`;
-            shineLayer.style.maskImage = `url('${src}')`;
-        }
+    const shineLayer = document.getElementById('bqcShine');
+    if (shineLayer) {
+        shineLayer.style.opacity = '0'; // 强制初始透明
+        // ... 设置遮罩 ...
     }
+    
+    bqcModal.classList.add('active');
+    tiltCard.style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg)`;
+}
 
     // 关闭逻辑
     bqcModal.addEventListener('click', function(e) {
@@ -6533,47 +6567,92 @@ function navigateChar(direction) {
     // 立即初始化
     initCardPlaylist();
 
+    // 【核心功能】判定文件名是否需要反光效果
+function checkReflection(src) {
+    // 提取文件名，例如: images/cards/RW-QGa.png -> RW-QGa
+    const filename = src.substring(src.lastIndexOf('/') + 1).replace('.png', '');
+    
+    // 正則表達式：判定結尾是否為 QG 或 QS 加上一個字母 (a-z)
+    // i 表示不區分大小寫
+    const isRare = /(QG[a-z]|QS[a-z]|PS[a-z])$/i.test(filename);
+    
+    const shineLayer = document.getElementById('bqcShine');
+    if (shineLayer) {
+        if (isRare) {
+            shineLayer.style.display = 'block'; // 顯示反光層
+            // 必須更新遮罩圖，否則光影形狀會停留在上一張卡
+            shineLayer.style.webkitMaskImage = `url('${src}')`;
+            shineLayer.style.maskImage = `url('${src}')`;
+        } else {
+            shineLayer.style.display = 'none';  // 隱藏反光層
+        }
+    }
+}
+
     // 2. 改造打开弹窗函数 (记录当前是哪一张)
     // 请保留你之前的 openBqcModal 逻辑，这里主要是增加索引查找
     const oldOpenBqcModal = openBqcModal; // 备份一下旧引用防止死循环(虽然后面没用到)
     
     // 覆盖旧函数
-    openBqcModal = function(src) {
-        // A. 执行原有的显示逻辑 (显示图片、3D复位、遮罩等)
-        bigImg.src = src;
-        bqcModal.classList.add('active');
-        tiltCard.style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg)`;
-        const shineLayer = document.getElementById('bqcShine');
-        if(shineLayer) {
-            shineLayer.style.webkitMaskImage = `url('${src}')`;
-            shineLayer.style.maskImage = `url('${src}')`;
-        }
+openBqcModal = function(src) {
+    // 1. 更新大圖路徑
+    bigImg.src = src;
+    
+    // 2. 執行反光判定 (這會自動控制 bqcShine 的顯示或隱藏)
+    checkReflection(src);
 
-        // B. [新增] 算出当前是第几张
-        // src 是 "images/.../RW-xxx.png"，我们需要提取出 "RW-xxx"
-        const filename = src.substring(src.lastIndexOf('/') + 1).replace('.png', '');
-        currentCardIndex = globalCardPlaylist.indexOf(filename);
-    }
+    // 3. 顯示彈窗並重置 3D 角度
+    bqcModal.classList.add('active');
+    tiltCard.style.transition = 'none'; // 切換時取消過渡，避免殘影
+    tiltCard.style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg)`;
+
+    // 4. 記錄當前索引
+    const filename = src.substring(src.lastIndexOf('/') + 1).replace('.png', '');
+    currentCardIndex = globalCardPlaylist.indexOf(filename);
+};
 
     // 3. 切换函数 (由按钮调用)
+// 切换卡牌函数 (整合判定 + 初始隐藏反光)
     function navigateCard(dir) {
         if (globalCardPlaylist.length === 0) return;
 
-        // 计算新索引 (循环播放)
-        let newIndex = currentCardIndex + dir;
-        if (newIndex >= globalCardPlaylist.length) newIndex = 0;
-        if (newIndex < 0) newIndex = globalCardPlaylist.length - 1;
+        // 1. 计算新索引
+        currentCardIndex += dir;
+        if (currentCardIndex >= globalCardPlaylist.length) currentCardIndex = 0;
+        if (currentCardIndex < 0) currentCardIndex = globalCardPlaylist.length - 1;
 
-        // 获取新文件名
-        const nextFile = globalCardPlaylist[newIndex];
-        
-        // 拼凑完整路径 (bqBasePath 之前已经定义过了)
+        const nextFile = globalCardPlaylist[currentCardIndex];
         const nextSrc = bqBasePath + nextFile + '.png';
-        
-        // 打开新卡牌
-        openBqcModal(nextSrc);
-    }
 
+        // 2. 获取大图和反光层元素
+        const bigImg = document.getElementById('bqcBigImg');
+        const shineLayer = document.getElementById('bqcShine');
+
+        // 3. 更新图片内容
+        if(bigImg) bigImg.src = nextSrc;
+
+        // 4. 【核心判定逻辑】
+        if (shineLayer) {
+            // 正则判定：卡名是否以 QGa-z 或 QSa-z 结尾
+            const isRare = /(QG[a-z]|QS[a-z])$/i.test(nextFile);
+            
+            if (isRare) {
+                shineLayer.style.display = 'block'; // 需要反光
+                shineLayer.style.opacity = '0';     // 【关键】初始设为透明，动起来才亮
+                // 更新遮罩形状（防止溢出）
+                shineLayer.style.webkitMaskImage = `url('${nextSrc}')`;
+                shineLayer.style.maskImage = `url('${nextSrc}')`;
+            } else {
+                shineLayer.style.display = 'none';  // 普通卡，彻底关闭反光
+            }
+        }
+
+        // 5. 重置旋转角度，让卡牌平整显示
+        const tiltCard = document.getElementById('bqcTiltCard');
+        if(tiltCard) {
+            tiltCard.style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg)`;
+        }
+    }
     // 5. 启动
     renderBqCards();
 
@@ -6720,41 +6799,86 @@ function fitModalToMobile() {
         }
     }, { passive: false });
 
-    // --- 3. 鼠标移动 (电脑端) ---
-    document.addEventListener('mousemove', function(e) {
-        if (!bqcModal.classList.contains('active')) return;
+    // --- [新增] 狀態鎖定變數 ---
+let isBqcHoveringButton = false; 
 
-        // 【屏蔽机制】如果鼠标悬停在按钮上，不触发倾斜
-        if (e.target.closest('.nav-btn-char') || e.target.closest('.nav-controls')) return;
+// 獲取所有導航按鈕和關閉按鈕（根據你之前的類名設定）
+// 這裡包含了左右切換按鈕以及可能存在的關閉提示文字
+const bqcNavElements = document.querySelectorAll('.nav-btn-char, .nav-controls, .bqc-close-hint');
 
-        const tiltCard = document.getElementById('bqcTiltCard');
-        const shineLayer = document.getElementById('bqcShine');
-        
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        
-        const xPos = (e.clientX / width) - 0.5;
-        const yPos = (e.clientY / height) - 0.5;
-
-        const rotationLimit = 12; 
-        const shineFactor = 20; 
-        const shineRange = rotationLimit * shineFactor; 
-
-        // 计算角度 (下沉模式)
-        const tiltX = yPos * -rotationLimit; 
-        const tiltY = xPos * rotationLimit;  
-        
-        tiltCard.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
-
-        const shineX = 50 + (xPos * shineRange); 
-        const shineY = 50 + (yPos * shineRange); 
-
-        if(shineLayer) {
-            shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%`;
-            const dist = Math.hypot(xPos, yPos); 
-            shineLayer.style.opacity = Math.min(dist * 1.5, 0.6);
-        }
+bqcNavElements.forEach(el => {
+    // 當滑鼠進入按鈕
+    el.addEventListener('mouseenter', () => {
+        isBqcHoveringButton = true; // 開啟鎖定
+        resetBqcCard();            // 執行復位函數（使用上一回寫好的函數）
     });
+
+    // 當滑鼠離開按鈕
+    el.addEventListener('mouseleave', () => {
+        isBqcHoveringButton = false; // 解除鎖定
+    });
+});
+
+    // --- 3. 鼠标移动 (电脑端) ---
+// --- [新增] 统一复位函数：让卡牌平滑回到正面，反光消失 ---
+function resetBqcCard() {
+    const tiltCard = document.getElementById('bqcTiltCard');
+    const shineLayer = document.getElementById('bqcShine');
+    if (tiltCard) {
+        // 复位时开启 0.5s 的平滑过渡
+        tiltCard.style.transition = "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)";
+        tiltCard.style.transform = "perspective(2000px) rotateX(0deg) rotateY(0deg) scale(1)";
+    }
+    if (shineLayer) {
+        // 反光也平滑淡出
+        shineLayer.style.transition = "opacity 0.5s ease";
+        shineLayer.style.opacity = "0";
+    }
+}
+
+// --- [优化] 鼠标移动逻辑 ---
+document.addEventListener('mousemove', function(e) {
+    // 1. 基础判定：弹窗没打开则不执行
+    if (!bqcModal.classList.contains('active')) return;
+
+    // 2. 【核心修改】悬停在按钮上时，立即执行复位并停止旋转
+    const isOverButton = e.target.closest('.nav-btn-char') || e.target.closest('.nav-controls');
+    if (isOverButton) {
+        resetBqcCard();
+        return; 
+    }
+
+    const tiltCard = document.getElementById('bqcTiltCard');
+    const shineLayer = document.getElementById('bqcShine');
+    
+    // 3. 【核心修改】开始移动时关闭过渡动画，确保 3D 跟随鼠标“指哪打哪”，没有延迟
+    tiltCard.style.transition = "none";
+    if (shineLayer) shineLayer.style.transition = "none";
+
+    // 4. 统一计算位置参数
+    const xPos = (e.clientX / window.innerWidth) - 0.5;
+    const yPos = (e.clientY / window.innerHeight) - 0.5;
+
+    // 5. 执行 3D 旋转计算
+    const rotationLimit = 30; 
+    const tiltX = yPos * -rotationLimit; 
+    const tiltY = xPos * rotationLimit; 
+    tiltCard.style.transform = `perspective(2000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
+
+    // 6. 执行反光计算
+    if(shineLayer) {
+        // 让背景位置随鼠标摆动
+        const shineX = 50 + (xPos * 100); 
+        const shineY = 50 + (yPos * 100); 
+        shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%, ${shineX}% ${shineY}%`;
+        
+        // 【核心修改】透明度反馈：dist 代表鼠标距离中心点的远近
+        // 当鼠标在屏幕中心时 dist 为 0，反光完全透明。越往边缘移动，反光越强。
+        const dist = Math.hypot(xPos, yPos); 
+        shineLayer.style.opacity = Math.min(dist * 2.5, 0.8);
+    }
+});
+
 
     // --- 4. 触摸结束 ---
     document.addEventListener('touchend', function(e) {
@@ -6764,12 +6888,54 @@ function fitModalToMobile() {
         const tiltCard = document.getElementById('bqcTiltCard');
         const shineLayer = document.getElementById('bqcShine');
         tiltCard.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)'; 
-        tiltCard.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+        tiltCard.style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg) scale(1)`;
         if(shineLayer) {
             shineLayer.style.transition = 'opacity 0.6s ease';
             shineLayer.style.opacity = 0;
         }
     });
+// --- [新增] 统一的复原函数 ---
+function resetBqcCard() {
+    const tiltCard = document.getElementById('bqcTiltCard');
+    const shineLayer = document.getElementById('bqcShine');
+
+    if (tiltCard) {
+        // 增加 0.5 秒的平滑过渡
+        tiltCard.style.transition = "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)";
+        tiltCard.style.transform = "perspective(2000px) rotateX(0deg) rotateY(0deg) scale(1)";
+    }
+    
+    if (shineLayer) {
+        // 反光也平滑消失
+        shineLayer.style.transition = "opacity 0.5s ease";
+        shineLayer.style.opacity = "0";
+    }
+}
+
+// 1. 监听鼠标离开弹窗区域 (bqcModal 是你那个全屏遮罩)
+const bqcModalElement = document.getElementById('bqcModal');
+if (bqcModalElement) {
+    bqcModalElement.addEventListener('mouseleave', resetBqcCard);
+}
+
+// 2. 监听鼠标离开网页窗口
+document.addEventListener('mouseleave', resetBqcCard);
+
+// 3. 监听窗口失去焦点 (比如用户按了 Alt+Tab 切换窗口)
+window.addEventListener('blur', resetBqcCard);
+
+// --- [关键微调] 修改你原本的 mousemove 逻辑 ---
+// 在原本处理鼠标移动旋转的代码里，第一行一定要加上清理 transition 的指令
+document.addEventListener('mousemove', function(e) {
+    if (!bqcModal.classList.contains('active')) return;
+    
+    const tiltCard = document.getElementById('bqcTiltCard');
+    // 【关键】：开始移动时，必须把 transition 设为 "none"，否则 3D 跟随会有延迟感
+    tiltCard.style.transition = "none";
+    
+    // ... 这里是你原本计算旋转角度和移动 shine 的代码 ...
+});
+
 
 /* =========================================================================
    PART 7: 人物档案页 自动化构建与导航系统 (新增)
@@ -9587,19 +9753,20 @@ html += `
 
 
     // --- 2. 装备章节 ---
-    const equipColor = 'var(--tab-cards)';
+const equipColor = 'var(--tab-cards)';
     const equipBg = `linear-gradient(180deg, color-mix(in srgb, ${equipColor}, transparent 90%) 0%, rgba(26,26,26,0) 100%)`;
     
     html += `
-    
     <div class="ov-section" id="ov-equip" style="background: ${equipBg}; margin-top: 60px; padding-bottom:0 !important;">
-        <div class="bqc-chapter-bar" onclick="toggleOvMenu()" style="border-left-color: ${equipColor}">
+        
+        <div class="bqc-chapter-bar" onclick="toggleOvMenu()" style="border-left-color: ${equipColor}; margin-bottom: 0 !important; border-bottom: none;">
             <div style="width:12px; height:12px; background:${equipColor}; border-radius:50%; box-shadow: 0 0 5px ${equipColor};"></div>
             <span class="bqc-bar-title" style="color:#fff">装备吧！ ▾</span>
         </div>
-        <img src="${OverviewAssets.equipHeader}" class="combat-intro-header">
         
-        <div class="equip-container">
+        <img src="${OverviewAssets.equipHeader}" class="combat-intro-header" style="margin-top: 0 !important; display: block;">
+
+        <div class="equip-container" style="margin-top: 0 !important; padding-top: 15px;">
             
             `;
 
