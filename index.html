@@ -2163,7 +2163,7 @@ background-size: auto;
     
     /* 【背景平铺设置】 */
     /* 彩虹层设为 repeat，这样在旋转角度很大时，色彩能循环出现 */
-    background-repeat: repeat, no-repeat;
+    background-repeat: repeat, repeat;
     
     /* 【内层混合模式】 */
     /* color-dodge 让两层背景互相叠加时亮度爆表，不显脏 */
@@ -6634,7 +6634,7 @@ openBqcModal = function(src) {
         // 4. 【核心判定逻辑】
         if (shineLayer) {
             // 正则判定：卡名是否以 QGa-z 或 QSa-z 结尾
-            const isRare = /(QG[a-z]|QS[a-z])$/i.test(nextFile);
+            const isRare = /(QG[a-z]|QS[a-z]|PS[a-z])$/i.test(nextFile);
             
             if (isRare) {
                 shineLayer.style.display = 'block'; // 需要反光
@@ -6788,15 +6788,25 @@ function fitModalToMobile() {
         tiltCard.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
 
         // 反光
-        if(shineLayer) {
-            const shineSpeed = 1.5; 
-            const shineX = 50 + (deltaX * speed * shineSpeed);
-            const shineY = 50 + (deltaY * speed * shineSpeed);
-            shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%`;
-            
-            const dist = Math.hypot(deltaX, deltaY);
-            shineLayer.style.opacity = Math.min(dist / 200, 0.6); 
-        }
+// 反光处理 (手机端优化版)
+if(shineLayer) {
+    const shineSpeed = 1.0; // 适当降低手机端的移动系数，防止滑得太快
+    
+    // 使用 Math.max 和 Math.min 限制背景位置在 0% 到 100% 之间（或者 -50 到 150）
+    // 这样即便手指滑出屏幕，光斑也会停留在卡牌边缘，而不会露出底色
+    let shineX = 50 + (deltaX * speed * shineSpeed);
+    let shineY = 50 + (deltaY * speed * shineSpeed);
+
+    // 【核心修正】限制位移范围，防止光斑飞出 400% 的背景区域
+    shineX = Math.max(-50, Math.min(150, shineX));
+    shineY = Math.max(-50, Math.min(150, shineY));
+
+    shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%, ${shineX}% ${shineY}%`;
+    
+    // 透明度逻辑保持
+    const dist = Math.hypot(deltaX, deltaY);
+    shineLayer.style.opacity = Math.min(dist / 150, 0.8); 
+}
     }, { passive: false });
 
     // --- [新增] 狀態鎖定變數 ---
