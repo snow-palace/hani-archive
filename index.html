@@ -4562,7 +4562,7 @@ position: absolute;
                     <span class="note-num">04</span><span class="note-text">斑丘卡牌</span>
                 </div>
                 <div class="home-note-btn" onclick="switchView('story', null)" style="--note-color: var(--tab-story)">
-                    <span class="note-num">05</span><span class="note-text">剧情备忘录</span>
+                    <span class="note-num">05</span><span class="note-text">剧情备忘</span>
                 </div>
                 <div class="home-note-btn" onclick="switchView('others', null)" style="--note-color: var(--tab-others)">
                     <span class="note-num">06</span><span class="note-text">其他</span>
@@ -5128,19 +5128,19 @@ guide: {
     rows: [
         {
             // 第一行
-            main: { img: 'images/guide/main1.png', title: '章节标题1', desc: '一阵晕眩过后，你已身处一片诡异沙漠的中央，远处伫立着你的学校，身旁站着被吓哭的好友' },
+            main: { img: 'images/guide/main1.png', title: '我被弄到哪儿来了!?', desc: '一阵晕眩过后，你已身处一片荒漠之中，熟悉的校园突兀地伫立在身后，同学们茫然四顾，不知所措;<br>看来你们都被不知名的力量，转移到了这陌生的地方，被迫与其他陌生的学生竞争，参与一场荒唐且残忍的游戏' },
             left:  { bottom: 'images/guide/L1_back.png', top: 'images/guide/L1_front.png' },
             right: { bottom: 'images/guide/R1_back.png', top: 'images/guide/R1_front.png' }
         },
         {
             // 第二行
-            main: { img: 'images/guide/main2.png', title: '章节标题2', desc: '描述文字2' },
+            main: { img: 'images/guide/main2.png', title: '这人怎么这么坏!?', desc: '在惊慌之余，一群自称[哈尼]的兔子不知从何处冒出，叫嚣着要接管你们的学校;<br>哈尼狡猾、下作还不择手段，她们作为参与者的同时，又是游戏的组织者，在这号称“绝对公平”的游戏中，她们通过计谋、期满、利用规则漏洞等手段，让自身始终立于不败之地' },
             left:  { bottom: 'images/guide/L2_back.png', top: 'images/guide/L2_front.png' },
             right: { bottom: 'images/guide/R2_back.png', top: 'images/guide/R2_front.png' }
         },
                 {
             // 第二行
-            main: { img: 'images/guide/main3.png', title: '章节标题2', desc: '描述文字2' },
+            main: { img: 'images/guide/main3.png', title: '怎么都想害我!?', desc: '面对哈尼的种种手段，若没法给予有效的还击，你也只能任其宰割，就算在这种情形下，陌生的学生之间仍做不到互相合作，甚至内斗不断;<br>大家都在为自身利益行动时，你又该作何选择... ...' },
             left:  { bottom: 'images/guide/L3_back.png', top: 'images/guide/L3_front.png' },
             right: { bottom: 'images/guide/R3_back.png', top: 'images/guide/R3_front.png' }
         }
@@ -5183,11 +5183,11 @@ guide: {
     // 装备章节：4行特定排版
     equip: [
         { type: 'row-img-left', img: 'images/overview/e1.png', title: '装备系统', 
-        desc: '利用收集物品来增强自身数值，战斗中不可更改，<br>在一般情况下，其布置只有玩家自己可以看到的，战斗时也需要猜测敌人的布置，并做相应调整' },
-        { type: 'row-img-right', img: 'images/overview/e2.png', title: '块盘', 
-        desc: '决定玩家攻击属性和自身各项数值<br>这些数值均取决于玩家如何放置、放置多少[属性块]，在自己的[块盘]<br>具体的放置机制，有明确公式计算，但必须在游玩中自行实验或者想办法偷看别人的布置' },
-        { type: 'row-img-right', img: 'images/overview/e3.png', title: '卡盘', 
-        desc: '[人物卡]决定玩家各项数值的上限<br>[技能卡]决定战斗中可以释放的技能<br>[物品卡]决定战斗中各属性的加成以及可以使用的道具<br>部分卡牌可以装备与否，取决于[块盘]中放置的[属性块数量]' },
+        desc: '相当于[战斗技能]与[能力数值]，利用收集物品来增强自身战斗力，战斗中不可更改；<br>在一般情况下，其布置只有玩家自己可以看到的，战斗时也需要猜测敌人的布置，并做相应调整' },
+        { type: 'row-img-right', img: 'images/overview/e2.png', title: '[块盘]', 
+        desc: '决定玩家攻击属性和自身各项数值<br>这些数值均取决于玩家如何布置、布置多少[属性块]<br>具体的机制，虽有明确公式计算，但必须在游玩中自行实验推导，或者想办法偷看别人的' },
+        { type: 'row-img-right', img: 'images/overview/e3.png', title: '[卡盘]', 
+        desc: '决定玩家携带的武器、各项数值的上限、可以释放的技能、能力值加成以及道具<br>有些卡牌需要[块盘]中放置相应数量的[属性块]，才能装备使用' },
         { type: 'row-full', img: 'images/overview/e4_diff.png', title: '性能差异对比', desc: '' }
     ],
 
@@ -9513,7 +9513,7 @@ html += `
                         <div style="background:rgba(10,10,10); padding:10px; border-radius:4px; border:3px solid #3f72ff;"><span class="mm-justice1">所有人</span> 一起获胜离开</div>
                     </div>
                 </div>
-                <div class="justice-capsule" style="--border-color: #3f72ff; margin-top:20px; text-align:center;">一般路线</div>
+                <div class="justice-capsule" style="--border-color: #3f72ff; margin-top:20px; text-align:center;">哈尼的误导</div>
             </div>
             <div class="justice-unit" style="position:relative;">
                 <div class="equip-glass-card" style="width:100% !important;">
@@ -9526,7 +9526,7 @@ html += `
                         <div style="background:rgba(10,10,10); padding:10px; border-radius:4px; border:3px solid #FF00FF;">只有<span class="mm-justice1">自己</span> 获胜离开</div>
                     </div>
                 </div>
-                <div class="justice-capsule" style="--border-color: #ff258b; margin-top:20px; text-align:center;">隐藏路线</div>
+                <div class="justice-capsule" style="--border-color: #ff258b; margin-top:20px; text-align:center;">实际的情况</div>
             </div>
         </div>
         ${makeDrawer('right', comp.right)}
