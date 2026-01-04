@@ -6755,80 +6755,58 @@ function fitModalToMobile() {
     }, { passive: false });
 
     // --- 2. 触摸移动 (手机端) ---
-    document.addEventListener('touchmove', function(e) {
-        // 如果没激活，或者刚才点的是按钮，就啥也不干
-        if (!bqcModal.classList.contains('active') || !isTouching) return;
-        if(e.cancelable) e.preventDefault(); 
+document.addEventListener('touchmove', function(e) {
+    if (!bqcModal.classList.contains('active') || !isTouching) return;
+    if(e.cancelable) e.preventDefault(); 
 
-        // 【屏蔽机制】再次检查：如果手指划到了按钮上，立刻停止旋转
-        if (e.target.closest('.nav-btn-char')) return;
+    // 【屏蔽机制】手指在按钮上时不触发
+    if (e.target.closest('.nav-btn-char')) return;
 
-        const tiltCard = document.getElementById('bqcTiltCard');
-        const shineLayer = document.getElementById('bqcShine');
-        const touch = e.touches[0];
+    const tiltCard = document.getElementById('bqcTiltCard');
+    const shineLayer = document.getElementById('bqcShine');
+    const touch = e.touches[0];
 
-        const deltaX = touch.clientX - touchStartX;
-        const deltaY = touch.clientY - touchStartY;
+    const deltaX = touch.clientX - touchStartX;
+    const deltaY = touch.clientY - touchStartY;
 
-        // 【防抖机制】如果移动距离小于 3px (手抖)，直接忽略
-        if (Math.abs(deltaX) < 3 && Math.abs(deltaY) < 3) return;
+    // 【防抖】
+    if (Math.abs(deltaX) < 3 && Math.abs(deltaY) < 3) return;
 
-        // 参数配置
-        const speed = 0.2; 
-        const maxAngle = 20; 
+    // 参数配置
+    const speed = 0.2; 
+    const maxAngle = 20; 
 
-        // 计算角度 (下沉模式)
-        let tiltX = deltaY * speed * -1; 
-        let tiltY = deltaX * speed;      
+    // 1. 计算角度并【锁定范围】
+    // 这一步之后，tiltX 和 tiltY 最大也只会是 20 或 -20
+    let tiltX = Math.max(-maxAngle, Math.min(maxAngle, deltaY * speed * -1));
+    let tiltY = Math.max(-maxAngle, Math.min(maxAngle, deltaX * speed));
+    
+    // 应用 3D 变换
+    tiltCard.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
 
-        tiltX = Math.max(-maxAngle, Math.min(maxAngle, tiltX));
-        tiltY = Math.max(-maxAngle, Math.min(maxAngle, tiltY));
+    // 2. 【核心修改：反光处理】
+    if(shineLayer) {
+        // 让移动灵敏度平滑
+        shineLayer.style.transition = "none";
+
+        // --- 关键算法：让反光绑定到旋转角度上 ---
+        // 这里的 1.5 是光影摆动的幅度，你可以微调
+        // 因为角度最大是 20，那么 20 * 1.5 = 30
+        // 所以反光中心会在 50% ± 30% (也就是 20% 到 80% 之间) 晃动
+        // 这样它永远跑不出 300% 大小的背景图，边缘也就消失了！
+        const shineFactor = 1.5; 
         
-        // 应用变换
-        tiltCard.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
+        let shineX = 50 + (tiltY * shineFactor); 
+        let shineY = 50 + (tiltX * -shineFactor); // 注意：这里 TiltX 的正负号要反过来对应 Y 轴
 
-        // 反光
-// 反光处理 (手机端优化版)
-if(shineLayer) {
-    const shineSpeed = 1.0; // 适当降低手机端的移动系数，防止滑得太快
-    
-    // 使用 Math.max 和 Math.min 限制背景位置在 0% 到 100% 之间（或者 -50 到 150）
-    // 这样即便手指滑出屏幕，光斑也会停留在卡牌边缘，而不会露出底色
-    let shineX = 50 + (deltaX * speed * shineSpeed);
-    let shineY = 50 + (deltaY * speed * shineSpeed);
-
-    // 【核心修正】限制位移范围，防止光斑飞出 400% 的背景区域
-    shineX = Math.max(-50, Math.min(150, shineX));
-    shineY = Math.max(-50, Math.min(150, shineY));
-
-    shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%, ${shineX}% ${shineY}%`;
-    
-    // 透明度逻辑保持
-    const dist = Math.hypot(deltaX, deltaY);
-    shineLayer.style.opacity = Math.min(dist / 150, 0.8); 
-}
-    }, { passive: false });
-
-    // --- [新增] 狀態鎖定變數 ---
-let isBqcHoveringButton = false; 
-
-// 獲取所有導航按鈕和關閉按鈕（根據你之前的類名設定）
-// 這裡包含了左右切換按鈕以及可能存在的關閉提示文字
-const bqcNavElements = document.querySelectorAll('.nav-btn-char, .nav-controls, .bqc-close-hint');
-
-bqcNavElements.forEach(el => {
-    // 當滑鼠進入按鈕
-    el.addEventListener('mouseenter', () => {
-        isBqcHoveringButton = true; // 開啟鎖定
-        resetBqcCard();            // 執行復位函數（使用上一回寫好的函數）
-    });
-
-    // 當滑鼠離開按鈕
-    el.addEventListener('mouseleave', () => {
-        isBqcHoveringButton = false; // 解除鎖定
-    });
-});
-
+        // 应用位置：同步多层背景
+        shineLayer.style.backgroundPosition = `${shineX}% ${shineY}%, ${shineX}% ${shineY}%`;
+        
+        // 透明度反馈：依然根据手指滑动的真实距离（dist）决定，滑动越远光越亮
+        const dist = Math.hypot(deltaX, deltaY);
+        shineLayer.style.opacity = Math.min(dist / 150, 0.8); 
+    }
+}, { passive: false });
     // --- 3. 鼠标移动 (电脑端) ---
 // --- [新增] 统一复位函数：让卡牌平滑回到正面，反光消失 ---
 function resetBqcCard() {
