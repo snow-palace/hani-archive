@@ -57,7 +57,7 @@
             --bqv-photo-shadow: 0 10px 30px rgba(0,0,0,0.8); /* 統一陰影 */
             --bqv-tilt-limit: 3deg;      /* 最大傾斜角度限制 */
             
-            --bqv-glass-bg: rgba(255, 255, 255, 0.05);
+            --bqv-glass-bg: rgba(0, 0, 0, 0.541);
             --bqv-glass-blur: 12px;
         /* [新增] 标签色谱 */
             --tab-home: #ffffff;   /* 主页 - 白 */
@@ -2633,9 +2633,9 @@ background-size: auto;
     background: var(--bqv-glass-bg);
     backdrop-filter: blur(var(--bqv-glass-blur));
     -webkit-backdrop-filter: blur(var(--bqv-glass-blur));
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 4px; padding: 25px;
-    color: #ccc; line-height: 1.8; font-size: 14px;
+    color: #ffffff; line-height: 1.8; font-size: 14px;
     box-shadow: inset 0 0 20px rgba(255,255,255,0.05);
     margin-bottom: 50px;
     margin: 0 auto; max-width: 90%;
@@ -3688,7 +3688,7 @@ position: absolute;
     aspect-ratio: 16 / 9;
     object-fit: cover;
     border-radius: 4px;
-    border: 2px solid #000 !important; /* 强制黑边 */
+    border: 3px solid #000 !important; /* 强制黑边 */
     box-shadow: 0 10px 30px rgba(0,0,0,0.6) !important; /* 强制阴影 */
     display: block;
 }
@@ -3696,11 +3696,11 @@ position: absolute;
 /* 2. 玻璃框：在你提供的基础上增加更透亮、外发光 */
 .equip-glass-card {
     width: 50% ;
-    background: rgba(207, 207, 207, 0.486) !important; 
+    background: rgba(223, 223, 223, 0.486) !important; 
     backdrop-filter: blur(15px) saturate(150%) !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.699), inset 0 0 10px rgba(255, 255, 255, 0.05) !important;
-    border-radius: 8px;
+    border-radius: 0 0 12px 12px;
     height: auto; 
     max-height: none !important;
 }
@@ -5159,6 +5159,7 @@ document.querySelectorAll('.card').forEach(card => {
     // === [新增] 必须补上这个路径 ===
     combatHeader: 'images/overview/combat_header.png',
     equipHeader: 'images/overview/equip_header.png',
+    justiceHeader: 'images/overview/justice_header.png',
     // === [新增] 导游章节数据 ===
 // 在 OverviewAssets 对象内添加
 guide: {
@@ -5182,14 +5183,14 @@ guide: {
             right: { bottom: 'images/guide/R3_back.png', top: 'images/guide/R3_front.png' }
         },
                 {
-            // 第三行
+            // 第四行
             main: { img: 'images/guide/main4.png', title: '怎么都想害我!?', desc: '面对哈尼的种种手段，若没法给予有效的还击，你也只能任其宰割，就算在这种情形下，陌生的学生之间仍做不到互相合作，甚至内斗不断;<br>大家都在为自身利益行动时，你又该作何选择... ...' },
             left:  { bottom: 'images/guide/L5_back.png', top: 'images/guide/L5_front.png' },
             right: { bottom: 'images/guide/R5_back.png', top: 'images/guide/R5_front.png' }
         },
     ],
     comparison: {
-        // 第三行对比
+        // 第五行对比
         left:  { bottom: 'images/guide/L4_back.png', top: 'images/guide/L4_front.png' },
         right: { bottom: 'images/guide/R4_back.png', top: 'images/guide/R4_front.png' },
         showOffL: 'images/guide/star.png', 
@@ -6238,7 +6239,7 @@ function navigateChar(direction) {
         },
         {
             key: 'WP', name: '物品卡', color: '#23c75a',
-            c1: '探索 / 商店',
+            c1: '探索 / 商店抽取 / 交易',
             c2: '加成 / 恢复 / 召唤怪物',
             c3: '一次性', c3Class: 'warn',
             c4: '不可',  c4Class: 'no',
@@ -6246,7 +6247,7 @@ function navigateChar(direction) {
         },
         {
             key: 'JK', name: '纪念卡', color: '#eeff00',
-            c1: '击杀 / 特定人物 / 探索',
+            c1: '击杀 / 抢夺 / 达成条件',
             c2: '集齐直接获胜', 
             c3: '永久', c3Class: '',
             c4: '不可', c4Class: 'no',
@@ -6329,7 +6330,7 @@ function navigateChar(direction) {
             <div class="col-icon-fixed">卡牌种类</div>
             <div class="col-data-flex">
                 <div class="cell-common c-1">获取方式</div>
-                <div class="cell-common c-2">功能/用途</div>
+                <div class="cell-common c-2">功能</div>
                 <div class="cell-common c-3">次数</div>
                 <div class="cell-common c-4">垄断</div>
                 <div class="cell-common c-5">交换</div>
@@ -7087,6 +7088,12 @@ function renderCharPage() {
 
     // 循环结束，闭合最后一个分组的 div
     htmlStructure += `</div>`;
+    // === [新增] 人物页末尾结算图 ===
+    // 请将 src 替换为你准备好的图片路径
+    htmlStructure += `
+        <img src="images/overview/char_final.png" 
+            class="equip-final-full" 
+            style="display: block !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 20px;">`;
     
     // 【新增插入点】
     htmlStructure += createNextBtn('chars');
@@ -7360,7 +7367,14 @@ html += `
         </div>`;
 
     });
-            // 【新增插入点】
+    // === [新增] 景色页末尾结算图 ===
+    // 请将 src 替换为你准备好的图片路径
+    html += `
+        <img src="images/overview/scenery_final.png" 
+            class="equip-final-full" 
+            style="display: block !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 20px;">`;
+    
+    // 【新增插入点】
     html += createNextBtn('scenery');
 
     dynamicRoot.innerHTML = html;
@@ -9667,7 +9681,7 @@ html += `
     <div class="justice-grid" style="width:70%;">
             <div class="justice-unit" style="position:relative;">
                 <div class="equip-glass-card" style="width:100% !important;">
-                    <div class="equip-card-header">告诉你<span class="mm-justice1">只能</span>要这么玩</div>
+                    <div class="equip-card-header">告诉你<span class="mm-justice1">只能</span>这么玩</div>
                     <div class="equip-card-body" style="text-align:center; padding: 40px 20px !important;">
                         <div style="background:#585858; padding:10px; border-radius:4px;border:2px solid #ccc;">加入社团 <span class="mm-justice1">一起战斗</span></div>
                         <div class="flow-arrow" style="font-size:60px; line-height:1;">↓</div>
@@ -9684,7 +9698,7 @@ html += `
                     <div class="equip-card-body" style="text-align:center; padding: 40px 20px !important;">
                         <div style="background:#585858; padding:10px; border-radius:4px;border:2px solid #ccc">一个人 <span class="mm-justice2">单打独斗</span></div>
                         <div class="flow-arrow" style="font-size:60px; line-height:1;">↓</div>
-                        <div style="background:#585858; padding:10px; border-radius:4px;border:2px solid #ccc">抢夺全部 <span class="mm-justice2">[纪念卡]</span></div>
+                        <div style="background:#585858; padding:10px; border-radius:4px;border:2px solid #ccc">收集全部 <span class="mm-justice2">[纪念卡]</span></div>
                         <div class="flow-arrow" style="font-size:60px; line-height:1;">↓</div>
                         <div style="background:rgba(10,10,10); padding:10px; border-radius:4px; border:3px solid #FF00FF;">只有<span class="mm-justice2">自己</span> 获胜离开</div>
                     </div>
@@ -9741,9 +9755,14 @@ html += `
         <div class="battle-row ${side}" data-animate="battle" style="--tilt: ${tilt}">
             <div class="battle-img-box"><img src="${row.img}"></div>
             <div class="battle-info-box"><img src="${row.info}"></div>
-        </div>`;
+            
+        </div>`
+        
+        
+        
     });
     html += `</div>`;
+    
 
 // --- 2. 装备章节 (ID 确保跳转可用) ---
 // --- 定义图标资源 ---
@@ -9751,21 +9770,21 @@ html += `
 
     // --- 2. 装备章节 ---<img src="${OverviewAssets.equipHeader}" class="combat-intro-header" style="margin-top: 0 !important; display: block;">
 const equipColor = 'var(--tab-cards)';
-    const equipBg = `linear-gradient(180deg, color-mix(in srgb, ${equipColor}, transparent 90%) 0%, rgba(26,26,26,0) 100%)`;
-    
-    html += `
-    <div class="ov-section" id="ov-equip" style="background: ${equipBg}; margin-top: 60px; padding-bottom:0 !important;">
-        
-        <div class="bqc-chapter-bar" onclick="toggleOvMenu()" style="border-left-color: ${equipColor}; margin-bottom: 0 !important; border-bottom: none;">
-            <div style="width:12px; height:12px; background:${equipColor}; border-radius:50%; box-shadow: 0 0 5px ${equipColor};"></div>
-            <span class="bqc-bar-title" style="color:#fff">装备吧！ ▾</span>
-        </div>
-        
-        
+const equipBg = `linear-gradient(180deg, color-mix(in srgb, ${equipColor}, transparent 90%) 0%, rgba(26,26,26,0) 100%)`;
 
-        <div class="equip-container" style="margin-top: 0 !important; padding-top: 15px;">
-            
-            `;
+// --- 第一步：开始渲染章节，注意这里不要闭合 </div> ---
+html += `
+<div class="ov-section" id="ov-equip" style="background: ${equipBg}; margin-top: 60px; padding-bottom: 60px !important;">
+    
+    <div class="bqc-chapter-bar" onclick="toggleOvMenu()" style="border-left-color: ${equipColor}; margin-bottom: 0 !important;">
+        <div style="width:12px; height:12px; background:${equipColor}; border-radius:50%; box-shadow: 0 0 5px ${equipColor};"></div>
+        <span class="bqc-bar-title" style="color:#fff">装备吧！ ▾</span>
+    </div>
+    
+    <img src="${OverviewAssets.equipHeader}" class="combat-intro-header" style="display: block;">
+
+    <div class="equip-container"> 
+    `;
 
 // 1. 定义卡牌数据
     const RuleIcons = {
@@ -9817,35 +9836,20 @@ const equipColor = 'var(--tab-cards)';
         </div>`;
 
 // 2. 遍历渲染（除了最后一张图）
+// --- 第二步：遍历渲染 ---
 OverviewAssets.equip.forEach((item, index) => {
-        const isLastItem = (index === OverviewAssets.equip.length - 1);
+    const isLastItem = (index === OverviewAssets.equip.length - 1);
 
-        if (isLastItem) {
-            // 1. 先徹底閉合帶有間距的容器
-            html += `</div>`; 
+    if (isLastItem) {
+        // 如果这是最后一张图的数据，我们什么都不渲染（直接跳过）
+        // 这样就实现了你说的“最后一张图直接不展示”
+    } else {
+        // 正常渲染玻璃文字框单元
+        html += `<div class="equip-unit">`;
+        
+        const imgClass = item.type === 'row-full' ? 'equip-row-full' : 'equip-img';
+        html += `<img src="${item.img}" class="${imgClass}">`;
 
-            // 2. 渲染最後一張圖（核心修改：加入強制居中樣式）
-            // 這裡我們直接寫死 style，確保它不受 CSS 影響，百分之百居中且貼底
-            html += `
-                <img src="${item.img}" 
-                    class="equip-final-full" 
-                    style="
-                        display: block !important;    /* 轉為區塊元素 */
-                        margin-left: auto !important;  /* 左右自動外邊距實現居中 */
-                        margin-right: auto !important; 
-
-
-                    ">`;
-
-            // 3. 閉合整個章節
-            html += `</div>`; 
-        } else {
-            // 正常渲染每一个大单元
-            html += `<div class="equip-unit">`;
-            
-            const imgClass = item.type === 'row-full' ? 'equip-row-full' : 'equip-img';
-            html += `<img src="${item.img}" class="${imgClass}">`;
-        // 基础标题玻璃框
         if (item.title && item.desc) {
             html += `
             <div class="equip-glass-card">
@@ -9853,6 +9857,7 @@ OverviewAssets.equip.forEach((item, index) => {
                 <div class="equip-card-body">${item.desc}</div>
             </div>`;
         }
+
 //<span class="mm-highlight">禁止暴力抢夺</span>。行内变色样式//
         // --- 单元 2 (Index 1: 属性块) 额外挂载内容 ---
 // --- 单元 2 (Index 1: 属性块) ---
@@ -9886,24 +9891,24 @@ OverviewAssets.equip.forEach((item, index) => {
                     
                     <div class="mm-branches">
                         <div class="mm-branch">
-                            <div class="mm-title">核心功能</div>
+                            <div class="mm-title">功能</div>
                             <div class="mm-item">
-                                <span class="mm-highlight">货币：</span>可以在[友谊百货]中，通过支付不等数量的[属性块]，来[抽取]部分[斑丘卡]，或者直接[购买]部分展示出来的[斑丘卡]；
+                                <span class="mm-highlight">货币：</span>可以在友谊百货中，通过支付不[属性块]来抽取卡池中的[斑丘卡]，或者直接购买展示出来的[斑丘卡]；
                             </div>
                             <div class="mm-item">
-                                <span class="mm-highlight">数值：</span>游戏中没有等级概念，玩家需要通过将[属性块]布置在[属性盘]的特定位置，来提升自身某些特定方面的数值，详见之后的[属性盘]篇章。
+                                <span class="mm-highlight">等级/数值：</span>游戏中没有等级概念，玩家需要通过将[属性块]布置在[块盘]的特定位置，来提升自身某些特定方面的数值。
                             </div>
                         </div>
                         <div class="mm-branch">
-                            <div class="mm-title">运用特点</div>
+                            <div class="mm-title">特性</div>
                             <div class="mm-item">
-                                [属性块]可以在玩家中自由地交易、赠予等，需要双方在交换条件上达成共识，<span class="mm-highlight">不可以被暴力抢夺</span>；
+                                <span class="mm-highlight">安全性：</span>[属性块]可以在玩家中自由地交易、赠予等，需要双方在交换条件上达成共识，不可以被暴力抢夺；
                             </div>
                             <div class="mm-item">
-                                每天都可以按照自身所持的数量，有一定几率，获得一定比例的<span class="mm-highlight">[利息]</span>，此[利息]由[社联组]随机发放；
+                                <span class="mm-highlight">每日利息：</span>每天都可以按照自身所持的数量，有一定几率，获得一定比例的利息，由社联组随机发放；
                             </div>
                             <div class="mm-item">
-                                <span class="mm-highlight">垄断机制：</span>单种数量固定。若某[社团]获得全部数量的单种块，可以选择宣布[垄断]。垄断后[社联组]将不再发放该种块，仅能从玩家处获取。
+                                <span class="mm-highlight">垄断：</span>单种数量固定。若某社团获得全部的单种块，可以选择宣布垄断，垄断后社联组将不再发放该种块，仅能从已拥有的玩家处获取。
                             </div>
                         </div>
                     </div>
@@ -9942,22 +9947,22 @@ OverviewAssets.equip.forEach((item, index) => {
                 <div class="equip-card-body" style="padding: 30px;">
                     
                     ${renderBqMindmap('RW', '人物卡', '#2f5fff', '#fff', {
-                        get: `获取属性块，可与持有双方[人物卡]的对象交流通信，可以提升特定属性的数值上限`,
-                        effect: `获取属性块，可与持有双方[人物卡]的对象交流通信，非一次性。`,
+                        get: `获取属性块，可与持有双方人物卡的对象交流通信，可以提升特定属性的数值上限`,
+                        effect: `获取属性块，可与持有双方人物卡的对象交流通信，非一次性。`,
                         monopoly: `总数无限制。每人仅能给予一次，<span class="mm-highlight">不可垄断</span>。`
                     })}
 
                     ${renderBqMindmap('JN', '技能卡', '#ff3422', '#fff', {
                         get: `在战斗中使出强力招式；消耗后回到卡池，全部为<span class="mm-highlight">一次性</span>
-                        <br>累计触发100次可宣布[垄断]，垄断后本社团成员<span class="mm-highlight">免费使用</span>（无视装备条件）`,
+                        <br>累计触发100次可宣布垄断，垄断后本社团成员<span class="mm-highlight">免费使用</span>（无视装备条件）`,
                         effect: `在战斗中使出强力招式。消耗后回到卡池，全部为<span class="mm-highlight">一次性</span>。`,
-                        monopoly: `累计触发100次可宣布[垄断]。垄断后本社团成员<span class="mm-highlight">免费使用</span>（无视条件）。`
+                        monopoly: `累计触发100次可宣布垄断。垄断后本社团成员<span class="mm-highlight">免费使用</span>（无视条件）。`
                     })}
 
                     ${renderBqMindmap('WP', '物品卡', '#23c75a', '#fff', {
-                        get: `用作战斗加成、恢复体力、特殊事件开关等，种类丰富，[校徽卡]也是其中一种；部分为一次性，消耗后回卡池`,
+                        get: `用作战斗加成、恢复体力、特殊事件开关等，种类丰富，校徽卡也是其中一种；部分为一次性，消耗后回卡池`,
                         effect: `战斗加成、恢复体力。大部分为一次性，消耗后回卡池。`,
-                        monopoly: `<span class="mm-highlight">[校徽卡]</span>单种仅1张。开年由社联组自动分配，<span class="mm-highlight">不可垄断</span>。`
+                        monopoly: `<span class="mm-highlight">校徽卡</span>单种仅1张。回合开始前由社联组自动分配，<span class="mm-highlight">不可垄断</span>。`
                     })}
 
                     ${renderBqMindmap('JK', '技能卡', '#eeff00', '#000', {
@@ -9974,19 +9979,21 @@ OverviewAssets.equip.forEach((item, index) => {
         html += `</div>`; // 闭合单元
 }
     });
-
+html += `
+    </div> </div> `;
     
 // --- 3. 公正章節 (粉色) ---
     const justiceColor = 'var(--tab-chars)';
     const justiceBg = `linear-gradient(180deg, color-mix(in srgb, ${justiceColor}, transparent 90%) 0%, rgba(26,26,26,0) 100%)`;
     
     html += `
+    
     <div class="ov-section" id="ov-justice" style="background: ${justiceBg}; margin-top: 60px; padding-bottom: 0 !important;">
         <div class="bqc-chapter-bar" onclick="toggleOvMenu()" style="border-left-color: ${justiceColor}; margin-top: 0 !important;">
             <div style="width:12px; height:12px; background:${justiceColor}; border-radius:50%; box-shadow: 0 0 5px ${justiceColor};"></div>
             <span class="bqc-bar-title" style="color:#fff">公正吧！ ▾</span>
         </div>
-        
+        <img src="${OverviewAssets.justiceHeader}" class="combat-intro-header" style="margin-top: 0 !important; display: block;">
         <div class="justice-grid">`;
     
     OverviewAssets.justice.forEach(row => {
