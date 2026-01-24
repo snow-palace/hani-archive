@@ -2064,7 +2064,7 @@ background-size: auto;
             z-index: 9999;
             justify-content: center;
             align-items: center;
-            perspective: 1000px; /* 3D透视点 */
+            perspective: 2000px; /* 3D透视点 */
         }
 
         .bqc-modal-overlay.active {
@@ -6854,7 +6854,7 @@ document.addEventListener('mousemove', function(e) {
     const yPos = (e.clientY / window.innerHeight) - 0.5;
 
     // 5. 执行 3D 旋转计算
-    const rotationLimit = 30; 
+    const rotationLimit = 45; 
     const tiltX = yPos * -rotationLimit; 
     const tiltY = xPos * rotationLimit; 
     tiltCard.style.transform = `perspective(2000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
