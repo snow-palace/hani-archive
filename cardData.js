@@ -1,4 +1,4 @@
-// 自動生成的卡牌數據 - 產生於 2026年1月5日 下午8:08:09
+// 自動生成的卡牌數據 - 產生於 2026年1月25日 下午10:39:12
 const bqCardData = {
     "RW": [
         "RW-A01a-PGa",
@@ -122,6 +122,7 @@ const bqCardData = {
         "WP-Y104a-PSa"
     ],
     "JK": [
+        "JK-001a-QSa",
         "JK-011a-QSa",
         "JK-012a-QSa",
         "JK-013a-QSa",
