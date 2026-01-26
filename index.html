@@ -6780,7 +6780,7 @@ document.addEventListener('touchmove', function(e) {
 
     // 参数配置
     const speed = 0.7; 
-    const maxAngle = 33; 
+    const maxAngle = 45; 
 
     // 1. 计算角度并【锁定范围】
     // 这一步之后，tiltX 和 tiltY 最大也只会是 20 或 -20
@@ -6810,7 +6810,7 @@ document.addEventListener('touchmove', function(e) {
         
         // 透明度反馈：依然根据手指滑动的真实距离（dist）决定，滑动越远光越亮
         const dist = Math.hypot(deltaX, deltaY);
-        shineLayer.style.opacity = Math.min(dist / 150, 0.8); 
+        shineLayer.style.opacity = Math.min(dist / 50, 0.8); 
     }
 }, { passive: false });
     // --- 3. 鼠标移动 (电脑端) ---
