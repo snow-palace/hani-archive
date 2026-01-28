@@ -6782,6 +6782,7 @@ document.addEventListener('touchmove', function(e) {
     const speed = 0.7; 
     const maxAngle = 35; 
 
+
     // 1. 计算角度并【锁定范围】
     // 这一步之后，tiltX 和 tiltY 最大也只会是 20 或 -20
     let tiltX = Math.max(-maxAngle, Math.min(maxAngle, deltaY * speed * -1));
