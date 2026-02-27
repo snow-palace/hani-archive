@@ -4531,7 +4531,7 @@ position: absolute;
 <div class="navbar">
     <div class="nav-left-zone">
         <div class="nav-logo-box" onclick="switchView('home', null)">
-            <img src="images/icon/website_logo.png" alt="LOGO"> 
+            <img src="images/icon/website_logo.webp" alt="LOGO"> 
         </div>
         <div class="nav-title-box" onclick="switchView('home', null)">
             <div class="nav-title-main">不公正的哈尼</div>
@@ -4570,19 +4570,19 @@ position: absolute;
     
     <div id="view-home" class="view-section active">
         <div class="home-facade-container">
-            <div class="home-bg-layer" style="background-image: url('images/home/bg_full.png');"></div>
+            <div class="home-bg-layer" style="background-image: url('images/home/bg_full.webp');"></div>
 
             <div class="home-bg-wings-wrapper" id="home-wings">
-                <div class="home-bg-side left" style="background-image: url('images/home/bg_left.png');"></div>
-                <div class="home-bg-side right" style="background-image: url('images/home/bg_right.png');"></div>
+                <div class="home-bg-side left" style="background-image: url('images/home/bg_left.webp');"></div>
+                <div class="home-bg-side right" style="background-image: url('images/home/bg_right.webp');"></div>
             </div>
 
             <div class="home-main-visual" id="home-main-box">
-                <img src="images/home/visual.png" alt="Main Visual" id="home-main-img">
+                <img src="images/home/visual.webp" alt="Main Visual" id="home-main-img">
             </div>
 
             <div class="home-top-overlay">
-                <img src="images/home/overlay.png" alt="Top Overlay">
+                <img src="images/home/overlay.webp" alt="Top Overlay">
             </div>
 
             <div class="home-nav-footer">
@@ -5005,266 +5005,266 @@ document.querySelectorAll('.card').forEach(card => {
 
     // [新增] 主页视觉资源字典
     const HomeAssets = {
-    bgFull: 'images/home/bg_full.png',      // 最底层 16:9 全屏背景 (红色方框)
-    mainVisual: 'images/home/visual.png',  // 中间层 16:9 主视觉 (黑色方框)
-    topOverlay: 'images/home/overlay.png', // 最上层 3:1 装饰图 (约85%宽度)
-    bgLeft: 'images/home/bg_left.png',      // 6:9 左侧背景
-    bgRight: 'images/home/bg_right.png',    // 6:9 右侧背景
-    specialVisual: 'images/home/visual_special.png', // 点击后闪现的图片
-    thirdVisual: 'images/home/visual_third.png' // 【添加这一行】
+    bgFull: 'images/home/bg_full.webp',      // 最底层 16:9 全屏背景 (红色方框)
+    mainVisual: 'images/home/visual.webp',  // 中间层 16:9 主视觉 (黑色方框)
+    topOverlay: 'images/home/overlay.webp', // 最上层 3:1 装饰图 (约85%宽度)
+    bgLeft: 'images/home/bg_left.webp',      // 6:9 左侧背景
+    bgRight: 'images/home/bg_right.webp',    // 6:9 右侧背景
+    specialVisual: 'images/home/visual_special.webp', // 点击后闪现的图片
+    thirdVisual: 'images/home/visual_third.webp' // 【添加这一行】
 };
 
         // 属性块
     const Attrs = {
-        METAL: 'images/icon/UI_StatCube_iron_color_01.png', 
-        WOOD: 'images/icon/UI_StatCube_wood_color_01.png', 
-        WATER: 'images/icon/UI_StatCube_water_color_01.png', 
-        FIRE: 'images/icon/UI_StatCube_fire_color_01.png',
-        EARTH: 'images/icon/UI_StatCube_earth_color_01.png', 
-        WIND: 'images/icon/UI_StatCube_wind_color_01.png', 
-        THUNDER: 'images/icon/UI_StatCube_thunder_color_01.png', 
-        ICE: 'images/icon/UI_StatCube_ice_color_01.png',
-        CRYSTAL: 'images/icon/UI_StatCube_crystal_color_01.png', 
-        SUN: 'images/icon/UI_StatCube_sun_color_01.png', 
-        MOON: 'images/icon/UI_StatCube_moon_color_01.png', 
-        DUST: 'images/icon/UI_StatCube_dust_color_01.png',
-        STAR: 'images/icon/UI_StatCube_star_color_01.png', 
-        LIGHT: 'images/icon/UI_StatCube_light_color_01.png', 
-        WAVE: 'images/icon/UI_StatCube_wave_color_01.png'
+        METAL: 'images/icon/UI_StatCube_iron_color_01.webp', 
+        WOOD: 'images/icon/UI_StatCube_wood_color_01.webp', 
+        WATER: 'images/icon/UI_StatCube_water_color_01.webp', 
+        FIRE: 'images/icon/UI_StatCube_fire_color_01.webp',
+        EARTH: 'images/icon/UI_StatCube_earth_color_01.webp', 
+        WIND: 'images/icon/UI_StatCube_wind_color_01.webp', 
+        THUNDER: 'images/icon/UI_StatCube_thunder_color_01.webp', 
+        ICE: 'images/icon/UI_StatCube_ice_color_01.webp',
+        CRYSTAL: 'images/icon/UI_StatCube_crystal_color_01.webp', 
+        SUN: 'images/icon/UI_StatCube_sun_color_01.webp', 
+        MOON: 'images/icon/UI_StatCube_moon_color_01.webp', 
+        DUST: 'images/icon/UI_StatCube_dust_color_01.webp',
+        STAR: 'images/icon/UI_StatCube_star_color_01.webp', 
+        LIGHT: 'images/icon/UI_StatCube_light_color_01.webp', 
+        WAVE: 'images/icon/UI_StatCube_wave_color_01.webp'
     };
 
 
         // 校徽
     const Schools = { 
-        XIWAN: 'images/charData/schoolbadges/badge_xiwan.png', 
-        JIANGKOU: 'images/charData/schoolbadges/badge_jiangkou.png', 
-        HANI: 'images/charData/schoolbadges/badge_hani.png', 
-        LINZHOU: 'images/charData/schoolbadges/badge_linzhou.png', 
-        PINGXIAN: 'images/charData/schoolbadges/badge_pingxian.png', 
-        JINGU: 'images/charData/schoolbadges/badge_jingu.png', 
-        CHONGJIANG: 'images/charData/schoolbadges/badge_chongjiang.png', 
-        ZHONGLIAO: 'images/charData/schoolbadges/badge_zhongliao.png', 
-        HUAGANG: 'images/charData/schoolbadges/badge_huagang.png' 
+        XIWAN: 'images/charData/schoolbadges/badge_xiwan.webp', 
+        JIANGKOU: 'images/charData/schoolbadges/badge_jiangkou.webp', 
+        HANI: 'images/charData/schoolbadges/badge_hani.webp', 
+        LINZHOU: 'images/charData/schoolbadges/badge_linzhou.webp', 
+        PINGXIAN: 'images/charData/schoolbadges/badge_pingxian.webp', 
+        JINGU: 'images/charData/schoolbadges/badge_jingu.webp', 
+        CHONGJIANG: 'images/charData/schoolbadges/badge_chongjiang.webp', 
+        ZHONGLIAO: 'images/charData/schoolbadges/badge_zhongliao.webp', 
+        HUAGANG: 'images/charData/schoolbadges/badge_huagang.webp' 
     };
 
 
         // 社团印章
     const Societies = { 
-        FRIEND: 'images/charData/soclogos/logo_friend.png', 
-        TOWER: 'images/charData/soclogos/logo_tower.png', 
-        BAD: 'images/charData/soclogos/logo_bad.png', 
-        FACTORY: 'images/charData/soclogos/logo_factory.png', 
-        PLAZA: 'images/charData/soclogos/logo_plaza.png', 
-        HANI: 'images/charData/soclogos/logo_hani.png', 
-        STARS: 'images/charData/soclogos/logo_stars.png', 
-        MAO: 'images/charData/soclogos/logo_mao.png', 
-        WHITE: 'images/charData/soclogos/logo_white.png', 
-        UNION: 'images/charData/soclogos/logo_union.png', 
-        RADIO: 'images/charData/soclogos/logo_radio.png', 
-        TUCTUC: 'images/charData/soclogos/logo_tuctuc.png', 
-        SODA4: 'images/charData/soclogos/logo_soda4.png', 
-        BUKLL: 'images/charData/soclogos/logo_bukll.png' 
+        FRIEND: 'images/charData/soclogos/logo_friend.webp', 
+        TOWER: 'images/charData/soclogos/logo_tower.webp', 
+        BAD: 'images/charData/soclogos/logo_bad.webp', 
+        FACTORY: 'images/charData/soclogos/logo_factory.webp', 
+        PLAZA: 'images/charData/soclogos/logo_plaza.webp', 
+        HANI: 'images/charData/soclogos/logo_hani.webp', 
+        STARS: 'images/charData/soclogos/logo_stars.webp', 
+        MAO: 'images/charData/soclogos/logo_mao.webp', 
+        WHITE: 'images/charData/soclogos/logo_white.webp', 
+        UNION: 'images/charData/soclogos/logo_union.webp', 
+        RADIO: 'images/charData/soclogos/logo_radio.webp', 
+        TUCTUC: 'images/charData/soclogos/logo_tuctuc.webp', 
+        SODA4: 'images/charData/soclogos/logo_soda4.webp', 
+        BUKLL: 'images/charData/soclogos/logo_bukll.webp' 
 
     };
 
 
         // 角色头像
     const CardImages = {
-        YUMU: 'images/charData/cards/card_yumu.png', 
-        ZHOU: 'images/charData/cards/card_zhou.png', 
-        COTTON: 'images/charData/cards/card_cotton.png', 
-        SONG: 'images/charData/cards/card_song.png',
-        STONE: 'images/charData/cards/card_stone.png', 
-        MASTER: 'images/charData/cards/card_master.png', 
-        COCO: 'images/charData/cards/card_coco.png', 
-        XIAOBEI: 'images/charData/cards/card_xiaobei.png',
-        HEI: 'images/charData/cards/card_hei.png', 
-        HUA: 'images/charData/cards/card_hua.png', 
-        BAN: 'images/charData/cards/card_ban.png', 
-        HONG: 'images/charData/cards/card_hong.png',
-        PIAO: 'images/charData/cards/card_piao.png', 
-        CAT: 'images/charData/cards/card_cat.png', 
-        DOU: 'images/charData/cards/card_dou.png',
-        SB: 'images/charData/cards/card_sb.png', 
-        NAO: 'images/charData/cards/card_nao.png',
-        KID: 'images/charData/cards/card_kid.png', 
-        XHANI: 'images/charData/cards/card_xhani.png', 
-        NURSE: 'images/charData/cards/card_nurse.png', 
-        DREAM: 'images/charData/cards/card_dream.png', 
-        CANDY: 'images/charData/cards/card_candy.png', 
-        KING: 'images/charData/cards/card_king.png', 
-        WAX: 'images/charData/cards/card_wax.png', 
-        PIGEON: 'images/charData/cards/card_pigeon.png',
-        PIKA: 'images/charData/cards/card_pika.png', 
-        DING: 'images/charData/cards/card_ding.png', 
-        BUTA: 'images/charData/cards/card_buta.png',
-        XDQ: 'images/charData/cards/card_xdq.png', 
-        penguin: 'images/charData/cards/card_penguin.png', 
-        PAO: 'images/charData/cards/card_pao.png', 
-        ZHE: 'images/charData/cards/card_zhe.png', 
-        TIE: 'images/charData/cards/card_tie.png', 
-        BULIAN: 'images/charData/cards/card_bulian.png',
-        PEACH: 'images/charData/cards/card_peach.png',
-        SWEET: 'images/charData/cards/card_sweet.png',
-        KFLOWER: 'images/charData/cards/card_kflower.png',
-        YAN: 'images/charData/cards/card_yan.png',
-        NOBODY: 'images/charData/cards/card_nobody.png',
-        NOHANI: 'images/charData/cards/card_nohani.png'
+        YUMU: 'images/charData/cards/card_yumu.webp', 
+        ZHOU: 'images/charData/cards/card_zhou.webp', 
+        COTTON: 'images/charData/cards/card_cotton.webp', 
+        SONG: 'images/charData/cards/card_song.webp',
+        STONE: 'images/charData/cards/card_stone.webp', 
+        MASTER: 'images/charData/cards/card_master.webp', 
+        COCO: 'images/charData/cards/card_coco.webp', 
+        XIAOBEI: 'images/charData/cards/card_xiaobei.webp',
+        HEI: 'images/charData/cards/card_hei.webp', 
+        HUA: 'images/charData/cards/card_hua.webp', 
+        BAN: 'images/charData/cards/card_ban.webp', 
+        HONG: 'images/charData/cards/card_hong.webp',
+        PIAO: 'images/charData/cards/card_piao.webp', 
+        CAT: 'images/charData/cards/card_cat.webp', 
+        DOU: 'images/charData/cards/card_dou.webp',
+        SB: 'images/charData/cards/card_sb.webp', 
+        NAO: 'images/charData/cards/card_nao.webp',
+        KID: 'images/charData/cards/card_kid.webp', 
+        XHANI: 'images/charData/cards/card_xhani.webp', 
+        NURSE: 'images/charData/cards/card_nurse.webp', 
+        DREAM: 'images/charData/cards/card_dream.webp', 
+        CANDY: 'images/charData/cards/card_candy.webp', 
+        KING: 'images/charData/cards/card_king.webp', 
+        WAX: 'images/charData/cards/card_wax.webp', 
+        PIGEON: 'images/charData/cards/card_pigeon.webp',
+        PIKA: 'images/charData/cards/card_pika.webp', 
+        DING: 'images/charData/cards/card_ding.webp', 
+        BUTA: 'images/charData/cards/card_buta.webp',
+        XDQ: 'images/charData/cards/card_xdq.webp', 
+        penguin: 'images/charData/cards/card_penguin.webp', 
+        PAO: 'images/charData/cards/card_pao.webp', 
+        ZHE: 'images/charData/cards/card_zhe.webp', 
+        TIE: 'images/charData/cards/card_tie.webp', 
+        BULIAN: 'images/charData/cards/card_bulian.webp',
+        PEACH: 'images/charData/cards/card_peach.webp',
+        SWEET: 'images/charData/cards/card_sweet.webp',
+        KFLOWER: 'images/charData/cards/card_kflower.webp',
+        YAN: 'images/charData/cards/card_yan.webp',
+        NOBODY: 'images/charData/cards/card_nobody.webp',
+        NOHANI: 'images/charData/cards/card_nohani.webp'
     };
 
     
         // 战斗立绘
     const BattleArts = {
-        YUMU: 'images/charData/battle/battle_yumu.png', 
-        ZHOU: 'images/charData/battle/battle_zhou.png', 
-        COTTON: 'images/charData/battle/battle_cotton.png', 
-        SONG: 'images/charData/battle/battle_song.png',
-        STONE: 'images/charData/battle/battle_stone.png', 
-        MASTER: 'images/charData/battle/battle_master.png', 
-        COCO: 'images/charData/battle/battle_coco.png', 
-        XIAOBEI: 'images/charData/battle/battle_xiaobei.png',
-        HEI: 'images/charData/battle/battle_hei.png', 
-        HUA: 'images/charData/battle/battle_hua.png', 
-        BAN: 'images/charData/battle/battle_ban.png', 
-        HONG: 'images/charData/battle/battle_hong.png',
-        PIAO: 'images/charData/battle/battle_piao.png', 
-        CAT: 'images/charData/battle/battle_cat.png', 
-        DOU: 'images/charData/battle/battle_dou.png',
-        SB: 'images/charData/battle/battle_sb.png', 
-        NAO: 'images/charData/battle/battle_nao.png',
-        KID: 'images/charData/battle/battle_kid.png', 
-        XHANI: 'images/charData/battle/battle_xhani.png', 
-        NURSE: 'images/charData/battle/battle_nurse.png', 
-        DREAM: 'images/charData/battle/battle_dream.png', 
-        CANDY: 'images/charData/battle/battle_candy.png', 
-        KING: 'images/charData/battle/battle_king.png', 
-        WAX: 'images/charData/battle/battle_wax.png', 
-        PIGEON: 'images/charData/battle/battle_pigeon.png',
-        PIKA: 'images/charData/battle/battle_pika.png', 
-        DING: 'images/charData/battle/battle_ding.png', 
-        BUTA: 'images/charData/battle/battle_buta.png',
-        XDQ: 'images/charData/battle/battle_xdq.png', 
-        penguin: 'images/charData/battle/battle_penguin.png',
-        PAO: 'images/charData/battle/battle_pao.png', 
-        ZHE: 'images/charData/battle/battle_zhe.png', 
-        TIE: 'images/charData/battle/battle_tie.png', 
-        BULIAN: 'images/charData/battle/battle_bulian.png',
-        YAN: 'images/charData/battle/battle_yan.png', 
-        DEFAULT: 'images/charData/battle/battle_default.png'
+        YUMU: 'images/charData/battle/battle_yumu.webp', 
+        ZHOU: 'images/charData/battle/battle_zhou.webp', 
+        COTTON: 'images/charData/battle/battle_cotton.webp', 
+        SONG: 'images/charData/battle/battle_song.webp',
+        STONE: 'images/charData/battle/battle_stone.webp', 
+        MASTER: 'images/charData/battle/battle_master.webp', 
+        COCO: 'images/charData/battle/battle_coco.webp', 
+        XIAOBEI: 'images/charData/battle/battle_xiaobei.webp',
+        HEI: 'images/charData/battle/battle_hei.webp', 
+        HUA: 'images/charData/battle/battle_hua.webp', 
+        BAN: 'images/charData/battle/battle_ban.webp', 
+        HONG: 'images/charData/battle/battle_hong.webp',
+        PIAO: 'images/charData/battle/battle_piao.webp', 
+        CAT: 'images/charData/battle/battle_cat.webp', 
+        DOU: 'images/charData/battle/battle_dou.webp',
+        SB: 'images/charData/battle/battle_sb.webp', 
+        NAO: 'images/charData/battle/battle_nao.webp',
+        KID: 'images/charData/battle/battle_kid.webp', 
+        XHANI: 'images/charData/battle/battle_xhani.webp', 
+        NURSE: 'images/charData/battle/battle_nurse.webp', 
+        DREAM: 'images/charData/battle/battle_dream.webp', 
+        CANDY: 'images/charData/battle/battle_candy.webp', 
+        KING: 'images/charData/battle/battle_king.webp', 
+        WAX: 'images/charData/battle/battle_wax.webp', 
+        PIGEON: 'images/charData/battle/battle_pigeon.webp',
+        PIKA: 'images/charData/battle/battle_pika.webp', 
+        DING: 'images/charData/battle/battle_ding.webp', 
+        BUTA: 'images/charData/battle/battle_buta.webp',
+        XDQ: 'images/charData/battle/battle_xdq.webp', 
+        penguin: 'images/charData/battle/battle_penguin.webp',
+        PAO: 'images/charData/battle/battle_pao.webp', 
+        ZHE: 'images/charData/battle/battle_zhe.webp', 
+        TIE: 'images/charData/battle/battle_tie.webp', 
+        BULIAN: 'images/charData/battle/battle_bulian.webp',
+        YAN: 'images/charData/battle/battle_yan.webp', 
+        DEFAULT: 'images/charData/battle/battle_default.webp'
     };
 
     // 总览字典
     const OverviewAssets = {
-    banner: 'images/overview/header_banner.png', // 21:9 头图
+    banner: 'images/overview/header_banner.webp', // 21:9 头图
     // === [新增] 必须补上这个路径 ===
-    combatHeader: 'images/overview/combat_header.png',
-    equipHeader: 'images/overview/equip_header.png',
-    justiceHeader: 'images/overview/justice_header.png',
+    combatHeader: 'images/overview/combat_header.webp',
+    equipHeader: 'images/overview/equip_header.webp',
+    justiceHeader: 'images/overview/justice_header.webp',
     // === [新增] 导游章节数据 ===
 // 在 OverviewAssets 对象内添加
 guide: {
     rows: [
         {
             // 第一行
-            main: { img: 'images/guide/main1.png', title: '我被弄到哪儿来了!?', desc: '一阵晕眩过后，你已身处一片荒漠之中，熟悉的校园突兀地伫立在身后，同学们茫然四顾，不知所措;<br>看来你们都被不知名的力量，转移到了这陌生的地方，被迫与其他陌生的学生竞争，参与一场荒唐且残忍的游戏' },
-            left:  { bottom: 'images/guide/L1_back.png', top: 'images/guide/L1_front.png' },
-            right: { bottom: 'images/guide/R1_back.png', top: 'images/guide/R1_front.png' }
+            main: { img: 'images/guide/main1.webp', title: '我被弄到哪儿来了!?', desc: '一阵晕眩过后，你已身处一片荒漠之中，熟悉的校园突兀地伫立在身后，同学们茫然四顾，不知所措;<br>看来你们都被不知名的力量，转移到了这陌生的地方，被迫与其他陌生的学生竞争，参与一场荒唐且残忍的游戏' },
+            left:  { bottom: 'images/guide/L1_back.webp', top: 'images/guide/L1_front.webp' },
+            right: { bottom: 'images/guide/R1_back.webp', top: 'images/guide/R1_front.webp' }
         },
         {
             // 第二行
-            main: { img: 'images/guide/main2.png', title: '这人怎么这么坏!?', desc: '在惊慌之余，一群自称[哈尼]的兔子不知从何处冒出，叫嚣着要接管你们的学校;<br>哈尼狡猾、下作还不择手段，她们作为参与者的同时，又是游戏的组织者，在这号称“绝对公平”的游戏中，她们通过计谋、欺瞒、利用规则漏洞等手段，让自身始终立于不败之地' },
-            left:  { bottom: 'images/guide/L2_back.png', top: 'images/guide/L2_front.png' },
-            right: { bottom: 'images/guide/R2_back.png', top: 'images/guide/R2_front.png' }
+            main: { img: 'images/guide/main2.webp', title: '这人怎么这么坏!?', desc: '在惊慌之余，一群自称[哈尼]的兔子不知从何处冒出，叫嚣着要接管你们的学校;<br>哈尼狡猾、下作还不择手段，她们作为参与者的同时，又是游戏的组织者，在这号称“绝对公平”的游戏中，她们通过计谋、欺瞒、利用规则漏洞等手段，让自身始终立于不败之地' },
+            left:  { bottom: 'images/guide/L2_back.webp', top: 'images/guide/L2_front.webp' },
+            right: { bottom: 'images/guide/R2_back.webp', top: 'images/guide/R2_front.webp' }
         },
                 {
             // 第三行
-            main: { img: 'images/guide/main3.png', title: '怎么都想害我!?', desc: '面对哈尼的种种手段，若没法给予有效的还击，你也只能任其宰割，就算在这种情形下，陌生的学生之间仍做不到互相合作，甚至内斗不断;<br>大家都在为自身利益行动时，你又该作何选择... ...' },
-            left:  { bottom: 'images/guide/L3_back.png', top: 'images/guide/L3_front.png' },
-            right: { bottom: 'images/guide/R3_back.png', top: 'images/guide/R3_front.png' }
+            main: { img: 'images/guide/main3.webp', title: '怎么都想害我!?', desc: '面对哈尼的种种手段，若没法给予有效的还击，你也只能任其宰割，就算在这种情形下，陌生的学生之间仍做不到互相合作，甚至内斗不断;<br>大家都在为自身利益行动时，你又该作何选择... ...' },
+            left:  { bottom: 'images/guide/L3_back.webp', top: 'images/guide/L3_front.webp' },
+            right: { bottom: 'images/guide/R3_back.webp', top: 'images/guide/R3_front.webp' }
         },
                 {
             // 第四行
-            main: { img: 'images/guide/main4.png', title: '怎么才算赢呢!?', desc: '在游戏中，你要不断探索其余玩家的据点，通过战斗获得强力的卡牌，再将这些卡牌用于之后的战斗中;<br>直至你收集到全部某种卡牌后，便可宣告胜利... ...' },
-            left:  { bottom: 'images/guide/L5_back.png', top: 'images/guide/L5_front.png' },
-            right: { bottom: 'images/guide/R5_back.png', top: 'images/guide/R5_front.png' }
+            main: { img: 'images/guide/main4.webp', title: '怎么才算赢呢!?', desc: '在游戏中，你要不断探索其余玩家的据点，通过战斗获得强力的卡牌，再将这些卡牌用于之后的战斗中;<br>直至你收集到全部某种卡牌后，便可宣告胜利... ...' },
+            left:  { bottom: 'images/guide/L5_back.webp', top: 'images/guide/L5_front.webp' },
+            right: { bottom: 'images/guide/R5_back.webp', top: 'images/guide/R5_front.webp' }
         },
     ],
     comparison: {
         // 第五行对比
-        left:  { bottom: 'images/guide/L4_back.png', top: 'images/guide/L4_front.png' },
-        right: { bottom: 'images/guide/R4_back.png', top: 'images/guide/R4_front.png' },
-        showOffL: 'images/guide/star.png', 
-        showOffR: 'images/guide/crown.png'
+        left:  { bottom: 'images/guide/L4_back.webp', top: 'images/guide/L4_front.webp' },
+        right: { bottom: 'images/guide/R4_back.webp', top: 'images/guide/R4_front.webp' },
+        showOffL: 'images/guide/star.webp', 
+        showOffR: 'images/guide/crown.webp'
     },
-    finalImg: 'images/guide/final.png'
+    finalImg: 'images/guide/final.webp'
 },
     
     // 战斗截图：16行（示例提供4组循环逻辑）
     // === [新增] 战斗引导模块数据 ===
     combatIntro: [
-        { img: 'images/overview/intro1.png', text: '物理攻击' },
-        { img: 'images/overview/intro2.png', text: '法术攻击' },
-        { img: 'images/overview/intro3.png', text: '使用卡牌' }
+        { img: 'images/overview/intro1.webp', text: '物理攻击' },
+        { img: 'images/overview/intro2.webp', text: '法术攻击' },
+        { img: 'images/overview/intro3.webp', text: '使用卡牌' }
     ],
     battle: [
-        { img: 'images/overview/b2_combat.png', info: 'images/overview/b2_desc.png', side: 'right' },
-        { img: 'images/overview/b3_combat.png', info: 'images/overview/b3_desc.png', side: 'left' },
-        { img: 'images/overview/b14_combat.png', info: 'images/overview/b14_desc.png', side: 'right' },
-        { img: 'images/overview/b5_combat.png', info: 'images/overview/b5_desc.png', side: 'left' },
-        { img: 'images/overview/b16_combat.png', info: 'images/overview/b16_desc.png', side: 'right' },
-        { img: 'images/overview/b7_combat.png', info: 'images/overview/b7_desc.png', side: 'left' },
-        { img: 'images/overview/b8_combat.png', info: 'images/overview/b8_desc.png', side: 'right' },
-        { img: 'images/overview/b9_combat.png', info: 'images/overview/b9_desc.png', side: 'left' },
+        { img: 'images/overview/b2_combat.webp', info: 'images/overview/b2_desc.webp', side: 'right' },
+        { img: 'images/overview/b3_combat.webp', info: 'images/overview/b3_desc.webp', side: 'left' },
+        { img: 'images/overview/b14_combat.webp', info: 'images/overview/b14_desc.webp', side: 'right' },
+        { img: 'images/overview/b5_combat.webp', info: 'images/overview/b5_desc.webp', side: 'left' },
+        { img: 'images/overview/b16_combat.webp', info: 'images/overview/b16_desc.webp', side: 'right' },
+        { img: 'images/overview/b7_combat.webp', info: 'images/overview/b7_desc.webp', side: 'left' },
+        { img: 'images/overview/b8_combat.webp', info: 'images/overview/b8_desc.webp', side: 'right' },
+        { img: 'images/overview/b9_combat.webp', info: 'images/overview/b9_desc.webp', side: 'left' },
 
-        { img: 'images/overview/b11_combat.png', info: 'images/overview/b11_desc.png', side: 'right' },
+        { img: 'images/overview/b11_combat.webp', info: 'images/overview/b11_desc.webp', side: 'right' },
 
-        { img: 'images/overview/b12_combat.png', info: 'images/overview/b12_desc.png', side: 'left' },
-        { img: 'images/overview/b13_combat.png', info: 'images/overview/b13_desc.png', side: 'right' },
+        { img: 'images/overview/b12_combat.webp', info: 'images/overview/b12_desc.webp', side: 'left' },
+        { img: 'images/overview/b13_combat.webp', info: 'images/overview/b13_desc.webp', side: 'right' },
         // ... 你可以根据这个格式写满16行
     ],
 
     // 装备章节：4行特定排版
     equip: [
-        { type: 'row-img-left', img: 'images/overview/e1.png', title: '装备系统', 
+        { type: 'row-img-left', img: 'images/overview/e1.webp', title: '装备系统', 
         desc: '相当于[战斗技能]与[能力数值]，利用收集物品来增强自身战斗力，战斗中不可更改；<br>在一般情况下，其布置只有玩家自己可以看到的，战斗时也需要猜测敌人的布置，并做相应调整' },
-        { type: 'row-img-right', img: 'images/overview/e2.png', title: '[块盘]', 
+        { type: 'row-img-right', img: 'images/overview/e2.webp', title: '[块盘]', 
         desc: '决定玩家攻击属性和自身各项数值<br>这些数值均取决于玩家如何布置、布置多少[属性块]<br>具体的机制，虽有明确公式计算，但必须在游玩中自行实验推导，或者想办法偷看别人的' },
-        { type: 'row-img-right', img: 'images/overview/e3.png', title: '[卡盘]', 
+        { type: 'row-img-right', img: 'images/overview/e3.webp', title: '[卡盘]', 
         desc: '决定玩家携带的武器、各项数值的上限、可以释放的技能、能力值加成以及道具<br>有些卡牌需要[块盘]中放置相应数量的[属性块]，才能装备使用' },
-        { type: 'row-full', img: 'images/overview/e4_diff.png', title: '性能差异对比', desc: '' }
+        { type: 'row-full', img: 'images/overview/e4_diff.webp', title: '性能差异对比', desc: '' }
     ],
 
 // 公正章节数据：改为每行 3 组数据
     justice: [
         { 
-            imgL: 'images/overview/j1_l.png', textL1: '只能使用 <span class="mm-justice1">5</span> 种属性块', 
-            imgM: 'images/overview/j1_m.png', textM1: '占位', // 中间列
-            imgR: 'images/overview/j1_r.png', textR1: '可以使用 <span class="mm-justice2">15</span> 种属性块' 
+            imgL: 'images/overview/j1_l.webp', textL1: '只能使用 <span class="mm-justice1">5</span> 种属性块', 
+            imgM: 'images/overview/j1_m.webp', textM1: '占位', // 中间列
+            imgR: 'images/overview/j1_r.webp', textR1: '可以使用 <span class="mm-justice2">15</span> 种属性块' 
         },
         { 
-            imgL: 'images/overview/j2_l.png', textL1: '只能使用 <span class="mm-justice1">3</span> 种斑丘卡', 
-            imgM: 'images/overview/j2_m.png', textM1: '占位', 
-            imgR: 'images/overview/j2_r.png', textR1: '可以使用 <span class="mm-justice2">4</span> 种斑丘卡' 
+            imgL: 'images/overview/j2_l.webp', textL1: '只能使用 <span class="mm-justice1">3</span> 种斑丘卡', 
+            imgM: 'images/overview/j2_m.webp', textM1: '占位', 
+            imgR: 'images/overview/j2_r.webp', textR1: '可以使用 <span class="mm-justice2">4</span> 种斑丘卡' 
         },
         { 
-            imgL: 'images/overview/j3_l.png', textL1: '只能使用 <span class="mm-justice1">32</span> 个槽位', 
-            imgM: 'images/overview/j3_m.png', textM1: '占位', 
-            imgR: 'images/overview/j3_r.png', textR1: '可以使用 <span class="mm-justice2">64</span> 个槽位' 
+            imgL: 'images/overview/j3_l.webp', textL1: '只能使用 <span class="mm-justice1">32</span> 个槽位', 
+            imgM: 'images/overview/j3_m.webp', textM1: '占位', 
+            imgR: 'images/overview/j3_r.webp', textR1: '可以使用 <span class="mm-justice2">64</span> 个槽位' 
         },
         { 
-            imgL: 'images/overview/j4_l.png', textL1: '只能使用 <span class="mm-justice1">12</span> 个槽位', 
-            imgM: 'images/overview/j4_m.png', textM1: '占位', 
-            imgR: 'images/overview/j4_r.png', textR1: '可以使用 <span class="mm-justice2">15</span> 个槽位' 
+            imgL: 'images/overview/j4_l.webp', textL1: '只能使用 <span class="mm-justice1">12</span> 个槽位', 
+            imgM: 'images/overview/j4_m.webp', textM1: '占位', 
+            imgR: 'images/overview/j4_r.webp', textR1: '可以使用 <span class="mm-justice2">15</span> 个槽位' 
         },
         { 
-            imgL: 'images/overview/j5_l.png', textL1: '收集所有 <span class="mm-justice1">校徽卡</span>', 
-            imgM: 'images/overview/j5_m.png', textM1: '占位', 
-            imgR: 'images/overview/j5_r.png', textR1: '收集所有 <span class="mm-justice2">纪念卡</span>' 
+            imgL: 'images/overview/j5_l.webp', textL1: '收集所有 <span class="mm-justice1">校徽卡</span>', 
+            imgM: 'images/overview/j5_m.webp', textM1: '占位', 
+            imgR: 'images/overview/j5_r.webp', textR1: '收集所有 <span class="mm-justice2">纪念卡</span>' 
         },
         { 
-            imgL: 'images/overview/j6_l.png', textL1: '与 <span class="mm-justice1">其余学生</span> 战斗', 
-            imgM: 'images/overview/j6_m.png', textM1: '占位', 
-            imgR: 'images/overview/j6_r.png', textR1: '与 <span class="mm-justice2">所有哈尼</span> 战斗' 
+            imgL: 'images/overview/j6_l.webp', textL1: '与 <span class="mm-justice1">其余学生</span> 战斗', 
+            imgM: 'images/overview/j6_m.webp', textM1: '占位', 
+            imgR: 'images/overview/j6_r.webp', textR1: '与 <span class="mm-justice2">所有哈尼</span> 战斗' 
         },
         // ... 请按此格式写满 6 行
     ]
@@ -5306,7 +5306,7 @@ guide: {
             school:'西湾区实验中学', join:'S0 (AA2008)', society:'友谊百货', job:'召唤师', color:'#87CEEB', 
             hp:50, patk:50, pdef:50, matk:50, mdef:50, isKing: true, chairs:['yellow'], isChairForbidden: true,
             cardImage: CardImages.YUMU, 
-            portrait: 'images/charData/portraits/art_yumu.png', 
+            portrait: 'images/charData/portraits/art_yumu.webp', 
             battleArt: BattleArts.YUMU, 
             schoolLogo: Schools.XIWAN, societyLogo: Societies.FRIEND, 
             attr1: Attrs.LIGHT, attr2: '', 
@@ -5315,7 +5315,7 @@ guide: {
             school:'江口铁道第三中学', join:'S2 (AA2010)', society:'友谊百货', job:'牧师', color:'#FFC0CB', 
             hp:200, patk:200, pdef:200, matk:200, mdef:200, 
             cardImage: CardImages.ZHOU, 
-            portrait: 'images/charData/portraits/art_zhou.png', 
+            portrait: 'images/charData/portraits/art_zhou.webp', 
             battleArt: BattleArts.ZHOU, 
             schoolLogo: Schools.JIANGKOU, societyLogo: Societies.FRIEND, 
             attr1: Attrs.LIGHT, attr2: '', 
@@ -5324,7 +5324,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'友谊百货', job:'厨师', color:'#4169E1', 
             hp:100, patk:200, pdef:150, matk:100, mdef:100, 
             cardImage: CardImages.COTTON, 
-            portrait: 'images/charData/portraits/art_cotton.png', 
+            portrait: 'images/charData/portraits/art_cotton.webp', 
             battleArt: BattleArts.COTTON, 
             schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
             attr1: Attrs.MOON, attr2: Attrs.LIGHT, 
@@ -5333,7 +5333,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S1 第二届', society:'友谊百货', job:'商人', color:'#FFA500', 
             hp:100, patk:100, pdef:100, matk:200, mdef:150, 
             cardImage: CardImages.SONG, 
-            portrait: 'images/charData/portraits/art_song.png', 
+            portrait: 'images/charData/portraits/art_song.webp', 
             battleArt: BattleArts.SONG, 
             schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
             attr1: Attrs.SUN, attr2: Attrs.LIGHT, 
@@ -5352,7 +5352,7 @@ guide: {
             school:'江口铁道第三中学', join:'S2 (AA2010)', society:'冷凝塔', job:'盾卫', color:'#FFD700', 
             hp:155, patk:110, pdef:125, matk:55, mdef:110, isKing: true, chairs:['yellow'], 
             cardImage: CardImages.STONE, 
-            portrait: 'images/charData/portraits/art_stone.png', 
+            portrait: 'images/charData/portraits/art_stone.webp', 
             battleArt: BattleArts.STONE, 
             schoolLogo: Schools.JIANGKOU, societyLogo: Societies.TOWER, 
             attr1: Attrs.EARTH, attr2: Attrs.FIRE, 
@@ -5361,7 +5361,7 @@ guide: {
             school:'江口铁道第三中学', join:'S2 (AA2010)', society:'冷凝塔', job:'铁匠', color:'#9370DB', 
             hp:75, patk:125, pdef:80, matk:60, mdef:100, 
             cardImage: CardImages.MASTER, 
-            portrait: 'images/charData/portraits/art_master.png', 
+            portrait: 'images/charData/portraits/art_master.webp', 
             battleArt: BattleArts.MASTER, 
             schoolLogo: Schools.JIANGKOU, societyLogo: Societies.TOWER, 
             attr1: Attrs.FIRE, attr2: '', 
@@ -5380,7 +5380,7 @@ guide: {
             school:'西湾区实验中学', join:'S2 (AA2010)', society:'冷凝塔', job:'格斗家', color:'#FF4500', 
             hp:70, patk:130, pdef:115, matk:85, mdef:95, 
             cardImage: CardImages.COCO, 
-            portrait: 'images/charData/portraits/art_coco.png', 
+            portrait: 'images/charData/portraits/art_coco.webp', 
             battleArt: BattleArts.COCO, 
             schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
             attr1: Attrs.METAL, attr2: '', 
@@ -5390,7 +5390,7 @@ guide: {
             school:'西湾区实验中学', join:'S2 (AA2010)', society:'冷凝塔', job:'游侠', color:'#999', 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOBODY, 
-            portrait: 'images/charData/portraits/art_coco.png', 
+            portrait: 'images/charData/portraits/art_coco.webp', 
             battleArt: '', 
             schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
             attr1: Attrs.METAL, attr2: '', 
@@ -5399,7 +5399,7 @@ guide: {
             school:'平仙市愚桥中学', join:'S1 (AA2009)', society:'冷凝塔', job:'刺客', color:'#40E0D0', 
             hp:100, patk:165, pdef:130, matk:65, mdef:110, isKing: false,  
             cardImage: CardImages.XIAOBEI, 
-            portrait: 'images/charData/portraits/art_xiaobei.png', 
+            portrait: 'images/charData/portraits/art_xiaobei.webp', 
             battleArt: BattleArts.XIAOBEI, 
             schoolLogo: Schools.PINGXIAN, societyLogo: Societies.TOWER, 
             attr1: Attrs.ICE, attr2: Attrs.MOON, 
@@ -5408,7 +5408,7 @@ guide: {
             school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'不良少年宫', job:'狂战士', color:'#8A2BE2', 
             hp:65, patk:125, pdef:60, matk:165, mdef:60, isKing: false, chairs: [ 'cyan'], 
             cardImage: CardImages.HEI, 
-            portrait: 'images/charData/portraits/art_hei.png', 
+            portrait: 'images/charData/portraits/art_hei.webp', 
             battleArt: BattleArts.HEI, 
             schoolLogo: Schools.LINZHOU, societyLogo: Societies.BAD, 
             attr1: Attrs.MOON, attr2: Attrs.DUST, 
@@ -5427,7 +5427,7 @@ guide: {
             school:'金谷市青松中学', join:'S2 (AA2010)', society:'不良少年宫', job:'猎人', color:'#32CD32', 
             hp:88, patk:140, pdef:170, matk:75, mdef:115, isKing: true, chairs: [ 'green'],
             cardImage: CardImages.BAN, 
-            portrait: 'images/charData/portraits/art_ban.png', 
+            portrait: 'images/charData/portraits/art_ban.webp', 
             battleArt: BattleArts.BAN, 
             schoolLogo: Schools.JINGU, societyLogo: Societies.BAD, 
             attr1: Attrs.WOOD, attr2: Attrs.CRYSTAL, 
@@ -5436,7 +5436,7 @@ guide: {
             school:'中廖外国语学校', join:'S2 (AA2010)', society:'不良少年宫', job:'狂战士', color:'#FF0000', 
             hp:105, patk:140, pdef:55, matk:30, mdef:55, 
             cardImage: CardImages.HONG, 
-            portrait: 'images/charData/portraits/art_hong.png', 
+            portrait: 'images/charData/portraits/art_hong.webp', 
             battleArt: BattleArts.HONG, 
             schoolLogo: Schools.ZHONGLIAO, societyLogo: Societies.BAD, 
             attr1: Attrs.SUN, attr2: Attrs.CRYSTAL, 
@@ -5446,7 +5446,7 @@ guide: {
             school:'溪北大学附属中学', join:'S2 (AA2010)', society:'冷凝塔', job:'火枪手', color:'#999', 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOBODY, 
-            portrait: 'images/charData/portraits/art_coco.png', 
+            portrait: 'images/charData/portraits/art_coco.webp', 
             battleArt: '', 
             schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
             attr1: Attrs.METAL, attr2: '', 
@@ -5455,7 +5455,7 @@ guide: {
             school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'炼厂', job:'刺客', color:'#DC143C', 
             hp:80, patk:135, pdef:130, matk:90, mdef:90, isKing: false, chairs: [ 'green'],  isChairForbidden: true,
             cardImage: CardImages.PIAO, 
-            portrait: 'images/charData/portraits/art_piao.png', 
+            portrait: 'images/charData/portraits/art_piao.webp', 
             battleArt: BattleArts.PIAO, 
             schoolLogo: Schools.LINZHOU, societyLogo: Societies.FACTORY, 
             attr1: Attrs.SUN, attr2: Attrs.EARTH, 
@@ -5464,7 +5464,7 @@ guide: {
             school:'金谷市青松中学', join:'S2 (AA2010)', society:'炼厂', job:'盗贼', color:'#FF8C00', 
             hp:50, patk:75, pdef:75, matk:65, mdef:65, 
             cardImage: CardImages.HUA, 
-            portrait: 'images/charData/portraits/art_hua.png', 
+            portrait: 'images/charData/portraits/art_hua.webp', 
             battleArt: BattleArts.HUA, 
             schoolLogo: Schools.JINGU, societyLogo: Societies.FACTORY, 
             attr1: Attrs.METAL, attr2: '', 
@@ -5473,7 +5473,7 @@ guide: {
             school:'平仙市愚桥中学', join:'S1 (AA2009)', society:'炼厂', job:'剪刀手', color: 'linear-gradient(to right, #FFD700, #0000FF)', 
             hp:150, patk:160, pdef:100, matk:100, mdef:100, isKing: false, 
             cardImage: CardImages.CAT, 
-            portrait: 'images/charData/portraits/art_cat.png', 
+            portrait: 'images/charData/portraits/art_cat.webp', 
             battleArt: BattleArts.CAT, 
             schoolLogo: Schools.PINGXIAN, societyLogo: Societies.FACTORY, 
             attr1: Attrs.CRYSTAL, attr2: Attrs.WIND, 
@@ -5482,7 +5482,7 @@ guide: {
             school:'花港市第十一中学', join:'S2 (AA2010)', society:'炼厂', job:'格斗家', color:'#1E90FF', 
             hp:100, patk:165, pdef:150, matk:50, mdef:180, isKing: true,  
             cardImage: CardImages.DOU, 
-            portrait: 'images/charData/portraits/art_dou.png', 
+            portrait: 'images/charData/portraits/art_dou.webp', 
             battleArt: BattleArts.DOU, 
             schoolLogo: Schools.HUAGANG, societyLogo: Societies.FACTORY, 
             attr1: Attrs.WIND, attr2: Attrs.ICE, 
@@ -5492,7 +5492,7 @@ guide: {
             school:'花港市第十一中学', join:'S2 (AA2010)', society:'冷凝塔', job:'雇佣兵', color:'#999', 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOBODY, 
-            portrait: 'images/charData/portraits/art_coco.png', 
+            portrait: 'images/charData/portraits/art_coco.webp', 
             battleArt: '', 
             schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
             attr1: Attrs.METAL, attr2: '', 
@@ -5502,7 +5502,7 @@ guide: {
             school:'平仙市愚桥中学', join:'S2 (AA2010)', society:'冷凝塔', job:'重力法师', color:'#999', 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOBODY, 
-            portrait: 'images/charData/portraits/art_coco.png', 
+            portrait: 'images/charData/portraits/art_coco.webp', 
             battleArt: '', 
             schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
             attr1: Attrs.METAL, attr2: '', 
@@ -5511,7 +5511,7 @@ guide: {
             school:'冲江市第五中学', join:'S3 (AA2011)', society:'蜂山广场', job:'剪刀手', color:'linear-gradient(to right, #00FF7F, #FF0055)', 
             hp:40, patk:60, pdef:40, matk:60, mdef:40, 
             cardImage: CardImages.SB, 
-            portrait: 'images/charData/portraits/art_sb.png', 
+            portrait: 'images/charData/portraits/art_sb.webp', 
             battleArt: BattleArts.SB, 
             schoolLogo: Schools.CHONGJIANG, societyLogo: Societies.PLAZA, 
             attr1: '', attr2: '', 
@@ -5520,7 +5520,7 @@ guide: {
             school:'冲江市第五中学', join:'S3 (AA2011)', society:'蜂山广场', job:'剑士', color:'#FFA500', 
             hp:65, patk:80, pdef:45, matk:80, mdef:55, 
             cardImage: CardImages.NAO, 
-            portrait: 'images/charData/portraits/art_nao.png', 
+            portrait: 'images/charData/portraits/art_nao.webp', 
             battleArt: BattleArts.NAO, 
             schoolLogo: Schools.CHONGJIANG, societyLogo: Societies.PLAZA, 
             attr1: Attrs.WOOD, attr2: '', 
@@ -5529,7 +5529,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S0 (AA2008)', society:'哈尼哈尼', job:'大魔法师', color:'#FF1493', 
             hp:110, patk:175, pdef:80, matk:200, mdef:140, isKing: true, chairs: [ 'rose'], isChairForbidden: true,
             cardImage: CardImages.KID, 
-            portrait: 'images/charData/portraits/art_kid.png', 
+            portrait: 'images/charData/portraits/art_kid.webp', 
             battleArt: BattleArts.KID, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
             attr1: Attrs.STAR, attr2: Attrs.CRYSTAL, 
@@ -5538,7 +5538,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'未提拔', society:'哈尼哈尼', job:'游侠', color:'#FFFF00', 
             hp:80, patk:80, pdef:80, matk:80, mdef:80,  
             cardImage: CardImages.XHANI, 
-            portrait: 'images/charData/portraits/art_xhani.png', 
+            portrait: 'images/charData/portraits/art_xhani.webp', 
             battleArt: BattleArts.XHANI, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
             attr1: Attrs.STAR, attr2: '', 
@@ -5547,7 +5547,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S2 第五届', society:'哈尼哈尼', job:'剑士', color:'#4AB5FF',  
             hp:70, patk:190, pdef:40, matk:30, mdef:50,  
             cardImage: CardImages.NURSE, 
-            portrait: 'images/charData/portraits/art_nurse.png', 
+            portrait: 'images/charData/portraits/art_nurse.webp', 
             battleArt: BattleArts.NURSE, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
             attr1: Attrs.WATER, attr2: '', 
@@ -5556,7 +5556,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S2 第五届', society:'哈尼哈尼', job:'火魔法师', color:'#FF69B4', 
             hp:110, patk:50, pdef:60, matk:130, mdef:150, 
             cardImage: CardImages.DREAM, 
-            portrait: 'images/charData/portraits/art_dream.png', 
+            portrait: 'images/charData/portraits/art_dream.webp', 
             battleArt: BattleArts.DREAM, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
             attr1: Attrs.FIRE, attr2: Attrs.EARTH, 
@@ -5565,7 +5565,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S1 第三届', society:'哈尼哈尼', job:'双刀客', color:'#DC143C', 
             hp:200, patk:220, pdef:100, matk:20, mdef:20, 
             cardImage: CardImages.CANDY, 
-            portrait: 'images/charData/portraits/art_candy.png', 
+            portrait: 'images/charData/portraits/art_candy.webp', 
             battleArt: BattleArts.CANDY, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
             attr1: Attrs.CRYSTAL, attr2: '', 
@@ -5574,7 +5574,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S1 第二届', society:'哈尼哈尼', job:'音波法师', color:'#C0C0C0', 
             hp:200, patk:20, pdef:20, matk:220, mdef:100, 
             cardImage: CardImages.KING, 
-            portrait: 'images/charData/portraits/art_king.png', 
+            portrait: 'images/charData/portraits/art_king.webp', 
             battleArt: BattleArts.KING, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
             attr1: Attrs.WAVE, attr2: Attrs.CRYSTAL, 
@@ -5583,7 +5583,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'哈尼哈尼', job:'死灵法师', color:'#FFA500', 
             hp:50, patk:50, pdef:50, matk:150, mdef:150, 
             cardImage: CardImages.WAX, 
-            portrait: 'images/charData/portraits/art_wax.png', 
+            portrait: 'images/charData/portraits/art_wax.webp', 
             battleArt: BattleArts.WAX, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
             attr1: Attrs.WOOD, attr2: Attrs.DUST, 
@@ -5592,7 +5592,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S2 第五届', society:'哈尼哈尼', job:'重锤战士', color:'#32CD32', 
             hp:80, patk:125, pdef:75, matk:45, mdef:95, 
             cardImage: CardImages.PIGEON, 
-            portrait: 'images/charData/portraits/art_pigeon.png', 
+            portrait: 'images/charData/portraits/art_pigeon.webp', 
             battleArt: BattleArts.PIGEON, 
             schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
             attr1: Attrs.WOOD, attr2: '', 
@@ -5601,7 +5601,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'三子星', job:'驯兽师', color:'#FFFF00', 
             hp:60, patk:90, pdef:50, matk:150, mdef:130, isKing: true,  
             cardImage: CardImages.PIKA, 
-            portrait: 'images/charData/portraits/art_pika.png', 
+            portrait: 'images/charData/portraits/art_pika.webp', 
             battleArt: BattleArts.PIKA, 
             schoolLogo: Schools.HANI, societyLogo: Societies.STARS, 
             attr1: Attrs.THUNDER, attr2: '', 
@@ -5610,7 +5610,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S2 第五届', society:'三子星', job:'骑士', color:'#00FFFF', 
             hp:100, patk:130, pdef:75, matk:100, mdef:80, 
             cardImage: CardImages.DING, 
-            portrait: 'images/charData/portraits/art_ding.png', 
+            portrait: 'images/charData/portraits/art_ding.webp', 
             battleArt: BattleArts.DING, 
             schoolLogo: Schools.HANI, societyLogo: Societies.STARS, 
             attr1: Attrs.ICE, attr2: '', 
@@ -5619,7 +5619,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'三子星', job:'铁匠', color:'#FFB6C1', 
             hp:120, patk:70, pdef:110, matk:80, mdef:125, 
             cardImage: CardImages.BUTA, 
-            portrait: 'images/charData/portraits/art_buta.png', 
+            portrait: 'images/charData/portraits/art_buta.webp', 
             battleArt: BattleArts.BUTA, 
             schoolLogo: Schools.HANI, societyLogo: Societies.STARS, 
             attr1: Attrs.WIND, attr2: '', 
@@ -5628,7 +5628,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'毛毛毛毛毛', job:'刺客', color:'#FFD700', 
             hp:100, patk:100, pdef:100, matk:100, mdef:130, isKing: true, 
             cardImage: CardImages.XDQ, 
-            portrait: 'images/charData/portraits/art_xdq.png', 
+            portrait: 'images/charData/portraits/art_xdq.webp', 
             battleArt: BattleArts.XDQ, 
             schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
             attr1: Attrs.CRYSTAL, attr2: Attrs.THUNDER, 
@@ -5637,7 +5637,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S1 第三届', society:'毛毛毛毛毛', job:'光魔法师', color:'#FF4500', 
             hp:100, patk:100, pdef:100, matk:100, mdef:130, isKing: true, 
             cardImage: CardImages.penguin, 
-            portrait: 'images/charData/portraits/art_penguin.png', 
+            portrait: 'images/charData/portraits/art_penguin.webp', 
             battleArt: BattleArts.penguin, 
             schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
             attr1: Attrs.SUN, attr2: Attrs.ICE, 
@@ -5646,7 +5646,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S1 第三届', society:'毛毛毛毛毛', job:'舞者', color:'#00FF7F', 
             hp:60, patk:180, pdef:130, matk:60, mdef:44, 
             cardImage: CardImages.PAO, 
-            portrait: 'images/charData/portraits/art_pao.png', 
+            portrait: 'images/charData/portraits/art_pao.webp', 
             battleArt: BattleArts.PAO, 
             schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
             attr1: Attrs.WOOD, attr2: Attrs.WIND, 
@@ -5655,7 +5655,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S1 第三届', society:'毛毛毛毛毛', job:'大召唤师', color:'#DA70D6', 
             hp:70, patk:130, pdef:44, matk:130, mdef:44, 
             cardImage: CardImages.ZHE, 
-            portrait: 'images/charData/portraits/art_zhe.png', 
+            portrait: 'images/charData/portraits/art_zhe.webp', 
             battleArt: BattleArts.ZHE, 
             schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
             attr1: Attrs.SUN, attr2: Attrs.CRYSTAL, 
@@ -5664,7 +5664,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'毛毛毛毛毛', job:'电磁法师', color:'#1E90FF', 
             hp:100, patk:150, pdef:120, matk:120, mdef:100, 
             cardImage: CardImages.TIE, 
-            portrait: 'images/charData/portraits/art_tie.png', 
+            portrait: 'images/charData/portraits/art_tie.webp', 
             battleArt: BattleArts.TIE, 
             schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
             attr1: Attrs.MOON, attr2: Attrs.CRYSTAL, 
@@ -5673,7 +5673,7 @@ guide: {
             school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'毛毛毛毛毛', job:'大祭司', color:'#FFFFFF', 
             hp:125, patk:120, pdef:90, matk:170, mdef:100, isKing: true,  
             cardImage: CardImages.BULIAN, 
-            portrait: 'images/charData/portraits/art_bulian.png', 
+            portrait: 'images/charData/portraits/art_bulian.webp', 
             battleArt: BattleArts.BULIAN, 
             schoolLogo: Schools.HANI, societyLogo: Societies.BUKLL, 
             attr1: Attrs.METAL, attr2: '', 
@@ -5792,7 +5792,7 @@ guide: {
             school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'白楼', job:'吟游诗人', color:'#FFFFFF', 
             hp:999, patk:999, pdef:999, matk:999, mdef:999, isKing: true, chairs: [ 'white'], 
             cardImage: CardImages.YAN, 
-            portrait: 'images/charData/portraits/art_yan.png', 
+            portrait: 'images/charData/portraits/art_yan.webp', 
             battleArt: BattleArts.YAN, 
             schoolLogo: Schools.LINZHOU, societyLogo: Societies.WHITE, 
             attr1: '', attr2: '', 
@@ -6213,10 +6213,10 @@ function navigateChar(direction) {
 
     // 1. [核心] 卡牌图标字典 (以后在任何地方引用图标，就用 RuleIcons.RW 这种格式)
     const RuleIcons = {
-        RW: 'images/BQcards/icons/cards_categories/UI_Card_Person_01.png',  // 人物卡 (Ren Wu)
-        JN: 'images/BQcards/icons/cards_categories/UI_Card_Skill_01.png',   // 技能卡 (Ji Neng)
-        WP: 'images/BQcards/icons/cards_categories/UI_Card_Item_01.png',    // 物品卡 (Wu Pin)
-        JK: 'images/BQcards/icons/cards_categories/UI_Card_Medal_01.png'    // 纪念卡 (Ji Nian / Jie Ke)
+        RW: 'images/BQcards/icons/cards_categories/UI_Card_Person_01.webp',  // 人物卡 (Ren Wu)
+        JN: 'images/BQcards/icons/cards_categories/UI_Card_Skill_01.webp',   // 技能卡 (Ji Neng)
+        WP: 'images/BQcards/icons/cards_categories/UI_Card_Item_01.webp',    // 物品卡 (Wu Pin)
+        JK: 'images/BQcards/icons/cards_categories/UI_Card_Medal_01.webp'    // 纪念卡 (Ji Nian / Jie Ke)
     };
 
     // 2. 表格内容配置 (把原来 HTML 里的字搬到这里)
@@ -6318,7 +6318,7 @@ function navigateChar(direction) {
         
 // === 【新增】在最顶部加入卡牌页的大头图 ===
     // 请替换 src 为你的真实图片路径
-    let htmlContent = `<img src="images/headers/page_header_card.png" class="header-poster-28" style="margin-bottom: 30px;">`;
+    let htmlContent = `<img src="images/headers/page_header_card.webp" class="header-poster-28" style="margin-bottom: 30px;">`;
     let jumpMenuHtml = ''; 
 // 2. 【新增】在这里插入规则表格 (搬运过来的)
     // 使用 archive-block 确保宽度和页边距与页面其他内容一致
@@ -6407,7 +6407,7 @@ function navigateChar(direction) {
 
         // 生成卡片 (不变)
         fileList.forEach(fileName => {
-            const imgSrc = `${bqBasePath}${fileName}.png`; 
+            const imgSrc = `${bqBasePath}${fileName}.webp`; 
             htmlContent += `
                 <div class="bqc-card-item" onclick="openBqcModal('${imgSrc}')">
                     <img src="${imgSrc}" class="bqc-card-img" loading="lazy" alt="${fileName}">
@@ -6436,8 +6436,8 @@ function navigateChar(direction) {
 
         const nextFile = globalCardPlaylist[newIndex];
         
-        // 👇 这里也改回了 .png
-        const nextSrc = bqBasePath + nextFile + '.png';
+        // 👇 这里也改回了 .webp
+        const nextSrc = bqBasePath + nextFile + '.webp';
         
         openBqcModal(nextSrc);
     }
@@ -6575,8 +6575,8 @@ function navigateChar(direction) {
 
     // 【核心功能】判定文件名是否需要反光效果
 function checkReflection(src) {
-    // 提取文件名，例如: images/cards/RW-QGa.png -> RW-QGa
-    const filename = src.substring(src.lastIndexOf('/') + 1).replace('.png', '');
+    // 提取文件名，例如: images/cards/RW-QGa.webp -> RW-QGa
+    const filename = src.substring(src.lastIndexOf('/') + 1).replace('.webp', '');
     
     // 正則表達式：判定結尾是否為 QG 或 QS 加上一個字母 (a-z)
     // i 表示不區分大小寫
@@ -6613,7 +6613,7 @@ openBqcModal = function(src) {
     tiltCard.style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg)`;
 
     // 4. 記錄當前索引
-    const filename = src.substring(src.lastIndexOf('/') + 1).replace('.png', '');
+    const filename = src.substring(src.lastIndexOf('/') + 1).replace('.webp', '');
     currentCardIndex = globalCardPlaylist.indexOf(filename);
 };
 
@@ -6628,7 +6628,7 @@ openBqcModal = function(src) {
         if (currentCardIndex < 0) currentCardIndex = globalCardPlaylist.length - 1;
 
         const nextFile = globalCardPlaylist[currentCardIndex];
-        const nextSrc = bqBasePath + nextFile + '.png';
+        const nextSrc = bqBasePath + nextFile + '.webp';
 
         // 2. 获取大图和反光层元素
         const bigImg = document.getElementById('bqcBigImg');
@@ -7008,7 +7008,7 @@ function renderCharPage() {
 
 // === 【新增】在最顶部加入人物页的大头图 ===
     // 请替换 src 为你的真实图片路径
-    let htmlStructure = `<img src="images/headers/page_header_char.png" class="header-poster-28" style="margin-bottom: 0px;">`;
+    let htmlStructure = `<img src="images/headers/page_header_char.webp" class="header-poster-28" style="margin-bottom: 0px;">`;
     let menuHtml = '';
 
     // 1. 遍历配置
@@ -7091,7 +7091,7 @@ function renderCharPage() {
     // === [新增] 人物页末尾结算图 ===
     // 请将 src 替换为你准备好的图片路径
     htmlStructure += `
-        <img src="images/overview/char_final.png" 
+        <img src="images/overview/char_final.webp" 
             class="equip-final-full" 
             style="display: block !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 20px;">`;
     
@@ -7273,7 +7273,7 @@ document.addEventListener('click', function(event) {
 
 // --- 1. 斑丘景色數據字典 ---景色主题色
 const bqViewData = {
-    overview: { poster: "images/BQviews/posters/0-1.png" },
+    overview: { poster: "images/BQviews/posters/0-1.webp" },
     chapters: [
         {
             id: 1, title: "炼厂", color: "#daf08e",
@@ -7339,7 +7339,7 @@ const sectionBg = `linear-gradient(180deg, color-mix(in srgb, ${ch.color}, trans
             </div>
             
 
-            <img src="images/BQviews/posters/${ch.id}-1.png" class="bqv-poster">
+            <img src="images/BQviews/posters/${ch.id}-1.webp" class="bqv-poster">
 
             <div class="bqv-content-wrap">
                 <div class="bqv-glass-card">${ch.bio}</div>
@@ -7359,7 +7359,7 @@ html += `
 <div class="bqv-photo-item" 
     style="transform: rotate(${tilt}deg)" 
     onclick="openBqvModal(${ch.id}, ${i})">
-    <img src="images/BQviews/photographs/${ch.id}-${num}.png" loading="lazy">
+    <img src="images/BQviews/photographs/${ch.id}-${num}.webp" loading="lazy">
 </div>`;
                 }
 
@@ -7370,7 +7370,7 @@ html += `
     // === [新增] 景色页末尾结算图 ===
     // 请将 src 替换为你准备好的图片路径
     html += `
-        <img src="images/overview/scenery_final.png" 
+        <img src="images/overview/scenery_final.webp" 
             class="equip-final-full" 
             style="display: block !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 20px;">`;
     
@@ -7411,7 +7411,7 @@ let bqvCurrentIndex = 1;
 /*
     html += `
     <div class="bqv-photo-item" style="transform: rotate(${tilt}deg)" onclick="openBqvModal(${ch.id}, ${i})">
-        <img src="images/BQviews/photographs/${ch.id}-${num}.png" loading="lazy">
+        <img src="images/BQviews/photographs/${ch.id}-${num}.webp" loading="lazy">
     </div>`;
 */
 
@@ -7425,7 +7425,7 @@ function openBqvModal(chapterId, index) {
 
 function updateBqvModalContent() {
     const num = bqvCurrentIndex < 10 ? '0' + bqvCurrentIndex : bqvCurrentIndex;
-    const imgSrc = `images/BQviews/photographs/${bqvCurrentChapter.id}-${num}.png`;
+    const imgSrc = `images/BQviews/photographs/${bqvCurrentChapter.id}-${num}.webp`;
     
     // 更新大图
     document.getElementById('bqv-modal-img').src = imgSrc;
@@ -7460,7 +7460,7 @@ function generatePhotos(chId) {
         const tilt = (Math.sin(chId * 10 + i) * limit).toFixed(2);
         pte += `
         <div class="bqv-photo-item" style="transform: rotate(${tilt}deg)" onclick="openBqvModal(${chId}, ${i})">
-            <img src="images/BQviews/photographs/${chId}-${num}.png">
+            <img src="images/BQviews/photographs/${chId}-${num}.webp">
         </div>`;
     }
     return pte;
@@ -7513,7 +7513,7 @@ renderer.code = function(code, language) {
 };
 
 // 3. 在这里粘贴你的 Notion 内容
-//![小孩的插图](images/story/photo01.png)【插入图片的格式】
+//![小孩的插图](images/story/photo01.webp)【插入图片的格式】
 const notionContent = `
 
 
@@ -9788,10 +9788,10 @@ html += `
 
 // 1. 定义卡牌数据
     const RuleIcons = {
-        RW: 'images/BQcards/icons/cards_categories/UI_Card_Person_01.png',
-        JN: 'images/BQcards/icons/cards_categories/UI_Card_Skill_01.png',
-        WP: 'images/BQcards/icons/cards_categories/UI_Card_Item_01.png',
-        JK: 'images/BQcards/icons/cards_categories/UI_Card_Medal_01.png'
+        RW: 'images/BQcards/icons/cards_categories/UI_Card_Person_01.webp',
+        JN: 'images/BQcards/icons/cards_categories/UI_Card_Skill_01.webp',
+        WP: 'images/BQcards/icons/cards_categories/UI_Card_Item_01.webp',
+        JK: 'images/BQcards/icons/cards_categories/UI_Card_Medal_01.webp'
     };
 
     const CardColors = {
@@ -10018,7 +10018,7 @@ html += `
 
     // === [关键修正]：加入和你装备页一样的内联样式，强制居中 ===
     html += `
-        <img src="images/overview/justice_final.png" 
+        <img src="images/overview/justice_final.webp" 
             class="equip-final-full" 
             style="display: block !important; margin-left: auto !important; margin-right: auto !important;">`;
 

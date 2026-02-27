@@ -18,10 +18,10 @@ try {
         "JK": []
     };
 
-    // 過濾出 .png 檔案並進行分類
+    // 過濾出 .webp 檔案並進行分類
     files.forEach(file => {
-        if (file.toLowerCase().endsWith('.png')) {
-            const fileNameNoExt = file.replace(/\.[^/.]+$/, ""); // 去掉 .png 後綴
+        if (file.toLowerCase().endsWith('.webp')) {
+            const fileNameNoExt = file.replace(/\.[^/.]+$/, ""); // 去掉 .webp 後綴
             
             // 根據檔名前綴 (RW-, JN-, WP-, JK-) 進行分類
             const prefix = fileNameNoExt.split('-')[0].toUpperCase();
