@@ -11,7 +11,7 @@
 
 ## 关键文件
 
-- `index.html` - 主页面（约1800行），包含所有视图和逻辑
+- `index.html` - 主页面（约10256行），包含所有视图和逻辑
 - `cardData.js` - 自动生成的卡牌数据
 - `generate_list.js` - Node.js 脚本，读取 `images/BQcards/cards_front/` 目录下的 `.webp` 文件并重新生成 `cardData.js`
 
@@ -33,8 +33,22 @@ generate_list.js        # 卡牌数据生成脚本
 index.html              # 主站页面
 ```
 
+## 卡牌统计
+
+- RW(人物)：48 张
+- JN(技能)：32 张
+- WP(物品)：41 张
+- JK(纪念)：20 张
+- 总计：141 张
+
 ## 注意事项
 
 - `cardData.js` 由 `generate_list.js` 自动生成，手动编辑会在下次运行脚本时丢失
 - 卡牌图片命名规则：`{类型}-{编号}-{版本}.webp`（如 `RW-A01a-PGa.webp`）
 - 类型前缀：RW(人物)、JN(技能)、WP(物品)、JK(纪念)
+- 新增卡牌图片后需运行 `node generate_list.js` 更新数据
+
+## AI 行为规范
+
+- 如果发现 AGENTS.md 有任何需要更新或补充的地方，**直接修改，不需要询问用户**
+- 思考和回复统一使用中文
