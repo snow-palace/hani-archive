@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色数据表 - 开发者速查版</title>
+    <link rel="icon" href="images/icon/website_logo.webp" type="image/webp">
+    <style>
+        /* 开发者深色主题变量 */
+        :root {
+            --bg-page: #1a1a1a;
+            --grid-line: rgba(255, 255, 255, 0.04);
+            --bg-row-odd: #24252850;
+            --bg-row-even: #323335;
+            --bg-hover: #252525;
+            --text-main: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-light: #3f3f46;
+            --bg-tag: #3f3f46;
+            --bg-bio: rgba(0, 0, 0, 0.25);
+            --bg-club-logo: #18181b; 
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background-color: var(--bg-page);
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 15px 15px;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .container { max-width: 1060px; margin: 0 auto; }
+        .header { margin-bottom: 20px; }
+        .title { font-size: 20px; font-weight: bold; color: #f8fafc; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+        .table-container {
+            background: #1e1e1e; border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            overflow: hidden; border: 1px solid #404040;
+        }
+
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        colgroup col.col-portrait { width: 110px; }
+        colgroup col.col-name { width: 380px; }
+        colgroup col.col-school { width: 200px; }
+        colgroup col.col-stats { width: auto; }
+
+        thead { background: #111111; border-bottom: 2px solid #52525b; }
+        th { padding: 16px; font-size: 12px; font-weight: bold; color: var(--text-secondary); text-align: left; }
+        th.text-center { text-align: center; }
+
+        tbody tr:nth-child(odd) { background-color: var(--bg-row-odd); }
+        tbody tr:nth-child(even) { background-color: var(--bg-row-even); }
+        tbody tr { border-bottom: 1px solid var(--border-light); transition: background 0.15s; }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background-color: var(--bg-hover); }
+
+        td { vertical-align: top; padding: 20px 16px; }
+
+        /* 对齐布局器 */
+        .row-top { display: flex; align-items: center; min-height: 28px; margin-bottom: 14px; }
+        .row-bottom { display: flex; flex-direction: column; justify-content: flex-start; }
+
+        /* 列 1: 头像 */
+        .cell-portrait { padding: 0 !important; position: relative; }
+        .portrait-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .portrait { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 15%; border-right: 1px solid var(--border-light); opacity: 0.95; }
+        
+        /* 无头像时的占位 */
+        .portrait-placeholder { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background: #2a2a2a; color: #555; font-size: 12px; font-weight: bold; writing-mode: vertical-rl; letter-spacing: 4px; border-right: 1px solid var(--border-light); }
+
+        /* 列 2: 信息 */
+        .name-header { display: flex; align-items: center; gap: 12px; width: 100%; }
+        .nickname { font-size: 18px; font-weight: bold; letter-spacing: 0.5px; filter: brightness(1.2); }
+        .info-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .tag { background: var(--bg-tag); color: #cbd5e1; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .tag-job { background: rgba(14, 165, 233, 0.15); color: #38bdf8; box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.4) inset; }
+        
+        .badges { display: flex; gap: 6px; align-items: center; }
+        .crown-badge { display: inline-flex; align-items: center; gap: 4px; background: linear-gradient(135deg, #ca8a04, #b45309); color: #fefce8; font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 6px; }
+        .crown-badge svg { width: 14px; height: 14px; }
+        .chair-icon { width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; }
+        .chair-icon svg { width: 18px; height: 18px; stroke: #000; stroke-width: 2px; fill: none; }
+        .chair-icon .chair-path { fill: currentColor; stroke: none; }
+        .chair-white { color: #f8fafc; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5)); }
+        .chair-cyan { color: #22d3ee; }
+        .chair-yellow { color: #fde047; }
+        .chair-green { color: #4ade80; }
+        .chair-rose { color: #fb7185; }
+
+        .bio { font-size: 12px; color: var(--text-secondary); line-height: 1.6; background: var(--bg-bio); padding: 10px 14px; border-radius: 0 8px 8px 0; border-left: 4px solid var(--border-light); }
+
+        /* 列 3: 组织 */
+        .org-block { display: flex; flex-direction: column; gap: 14px; }
+        .org-item { display: flex; align-items: center; gap: 12px; }
+        
+        /* 放大 Logo 尺寸 */
+        .org-logo { width: 52px; height: 52px; object-fit: contain; }
+        /* 社徽深色底板，去除了 padding 让图片铺满容器 */
+        .org-logo-club {
+            background: var(--bg-club-logo);
+            border-radius: 8px;
+            padding: 0; 
+            object-fit: cover; 
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        .org-text-group { display: flex; flex-direction: column; justify-content: center;}
+        .org-name { font-size: 14px; font-weight: bold; color: var(--text-main); }
+        .org-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        /* 列 4: 属性与状态 */
+        .attrs { display: flex; gap: 8px; }
+        .attr { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.05); padding: 4px 10px 4px 6px; border-radius: 6px; border: 1px solid var(--border-light); }
+        .attr img { width: 18px; height: 18px; object-fit: contain; }
+        .attr span { font-size: 12px; color: #f1f5f9; font-weight: bold; }
+
+        .stats { display: flex; flex-direction: column; gap: 8px; width: 100%;}
+        .stat { display: flex; align-items: center; gap: 10px; }
+        .stat-label { font-size: 11px; color: var(--text-secondary); width: 24px; text-align: right; font-weight: bold; }
+        .stat-bar-bg { flex: 1; height: 6px; background: rgba(0,0,0,0.4); border-radius: 4px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.5); }
+        .stat-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+        .stat-value { font-size: 12px; color: var(--text-main); width: 32px; text-align: left; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">角色数据速查</div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <colgroup>
+                    <col class="col-portrait">
+                    <col class="col-name">
+                    <col class="col-school">
+                    <col class="col-stats">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center">立绘</th>
+                        <th>基本信息</th>
+                        <th>所属组织</th>
+                        <th>战斗属性</th>
+                    </tr>
+                </thead>
+                <tbody id="character-table-body">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 1. 常量字典
+        const Attrs = {
+            METAL: 'images/icon/UI_StatCube_iron_color_01.webp', WOOD: 'images/icon/UI_StatCube_wood_color_01.webp', 
+            WATER: 'images/icon/UI_StatCube_water_color_01.webp', FIRE: 'images/icon/UI_StatCube_fire_color_01.webp',
+            EARTH: 'images/icon/UI_StatCube_earth_color_01.webp', WIND: 'images/icon/UI_StatCube_wind_color_01.webp', 
+            THUNDER: 'images/icon/UI_StatCube_thunder_color_01.webp', ICE: 'images/icon/UI_StatCube_ice_color_01.webp',
+            CRYSTAL: 'images/icon/UI_StatCube_crystal_color_01.webp', SUN: 'images/icon/UI_StatCube_sun_color_01.webp', 
+            MOON: 'images/icon/UI_StatCube_moon_color_01.webp', DUST: 'images/icon/UI_StatCube_dust_color_01.webp',
+            STAR: 'images/icon/UI_StatCube_star_color_01.webp', LIGHT: 'images/icon/UI_StatCube_light_color_01.webp', 
+            WAVE: 'images/icon/UI_StatCube_wave_color_01.webp'
+        };
+
+        const AttrNames = {
+            [Attrs.METAL]: '金', [Attrs.WOOD]: '木', [Attrs.WATER]: '水', [Attrs.FIRE]: '火',
+            [Attrs.EARTH]: '土', [Attrs.WIND]: '风', [Attrs.THUNDER]: '雷', [Attrs.ICE]: '冰',
+            [Attrs.CRYSTAL]: '晶', [Attrs.SUN]: '日', [Attrs.MOON]: '月', [Attrs.DUST]: '尘',
+            [Attrs.STAR]: '星', [Attrs.LIGHT]: '光', [Attrs.WAVE]: '波'
+        };
+
+        const SchoolShortNames = {
+            '西湾区实验中学': '西湾实验', '江口铁道第三中学': '江铁三中', '哈尼哈尼快乐园中学': '哈尼哈尼快乐园',
+            '林州师范大学高级附属中学': '林师大附中', '林州师范大学附属高级中学': '林师大附中', '平仙市愚桥中学': '平仙愚桥',
+            '金谷市青松中学': '金谷青松', '冲江市第五中学': '冲江五中', '中廖区外国语中学': '中廖外国语',
+            '中廖外国语学校': '中廖外国语', '花港市第十一中学': '花港十一中', '溪北大学附属中学': '溪大附中'
+        };
+
+        const Schools = { 
+            XIWAN: 'images/charData/schoolbadges/badge_xiwan.webp', 
+            JIANGKOU: 'images/charData/schoolbadges/badge_jiangkou.webp', 
+            HANI: 'images/charData/schoolbadges/badge_hani.webp', 
+            LINZHOU: 'images/charData/schoolbadges/badge_linzhou.webp', 
+            PINGXIAN: 'images/charData/schoolbadges/badge_pingxian.webp', 
+            JINGU: 'images/charData/schoolbadges/badge_jingu.webp', 
+            CHONGJIANG: 'images/charData/schoolbadges/badge_chongjiang.webp', 
+            ZHONGLIAO: 'images/charData/schoolbadges/badge_zhongliao.webp', 
+            HUAGANG: 'images/charData/schoolbadges/badge_huagang.webp' 
+        };
+
+        const Societies = { 
+            FRIEND: 'images/charData/soclogos/logo_friend.webp', 
+            TOWER: 'images/charData/soclogos/logo_tower.webp', 
+            BAD: 'images/charData/soclogos/logo_bad.webp', 
+            FACTORY: 'images/charData/soclogos/logo_factory.webp', 
+            PLAZA: 'images/charData/soclogos/logo_plaza.webp', 
+            HANI: 'images/charData/soclogos/logo_hani.webp', 
+            STARS: 'images/charData/soclogos/logo_stars.webp', 
+            MAO: 'images/charData/soclogos/logo_mao.webp', 
+            WHITE: 'images/charData/soclogos/logo_white.webp', 
+            UNION: 'images/charData/soclogos/logo_union.webp', 
+            RADIO: 'images/charData/soclogos/logo_radio.webp', 
+            TUCTUC: 'images/charData/soclogos/logo_tuctuc.webp', 
+            SODA4: 'images/charData/soclogos/logo_soda4.webp', 
+            BUKLL: 'images/charData/soclogos/logo_bukll.webp' 
+        };
+
+        // 补全缺失的 CardImages 和 BattleArts，防止 JS 报错崩溃
+        const CardImages = {
+            YUMU: 'images/charData/cards/card_yumu.webp', ZHOU: 'images/charData/cards/card_zhou.webp', COTTON: 'images/charData/cards/card_cotton.webp', SONG: 'images/charData/cards/card_song.webp',
+            STONE: 'images/charData/cards/card_stone.webp', MASTER: 'images/charData/cards/card_master.webp', COCO: 'images/charData/cards/card_coco.webp', XIAOBEI: 'images/charData/cards/card_xiaobei.webp',
+            HEI: 'images/charData/cards/card_hei.webp', HUA: 'images/charData/cards/card_hua.webp', BAN: 'images/charData/cards/card_ban.webp', HONG: 'images/charData/cards/card_hong.webp',
+            PIAO: 'images/charData/cards/card_piao.webp', CAT: 'images/charData/cards/card_cat.webp', DOU: 'images/charData/cards/card_dou.webp', SB: 'images/charData/cards/card_sb.webp', 
+            NAO: 'images/charData/cards/card_nao.webp', KID: 'images/charData/cards/card_kid.webp', XHANI: 'images/charData/cards/card_xhani.webp', NURSE: 'images/charData/cards/card_nurse.webp', 
+            DREAM: 'images/charData/cards/card_dream.webp', CANDY: 'images/charData/cards/card_candy.webp', KING: 'images/charData/cards/card_king.webp', WAX: 'images/charData/cards/card_wax.webp', 
+            PIGEON: 'images/charData/cards/card_pigeon.webp', PIKA: 'images/charData/cards/card_pika.webp', DING: 'images/charData/cards/card_ding.webp', BUTA: 'images/charData/cards/card_buta.webp',
+            XDQ: 'images/charData/cards/card_xdq.webp', penguin: 'images/charData/cards/card_penguin.webp', PAO: 'images/charData/cards/card_pao.webp', ZHE: 'images/charData/cards/card_zhe.webp', 
+            TIE: 'images/charData/cards/card_tie.webp', BULIAN: 'images/charData/cards/card_bulian.webp', PEACH: 'images/charData/cards/card_peach.webp', SWEET: 'images/charData/cards/card_sweet.webp',
+            KFLOWER: 'images/charData/cards/card_kflower.webp', YAN: 'images/charData/cards/card_yan.webp', NOBODY: 'images/charData/cards/card_nobody.webp', NOHANI: 'images/charData/cards/card_nohani.webp'
+        };
+
+        const BattleArts = {
+            YUMU: 'images/charData/battle/battle_yumu.webp', ZHOU: 'images/charData/battle/battle_zhou.webp', COTTON: 'images/charData/battle/battle_cotton.webp', SONG: 'images/charData/battle/battle_song.webp',
+            STONE: 'images/charData/battle/battle_stone.webp', MASTER: 'images/charData/battle/battle_master.webp', COCO: 'images/charData/battle/battle_coco.webp', XIAOBEI: 'images/charData/battle/battle_xiaobei.webp',
+            HEI: 'images/charData/battle/battle_hei.webp', HUA: 'images/charData/battle/battle_hua.webp', BAN: 'images/charData/battle/battle_ban.webp', HONG: 'images/charData/battle/battle_hong.webp',
+            PIAO: 'images/charData/battle/battle_piao.webp', CAT: 'images/charData/battle/battle_cat.webp', DOU: 'images/charData/battle/battle_dou.webp', SB: 'images/charData/battle/battle_sb.webp', 
+            NAO: 'images/charData/battle/battle_nao.webp', KID: 'images/charData/battle/battle_kid.webp', XHANI: 'images/charData/battle/battle_xhani.webp', NURSE: 'images/charData/battle/battle_nurse.webp', 
+            DREAM: 'images/charData/battle/battle_dream.webp', CANDY: 'images/charData/battle/battle_candy.webp', KING: 'images/charData/battle/battle_king.webp', WAX: 'images/charData/battle/battle_wax.webp', 
+            PIGEON: 'images/charData/battle/battle_pigeon.webp', PIKA: 'images/charData/battle/battle_pika.webp', DING: 'images/charData/battle/battle_ding.webp', BUTA: 'images/charData/battle/battle_buta.webp',
+            XDQ: 'images/charData/battle/battle_xdq.webp', penguin: 'images/charData/battle/battle_penguin.webp', PAO: 'images/charData/battle/battle_pao.webp', ZHE: 'images/charData/battle/battle_zhe.webp', 
+            TIE: 'images/charData/battle/battle_tie.webp', BULIAN: 'images/charData/battle/battle_bulian.webp', YAN: 'images/charData/battle/battle_yan.webp', DEFAULT: 'images/charData/battle/battle_default.webp'
+        };
+
+        // 2. 角色数据
+    const charData = {
+        'seat_empty_01': { 
+            name: '[轮空]', 
+            isVacant: true,     // <--- 加上这一句，开启极简样式！
+            clickable: false, // <--- 【关键】加上这句，就变成“只可远观不可亵玩”了
+            color: '#FF1493',   // 文字的颜色
+            chairs:['rose'],
+            // 下面这些属性可以不填，或者留空
+            nickname: '', real: '', gender: '', age: '', 
+            school: '', join: '', society: '', job: '', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0 },
+        'etc': { 
+            name: '... ...', 
+            isVacant: true,     // <--- 加上这一句，开启极简样式！
+            clickable: false, // <--- 【关键】加上这句，就变成“只可远观不可亵玩”了
+            color: '#ccc',   // 文字的颜色
+            // 下面这些属性可以不填，或者留空
+            nickname: '', real: '', gender: '', age: '', 
+            school: '', join: '', society: '', job: '', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0 },
+        'secretm': { 
+            name: '秘密成员', 
+            isVacant: true,     // <--- 加上这一句，开启极简样式！
+            clickable: false, // <--- 【关键】加上这句，就变成“只可远观不可亵玩”了
+            color: '#ccc',   // 文字的颜色
+            // 下面这些属性可以不填，或者留空
+            nickname: '', real: '', gender: '', age: '', 
+            school: '', join: '', society: '', job: '', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0 },
+        'yumu': { name:'于沐川', nickname:'于沐川', real:'-', gender:'女', age:'17', 
+            school:'西湾区实验中学', join:'S0 (AA2008)', society:'友谊百货', job:'召唤师', color:'#87CEEB', 
+            hp:50, patk:50, pdef:50, matk:50, mdef:50, isKing: true, chairs:['yellow'], isChairForbidden: true,
+            cardImage: CardImages.YUMU, 
+            portrait: 'images/charData/portraits/art_yumu.webp', 
+            battleArt: BattleArts.YUMU, 
+            schoolLogo: Schools.XIWAN, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.LIGHT, attr2: '', 
+            bio: '<p>这是我呀~</p>我在友谊百货负责抽卡和卖卡</p>可能时常在店里看不到我，因为我住得很远' },
+        'zhou': { name:'周周', nickname:'周周', real:'-', gender:'女', age:'17', 
+            school:'江口铁道第三中学', join:'S2 (AA2010)', society:'友谊百货', job:'牧师', color:'#FFC0CB', 
+            hp:200, patk:200, pdef:200, matk:200, mdef:200, 
+            cardImage: CardImages.ZHOU, 
+            portrait: 'images/charData/portraits/art_zhou.webp', 
+            battleArt: BattleArts.ZHOU, 
+            schoolLogo: Schools.JIANGKOU, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.LIGHT, attr2: '', 
+            bio: '<p>在友谊百货负责体力回复</p>长得超级漂亮，她看起来总是在微笑，但其实是嘴唇的形状很特别' },
+        'cotton': { name:'棉发', nickname:'棉发', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'友谊百货', job:'厨师', color:'#4169E1', 
+            hp:100, patk:200, pdef:150, matk:100, mdef:100, 
+            cardImage: CardImages.COTTON, 
+            portrait: 'images/charData/portraits/art_cotton.webp', 
+            battleArt: BattleArts.COTTON, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.MOON, attr2: Attrs.LIGHT, 
+            bio: '<p>在友谊百货负责零食</p>有点呆头呆脑，常常算不对送餐的人数，每天都会超额准备，每天也都会偷吃' },
+        'song': { name:'松松', nickname:'松松', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S1 第二届', society:'友谊百货', job:'商人', color:'#FFA500', 
+            hp:100, patk:100, pdef:100, matk:200, mdef:150, 
+            cardImage: CardImages.SONG, 
+            portrait: 'images/charData/portraits/art_song.webp', 
+            battleArt: BattleArts.SONG, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.SUN, attr2: Attrs.LIGHT, 
+            bio: '<p>在友谊百货负责娱乐</p>原本会给学生送漫画、电影，后来取消了这个业务，大多时候负责夜班<br>白天喜欢睡大觉，可总被我抓来替班' },
+        'buzhi': { clickable: false,
+            name:'布织鸣', nickname:'布织鸣', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'裁缝',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        'stone': { name:'主席', nickname:'主席', real:'袁君阳', gender:'男', age:'17', 
+            school:'江口铁道第三中学', join:'S2 (AA2010)', society:'冷凝塔', job:'盾卫', color:'#FFD700', 
+            hp:155, patk:110, pdef:125, matk:55, mdef:110, isKing: true, chairs:['yellow'], 
+            cardImage: CardImages.STONE, 
+            portrait: 'images/charData/portraits/art_stone.webp', 
+            battleArt: BattleArts.STONE, 
+            schoolLogo: Schools.JIANGKOU, societyLogo: Societies.TOWER, 
+            attr1: Attrs.EARTH, attr2: Attrs.FIRE, 
+            bio: '<p>冷凝塔的创立人 首席</p>负责保卫塔内不愿战斗的学生们，<br>做事过分认真负责，讲话声音也很大...' },
+        'master': { name:'小师傅', nickname:'小师傅', real:'江桂', gender:'女', age:'17', 
+            school:'江口铁道第三中学', join:'S2 (AA2010)', society:'冷凝塔', job:'铁匠', color:'#9370DB', 
+            hp:75, patk:125, pdef:80, matk:60, mdef:100, 
+            cardImage: CardImages.MASTER, 
+            portrait: 'images/charData/portraits/art_master.webp', 
+            battleArt: BattleArts.MASTER, 
+            schoolLogo: Schools.JIANGKOU, societyLogo: Societies.TOWER, 
+            attr1: Attrs.FIRE, attr2: '', 
+            bio: '<p>冷凝塔的修理工  战斗员</p>讲话啰啰嗦嗦，但很会照顾人，总把自己搞得很累' },
+        'lilmaster': { clickable: false,
+            name:'小小师傅', nickname:'小小师傅', real:'江湘', gender:'女', age:'17', 
+            school:'江口铁道第三中学', join:'S2 (AA2010)', society:'冷凝塔', job:'剑士', color:'#999', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOBODY, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.JIANGKOU, societyLogo: Societies.TOWER, 
+            attr1: Attrs.FIRE, attr2: '', 
+            bio: '' },
+        'coco': { name:'可可', nickname:'可可', real:'徐可', gender:'女', age:'17', 
+            school:'西湾区实验中学', join:'S2 (AA2010)', society:'冷凝塔', job:'格斗家', color:'#FF4500', 
+            hp:70, patk:130, pdef:115, matk:85, mdef:95, 
+            cardImage: CardImages.COCO, 
+            portrait: 'images/charData/portraits/art_coco.webp', 
+            battleArt: BattleArts.COCO, 
+            schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
+            attr1: Attrs.METAL, attr2: '', 
+            bio: '<p>冷凝塔的战斗员</p>运动是她的长项，高三之前一直是足球队的' },
+        'bai': { clickable: false,
+            name:'小白', nickname:'小白', real:'', gender:'男', age:'18', 
+            school:'西湾区实验中学', join:'S2 (AA2010)', society:'冷凝塔', job:'游侠', color:'#999', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOBODY, 
+            portrait: 'images/charData/portraits/art_coco.webp', 
+            battleArt: '', 
+            schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
+            attr1: Attrs.METAL, attr2: '', 
+            bio: '' },
+        'xiaobei': { name:'小北', nickname:'小北', real:'李小斐', gender:'女', age:'18', 
+            school:'平仙市愚桥中学', join:'S1 (AA2009)', society:'冷凝塔', job:'刺客', color:'#40E0D0', 
+            hp:100, patk:165, pdef:130, matk:65, mdef:110, isKing: false,  
+            cardImage: CardImages.XIAOBEI, 
+            portrait: 'images/charData/portraits/art_xiaobei.webp', 
+            battleArt: BattleArts.XIAOBEI, 
+            schoolLogo: Schools.PINGXIAN, societyLogo: Societies.TOWER, 
+            attr1: Attrs.ICE, attr2: Attrs.MOON, 
+            bio: '<p>冷凝塔的战斗员</p>平时留守阵地，也负责管理花园，虽然不怎么爱说话，做事倒是蛮拼的' },
+        'hei': { name:'黑爷', nickname:'黑爷', real:'彭程', gender:'男', age:'18', 
+            school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'不良少年宫', job:'狂战士', color:'#8A2BE2', 
+            hp:65, patk:125, pdef:60, matk:165, mdef:60, isKing: false, chairs: [ 'cyan'], 
+            cardImage: CardImages.HEI, 
+            portrait: 'images/charData/portraits/art_hei.webp', 
+            battleArt: BattleArts.HEI, 
+            schoolLogo: Schools.LINZHOU, societyLogo: Societies.BAD, 
+            attr1: Attrs.MOON, attr2: Attrs.DUST, 
+            bio: '<p>不良少年宫的创立人 第一任首席</p>现在退下来不做首席了，做事拖拖拉拉，嬉皮笑脸很烦人' },
+        'bald': { clickable: false,
+            name:'光头', nickname:'光头', real:'李忠海', gender:'男', age:'17', 
+            school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'不良少年宫', job:'苦行僧', color:'#999', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOBODY, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.LINZHOU, societyLogo: Societies.BAD, 
+            attr1: Attrs.MOON, attr2: Attrs.DUST, 
+            bio: '' },
+        'ban': { name:'班长', nickname:'班长', real:'阮芳雨', gender:'女', age:'17', 
+            school:'金谷市青松中学', join:'S2 (AA2010)', society:'不良少年宫', job:'猎人', color:'#32CD32', 
+            hp:88, patk:140, pdef:170, matk:75, mdef:115, isKing: true, chairs: [ 'green'],
+            cardImage: CardImages.BAN, 
+            portrait: 'images/charData/portraits/art_ban.webp', 
+            battleArt: BattleArts.BAN, 
+            schoolLogo: Schools.JINGU, societyLogo: Societies.BAD, 
+            attr1: Attrs.WOOD, attr2: Attrs.CRYSTAL, 
+            bio: '<p>不良少年宫 第三任首席</p>总的来说是个蛮善良的人，有时候搞不太懂她在想什么，有点爱奉献' },
+        'hong': { name:'小红', nickname:'小红', real:'张笑', gender:'女', age:'18', 
+            school:'中廖外国语学校', join:'S2 (AA2010)', society:'不良少年宫', job:'狂战士', color:'#FF0000', 
+            hp:105, patk:140, pdef:55, matk:30, mdef:55, 
+            cardImage: CardImages.HONG, 
+            portrait: 'images/charData/portraits/art_hong.webp', 
+            battleArt: BattleArts.HONG, 
+            schoolLogo: Schools.ZHONGLIAO, societyLogo: Societies.BAD, 
+            attr1: Attrs.SUN, attr2: Attrs.CRYSTAL, 
+            bio: '<p>不良少年宫的战斗员</p>性格开朗又热心，明明很瘦，饭量却大得惊人，可惜是个死心眼' },
+        'jiao': { clickable: false,
+            name:'娇娇', nickname:'娇娇', real:'', gender:'男', age:'18', 
+            school:'溪北大学附属中学', join:'S2 (AA2010)', society:'冷凝塔', job:'火枪手', color:'#999', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOBODY, 
+            portrait: 'images/charData/portraits/art_coco.webp', 
+            battleArt: '', 
+            schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
+            attr1: Attrs.METAL, attr2: '', 
+            bio: '' },
+        'piao': { name:'飘飘', nickname:'飘飘', real:'李菲', gender:'男', age:'18', 
+            school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'炼厂', job:'刺客', color:'#DC143C', 
+            hp:80, patk:135, pdef:130, matk:90, mdef:90, isKing: false, chairs: [ 'green'],  isChairForbidden: true,
+            cardImage: CardImages.PIAO, 
+            portrait: 'images/charData/portraits/art_piao.webp', 
+            battleArt: BattleArts.PIAO, 
+            schoolLogo: Schools.LINZHOU, societyLogo: Societies.FACTORY, 
+            attr1: Attrs.SUN, attr2: Attrs.EARTH, 
+            bio: '<p>炼厂的创立人 第一任首席</p><br>傻逼' },
+        'hua': { name:'小花', nickname:'小花', real:'刘晓坤', gender:'男', age:'17', 
+            school:'金谷市青松中学', join:'S2 (AA2010)', society:'炼厂', job:'盗贼', color:'#FF8C00', 
+            hp:50, patk:75, pdef:75, matk:65, mdef:65, 
+            cardImage: CardImages.HUA, 
+            portrait: 'images/charData/portraits/art_hua.webp', 
+            battleArt: BattleArts.HUA, 
+            schoolLogo: Schools.JINGU, societyLogo: Societies.FACTORY, 
+            attr1: Attrs.METAL, attr2: '', 
+            bio: '<p>炼厂的战斗员</p>自来熟，厚脸皮，不知道他吃什么长大的，感觉老师和校霸都拿他没办法' },
+        'wildcat': { name:'小野猫', nickname:'小野猫', real:'尹苗苗', gender:'女', age:'18', 
+            school:'平仙市愚桥中学', join:'S1 (AA2009)', society:'炼厂', job:'剪刀手', color: 'linear-gradient(to right, #FFD700, #0000FF)', 
+            hp:150, patk:160, pdef:100, matk:100, mdef:100, isKing: false, 
+            cardImage: CardImages.CAT, 
+            portrait: 'images/charData/portraits/art_cat.webp', 
+            battleArt: BattleArts.CAT, 
+            schoolLogo: Schools.PINGXIAN, societyLogo: Societies.FACTORY, 
+            attr1: Attrs.CRYSTAL, attr2: Attrs.WIND, 
+            bio: '<p>炼厂 第二任首席</p>邋遢，做事很马虎，还很懒，讲话太直接，打架倒是很拿手' },
+        'dou': { name:'豆子', nickname:'豆子', real:'杜婉月', gender:'女', age:'17', 
+            school:'花港市第十一中学', join:'S2 (AA2010)', society:'炼厂', job:'格斗家', color:'#1E90FF', 
+            hp:100, patk:165, pdef:150, matk:50, mdef:180, isKing: true,  
+            cardImage: CardImages.DOU, 
+            portrait: 'images/charData/portraits/art_dou.webp', 
+            battleArt: BattleArts.DOU, 
+            schoolLogo: Schools.HUAGANG, societyLogo: Societies.FACTORY, 
+            attr1: Attrs.WIND, attr2: Attrs.ICE, 
+            bio: '<p>炼厂 第二任首席</p>小个子，第一印象很冷漠，不过是个老实孩子，个性蛮坚毅的' },
+        'niuj': { clickable: false,
+            name:'牛姐', nickname:'牛姐', real:'', gender:'男', age:'18', 
+            school:'花港市第十一中学', join:'S2 (AA2010)', society:'冷凝塔', job:'雇佣兵', color:'#999', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOBODY, 
+            portrait: 'images/charData/portraits/art_coco.webp', 
+            battleArt: '', 
+            schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
+            attr1: Attrs.METAL, attr2: '', 
+            bio: '' },
+        'gua': { clickable: false,
+            name:'瓜仔', nickname:'瓜仔', real:'', gender:'男', age:'18', 
+            school:'平仙市愚桥中学', join:'S2 (AA2010)', society:'冷凝塔', job:'重力法师', color:'#999', 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOBODY, 
+            portrait: 'images/charData/portraits/art_coco.webp', 
+            battleArt: '', 
+            schoolLogo: Schools.XIWAN, societyLogo: Societies.TOWER, 
+            attr1: Attrs.METAL, attr2: '', 
+            bio: '' },
+        'sb': { name:'草莓', nickname:'草莓', real:'-', gender:'女', age:'18', 
+            school:'冲江市第五中学', join:'S3 (AA2011)', society:'蜂山广场', job:'剪刀手', color:'linear-gradient(to right, #00FF7F, #FF0055)', 
+            hp:40, patk:60, pdef:40, matk:60, mdef:40, 
+            cardImage: CardImages.SB, 
+            portrait: 'images/charData/portraits/art_sb.webp', 
+            battleArt: BattleArts.SB, 
+            schoolLogo: Schools.CHONGJIANG, societyLogo: Societies.PLAZA, 
+            attr1: '', attr2: '', 
+            bio: '<p>就是你啊</p>' },
+        'nao': { name:'闹闹', nickname:'闹闹', real:'顾子欣(18)', gender:'女', age:'17', 
+            school:'冲江市第五中学', join:'S3 (AA2011)', society:'蜂山广场', job:'剑士', color:'#FFA500', 
+            hp:65, patk:80, pdef:45, matk:80, mdef:55, 
+            cardImage: CardImages.NAO, 
+            portrait: 'images/charData/portraits/art_nao.webp', 
+            battleArt: BattleArts.NAO, 
+            schoolLogo: Schools.CHONGJIANG, societyLogo: Societies.PLAZA, 
+            attr1: Attrs.WOOD, attr2: '', 
+            bio: '<p>是你的好朋友呀</p>无拘无束，喜欢折腾，吵吵嚷嚷，开朗的都有点异常了，总能从包里“变”出小零食' },
+        'kid': { name:'小孩', nickname:'小孩', real:'顾子欣(15)', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 (AA2008)', society:'哈尼哈尼', job:'大魔法师', color:'#FF1493', 
+            hp:110, patk:175, pdef:80, matk:200, mdef:140, isKing: true, chairs: [ 'rose'], isChairForbidden: true,
+            cardImage: CardImages.KID, 
+            portrait: 'images/charData/portraits/art_kid.webp', 
+            battleArt: BattleArts.KID, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
+            attr1: Attrs.STAR, attr2: Attrs.CRYSTAL, 
+            bio: '<p>哈尼哈尼的创立人 首席</p>她总有新奇的点子，和她在一起从不会无聊，是个快乐的小疯子' },
+        'xhani': { name:'哈尼', nickname:'哈尼', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'未提拔', society:'哈尼哈尼', job:'游侠', color:'#FFFF00', 
+            hp:80, patk:80, pdef:80, matk:80, mdef:80,  
+            cardImage: CardImages.XHANI, 
+            portrait: 'images/charData/portraits/art_xhani.webp', 
+            battleArt: BattleArts.XHANI, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
+            attr1: Attrs.STAR, attr2: '', 
+            bio: '<p>没有名字的普通哈尼</p>斑丘里多到数不过来，又弱又嚣张，成天叽叽喳喳，上蹿下跳，不知道累一样' },
+        'nurse': { name:'杯杯头', nickname:'杯杯头', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S2 第五届', society:'哈尼哈尼', job:'剑士', color:'#4AB5FF',  
+            hp:70, patk:190, pdef:40, matk:30, mdef:50,  
+            cardImage: CardImages.NURSE, 
+            portrait: 'images/charData/portraits/art_nurse.webp', 
+            battleArt: BattleArts.NURSE, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
+            attr1: Attrs.WATER, attr2: '', 
+            bio: '<p>哈尼哈尼的战斗员</p>胆小怕事，瞻前顾后，无论多么小心，她总能把事情搞砸' },
+        'dream': { name:'梦灵灵', nickname:'梦灵灵', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S2 第五届', society:'哈尼哈尼', job:'火魔法师', color:'#FF69B4', 
+            hp:110, patk:50, pdef:60, matk:130, mdef:150, 
+            cardImage: CardImages.DREAM, 
+            portrait: 'images/charData/portraits/art_dream.webp', 
+            battleArt: BattleArts.DREAM, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
+            attr1: Attrs.FIRE, attr2: Attrs.EARTH, 
+            bio: '<p>哈尼哈尼的战斗员</p>一天到晚迷迷糊糊的，做事慢半拍自己也不在意，只要不打扰她睡觉，其他事情都不会让她生气' },
+        'candy': { name:'晕晕糖', nickname:'晕晕糖', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S1 第三届', society:'哈尼哈尼', job:'双刀客', color:'#DC143C', 
+            hp:200, patk:220, pdef:100, matk:20, mdef:20, 
+            cardImage: CardImages.CANDY, 
+            portrait: 'images/charData/portraits/art_candy.webp', 
+            battleArt: BattleArts.CANDY, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
+            attr1: Attrs.CRYSTAL, attr2: '', 
+            bio: '<p>哈尼哈尼的剑术指导 甜点师</p>很成熟，不怎么喜欢到室外去，教导剑术时特别严格，很爱给自己放假' },
+        'king': { name:'能大王', nickname:'能大王', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S1 第二届', society:'哈尼哈尼', job:'音波法师', color:'#C0C0C0', 
+            hp:200, patk:20, pdef:20, matk:220, mdef:100, 
+            cardImage: CardImages.KING, 
+            portrait: 'images/charData/portraits/art_king.webp', 
+            battleArt: BattleArts.KING, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
+            attr1: Attrs.WAVE, attr2: Attrs.CRYSTAL, 
+            bio: '<p>哈尼哈尼的法术指导 失踪</p>从那以后她好像就疯了，一直拿着几根天线到处挥舞，嘴里说的也是听不懂的语言' },
+        'wax': { name:'蜡沫子', nickname:'蜡沫子', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'哈尼哈尼', job:'死灵法师', color:'#FFA500', 
+            hp:50, patk:50, pdef:50, matk:150, mdef:150, 
+            cardImage: CardImages.WAX, 
+            portrait: 'images/charData/portraits/art_wax.webp', 
+            battleArt: BattleArts.WAX, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
+            attr1: Attrs.WOOD, attr2: Attrs.DUST, 
+            bio: '<p>哈尼哈尼的法术指导 园丁</p>可以说是相当正常的性格，工作也勤奋，教人也有耐心，真希望她平时能多去放松玩一玩' },
+        'pigeon': { name:'白鸽泥', nickname:'白鸽泥', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S2 第五届', society:'哈尼哈尼', job:'重锤战士', color:'#32CD32', 
+            hp:80, patk:125, pdef:75, matk:45, mdef:95, 
+            cardImage: CardImages.PIGEON, 
+            portrait: 'images/charData/portraits/art_pigeon.webp', 
+            battleArt: BattleArts.PIGEON, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.HANI, 
+            attr1: Attrs.WOOD, attr2: '', 
+            bio: '<p>哈尼哈尼的战斗员</p>有些太认真了，感觉她总是逼自己进步，对朋友很尽心尽力，大概是有点怕寂寞' },
+        'pika': { name:'皮皮卡', nickname:'皮皮卡', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'三子星', job:'驯兽师', color:'#FFFF00', 
+            hp:60, patk:90, pdef:50, matk:150, mdef:130, isKing: true,  
+            cardImage: CardImages.PIKA, 
+            portrait: 'images/charData/portraits/art_pika.webp', 
+            battleArt: BattleArts.PIKA, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.STARS, 
+            attr1: Attrs.THUNDER, attr2: '', 
+            bio: '<p>三子星的创立人 中心位</p>有时在快乐园兼职教导召唤术，明明写歌很好听但有点太懒了，纯凭心情，不太喜欢被束缚' },
+        'ding': { name:'露钉', nickname:'露钉', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S2 第五届', society:'三子星', job:'骑士', color:'#00FFFF', 
+            hp:100, patk:130, pdef:75, matk:100, mdef:80, 
+            cardImage: CardImages.DING, 
+            portrait: 'images/charData/portraits/art_ding.webp', 
+            battleArt: BattleArts.DING, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.STARS, 
+            attr1: Attrs.ICE, attr2: '', 
+            bio: '<p>三子星的成员 左边位</p>刚加入的新成员，是三子星复出的契机，她是最少有的会做学习计划的类型，私底下话不多，总一个人埋头做事' },
+        'buta': { name:'布挞米', nickname:'布挞米', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'三子星', job:'铁匠', color:'#FFB6C1', 
+            hp:120, patk:70, pdef:110, matk:80, mdef:125, 
+            cardImage: CardImages.BUTA, 
+            portrait: 'images/charData/portraits/art_buta.webp', 
+            battleArt: BattleArts.BUTA, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.STARS, 
+            attr1: Attrs.WIND, attr2: '', 
+            bio: '<p>三子星的成员 右边位</p>完全看不出来她擅长说唱，爱操心，总能察觉身边人的烦恼，会在暗地里偷偷帮助对方' },
+        'xdq': { name:'小冻青', nickname:'小冻青', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S2 第四届', society:'毛毛毛毛毛', job:'刺客', color:'#FFD700', 
+            hp:100, patk:100, pdef:100, matk:100, mdef:130, isKing: true, 
+            cardImage: CardImages.XDQ, 
+            portrait: 'images/charData/portraits/art_xdq.webp', 
+            battleArt: BattleArts.XDQ, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
+            attr1: Attrs.CRYSTAL, attr2: Attrs.THUNDER, 
+            bio: '<p>毛毛毛毛毛的创立人 主唱</p>三子星的前成员，有段时间总被人欺负，看似张扬，性格荒唐，不过其实非常能吃苦' },
+        'penguin': { name:'洽凉', nickname:'洽凉', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S1 第三届', society:'毛毛毛毛毛', job:'光魔法师', color:'#FF4500', 
+            hp:100, patk:100, pdef:100, matk:100, mdef:130, isKing: true, 
+            cardImage: CardImages.penguin, 
+            portrait: 'images/charData/portraits/art_penguin.webp', 
+            battleArt: BattleArts.penguin, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
+            attr1: Attrs.SUN, attr2: Attrs.ICE, 
+            bio: '' },
+        'pao': { name:'泡糊涂', nickname:'泡糊涂', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S1 第三届', society:'毛毛毛毛毛', job:'舞者', color:'#00FF7F', 
+            hp:60, patk:180, pdef:130, matk:60, mdef:44, 
+            cardImage: CardImages.PAO, 
+            portrait: 'images/charData/portraits/art_pao.webp', 
+            battleArt: BattleArts.PAO, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
+            attr1: Attrs.WOOD, attr2: Attrs.WIND, 
+            bio: '<p>毛毛毛毛毛的主舞</p>老说些别人听不懂的话，过分自由，虽然舞跳的不错，脑子却是缺根弦' },
+        'zhe': { name:'折公主', nickname:'折公主', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S1 第三届', society:'毛毛毛毛毛', job:'大召唤师', color:'#DA70D6', 
+            hp:70, patk:130, pdef:44, matk:130, mdef:44, 
+            cardImage: CardImages.ZHE, 
+            portrait: 'images/charData/portraits/art_zhe.webp', 
+            battleArt: BattleArts.ZHE, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
+            attr1: Attrs.SUN, attr2: Attrs.CRYSTAL, 
+            bio: '<p>毛毛毛毛毛的DJ</p>她平时爱装成机器人，几乎不说话，偶尔和声时才能听到她的声音，甜美的很' },
+        'tie': { name:'铁锒铛', nickname:'铁锒铛', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'毛毛毛毛毛', job:'电磁法师', color:'#1E90FF', 
+            hp:100, patk:150, pdef:120, matk:120, mdef:100, 
+            cardImage: CardImages.TIE, 
+            portrait: 'images/charData/portraits/art_tie.webp', 
+            battleArt: BattleArts.TIE, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.MAO, 
+            attr1: Attrs.MOON, attr2: Attrs.CRYSTAL, 
+            bio: '<p>毛毛毛毛毛的DJ</p>曾经很长一段时间都是独行，不知道怎么被说服入伙的，她只是穿着比较张扬，性格倒不是那样' },
+        'bu_lian': { name:'步可连', nickname:'步可连', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'步可连连', job:'大祭司', color:'#FFFFFF', 
+            hp:125, patk:120, pdef:90, matk:170, mdef:100, isKing: true,  
+            cardImage: CardImages.BULIAN, 
+            portrait: 'images/charData/portraits/art_bulian.webp', 
+            battleArt: BattleArts.BULIAN, 
+            schoolLogo: Schools.HANI, societyLogo: Societies.BUKLL, 
+            attr1: Attrs.METAL, attr2: '', 
+            bio: '<p>是个天后歌手</p>以前是小螺号的主唱，后来单飞了，热心正直又刻苦认真，提议了哈尼晋升的系统，曾经是全体哈尼的偶像，死得不明不白的' },
+        'totally': { clickable: false,
+            name:'托得理', nickname:'托得理', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'强盗',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.TUCTUC, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        'towuni': { clickable: false,
+            name:'托毋宁', nickname:'托毋宁', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'重锤战士',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.TUCTUC, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        'meizi': { clickable: false,
+            name:'美滋', nickname:'美滋', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'爆破师',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        'peach': { clickable: false,
+            name:'桃汽苏', nickname:'桃汽苏', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'船夫',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        'choco': { clickable: false,
+            name:'薄苛力', nickname:'薄苛力', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'催眠术师',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        'cream': { clickable: false,
+            name:'冰忌廉', nickname:'冰忌廉', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'冰魔法师',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        'sweet': { clickable: false,
+            name:'甜锈', nickname:'甜锈', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'刺客',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        'kflower': { clickable: false,
+            name:'小K花', nickname:'小K花', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'光魔法师',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        'flyh': { clickable: false,
+            name:'飞迪高', nickname:'飞迪高', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'骑士',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        'moji': { clickable: false,
+            name:'小蘑叽', nickname:'小蘑叽', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'木魔法师',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        '2loud': { clickable: false,
+            name:'两响', nickname:'两响', real:'-', gender:'女', age:'15', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'烟雾法师',color:'#999' , 
+            hp:0, patk:0, pdef:0, matk:0, mdef:0, 
+            cardImage: CardImages.NOHANI, 
+            portrait: '', 
+            battleArt: '', 
+            schoolLogo: Schools.HANI, societyLogo: Societies.FRIEND, 
+            attr1: Attrs.DUST, attr2: Attrs.LIGHT, 
+            bio: '' },
+        'yan': { name:'闫佳巧', nickname:'闫佳巧', real:'-', gender:'女', age:'18', 
+            school:'林州师范大学附属高级中学', join:'S0 (AA2008)', society:'白楼', job:'吟游诗人', color:'#FFFFFF', 
+            hp:999, patk:999, pdef:999, matk:999, mdef:999, isKing: true, chairs: [ 'white'], 
+            cardImage: CardImages.YAN, 
+            portrait: 'images/charData/portraits/art_yan.webp', 
+            battleArt: BattleArts.YAN, 
+            schoolLogo: Schools.LINZHOU, societyLogo: Societies.WHITE, 
+            attr1: '', attr2: '', 
+            bio: '<p>不知道是谁</p>个子很小，瘦得像营养不良，别人跟她说话她就像没听见一样，如果你抓到稀有的昆虫，可以送给她' }
+        
+    };
+
+        // 社团强制排序权重
+        const SocietyOrder = ['友谊百货', '冷凝塔', '不良少年宫', '炼厂', '蜂山广场', '哈尼哈尼', '三子星', '毛毛毛毛毛', '步可连连', '白楼'];
+
+        // 3. 渲染引擎核心逻辑
+        function renderTable() {
+            const tbody = document.getElementById('character-table-body');
+            
+            // 过滤无用的占位符空位，并保留真实角色
+            let characters = Object.values(charData).filter(c => c.name && c.clickable !== false);
+
+            // 核心排布逻辑：优先社团权重，其次按参加年限(join)
+            characters.sort((a, b) => {
+                const getIndex = soc => SocietyOrder.indexOf(soc) > -1 ? SocietyOrder.indexOf(soc) : 999;
+                if (a.society !== b.society) {
+                    return getIndex(a.society) - getIndex(b.society);
+                }
+                return (a.join || '').localeCompare(b.join || '');
+            });
+
+            // 遍历生成 HTML
+            let html = '';
+            characters.forEach(char => {
+                // 计算属性槽
+                let attrsHtml = '';
+                if (char.attr1) attrsHtml += `<div class="attr"><img src="${char.attr1}" alt="属性"><span>${AttrNames[char.attr1] || ''}</span></div>`;
+                if (char.attr2) attrsHtml += `<div class="attr"><img src="${char.attr2}" alt="属性"><span>${AttrNames[char.attr2] || ''}</span></div>`;
+
+                // 计算数值条百分比 (以 250 为单项满分基准)
+                const maxStat = 250;
+                const getBar = val => `<div class="stat-bar-bg"><div class="stat-fill" style="width:${Math.min(100, (val/maxStat)*100)}%;background:${char.color};"></div></div>`;
+
+                // 徽章系统
+                let badgesHtml = '';
+                if (char.isKing) {
+                    badgesHtml += `<span class="crown-badge"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L9 9l-7-3 3 14h14l3-14-7 3-3-8z" fill="currentColor"/></svg>首席</span>`;
+                }
+                if (char.chairs && char.chairs.length > 0) {
+                    char.chairs.forEach(c => {
+                        let lineSvg = char.isChairForbidden ? `<line x1="4" y1="4" x2="20" y2="20" stroke="#000" stroke-width="3"/>` : '';
+                        badgesHtml += `<span class="chair-icon chair-${c}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path class="chair-path" d="M7 2a2 2 0 0 0-2 2v7H4a1 1 0 0 0-1 1v4h1v6h2v-6h12v6h2v-6h1v-4a1 1 0 0 0-1-1h-1V4a2 2 0 0 0-2-2H7zm0 2h10v7H7V4z"/>${lineSvg}</svg></span>`;
+                    });
+                }
+
+                // 校名简称转换
+                const shortSchool = SchoolShortNames[char.school] || char.school;
+                
+                // 处理立绘图片
+                const portraitHtml = char.portrait 
+                    ? `<img class="portrait" src="${char.portrait}" alt="${char.name}">`
+                    : `<div class="portrait-placeholder">NO DATA</div>`;
+
+                // 生成单行 HTML 模板
+                html += `
+                <tr>
+                    <td class="cell-portrait">
+                        <div class="portrait-wrapper">
+                            ${portraitHtml}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row-top">
+                            <div class="name-header">
+                                <div class="nickname" style="color: ${char.color};">${char.name}</div> 
+                                <div class="badges">${badgesHtml}</div>
+                            </div>
+                        </div>
+                        <div class="row-bottom">
+                            <div class="info-tags">
+                                <span class="tag">${char.gender} · ${char.age}岁</span>
+                                ${char.join ? `<span class="tag">赛季：${char.join.split(' ')[0]}</span>` : ''}
+                                <span class="tag">姓名：${char.real || '-'}</span>
+                            </div>
+                            <div class="bio" style="border-left-color: ${char.color};">
+                                ${char.bio || '暂无简介'}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row-top"></div>
+                        <div class="row-bottom">
+                            <div class="org-block">
+                                <div class="org-item">
+                                    <img class="org-logo" src="${char.schoolLogo}" alt="校徽">
+                                    <div class="org-text-group"><span class="org-name">${shortSchool}</span><span class="org-sub">学校</span></div>
+                                </div>
+                                <div class="org-item">
+                                    <img class="org-logo org-logo-club" src="${char.societyLogo}" alt="社徽">
+                                    <div class="org-text-group"><span class="org-name">${char.society || '无组织'}</span><span class="org-sub">社团</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="row-top" style="justify-content: space-between;">
+                            <div class="attrs">${attrsHtml}</div>
+                            ${char.job ? `<span class="tag tag-job">${char.job}</span>` : ''}
+                        </div>
+                        <div class="row-bottom">
+                            <div class="stats">
+                                <div class="stat"><span class="stat-label">体力</span>${getBar(char.hp)}<span class="stat-value">${char.hp}</span></div>
+                                <div class="stat"><span class="stat-label">物攻</span>${getBar(char.patk)}<span class="stat-value">${char.patk}</span></div>
+                                <div class="stat"><span class="stat-label">物防</span>${getBar(char.pdef)}<span class="stat-value">${char.pdef}</span></div>
+                                <div class="stat"><span class="stat-label">法攻</span>${getBar(char.matk)}<span class="stat-value">${char.matk}</span></div>
+                                <div class="stat"><span class="stat-label">法防</span>${getBar(char.mdef)}<span class="stat-value">${char.mdef}</span></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        // 页面加载完毕后执行渲染
+        window.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>
