@@ -4583,11 +4583,11 @@ position: absolute;
             </div>
 
             <div class="home-main-visual" id="home-main-box">
-                <img src="images/home/visual.webp" alt="Main Visual" id="home-main-img">
+                <img src="images/home/visual.webp" alt="Main Visual" id="home-main-img" fetchpriority="high">
             </div>
 
             <div class="home-top-overlay">
-                <img src="images/home/overlay.webp" alt="Top Overlay">
+                <img src="images/home/overlay.webp" alt="Top Overlay" fetchpriority="high">
             </div>
 
             <div class="home-nav-footer">
@@ -4888,6 +4888,22 @@ function switchView(viewId, btn) {
     // 5. 手机端收起菜单 [保持不变]
     const mobileMenu = document.getElementById('mobileMenu');
     if(mobileMenu) mobileMenu.classList.remove('open');
+
+    // 6. 懒渲染：首次访问标签页时才渲染内容
+    if (viewId !== 'home' && !_rendered[viewId]) {
+        _rendered[viewId] = true;
+        try {
+            switch (viewId) {
+                case 'overview': renderOverview(); break;
+                case 'chars':    renderCharPage(); break;
+                case 'cards':    renderBqCards(); break;
+                case 'scenery':  renderBqScenery(); break;
+                case 'story':    renderStory(); break;
+            }
+        } catch (e) {
+            console.error("渲染 " + viewId + " 时出错:", e);
+        }
+    }
 
     // 触发其他页面的滚动监听
     if (typeof checkScroll === 'function') checkScroll();
@@ -6664,8 +6680,8 @@ openBqcModal = function(src) {
             tiltCard.style.transform = `perspective(2000px) rotateX(0deg) rotateY(0deg)`;
         }
     }
-    // 5. 启动
-    renderBqCards();
+    // 5. 启动（已移至 switchView 懒渲染）
+    
 
 // =========================================
 // [修改版] 浮窗定位：沉底靠左 + 留出按钮空间
@@ -7405,8 +7421,6 @@ function scrollToBqvCat(id, e) {
     }
 }
 
-// 啟動渲染
-setTimeout(renderBqScenery, 300);
 
 // --- 景色浮窗全局状态 ---
 let bqvCurrentChapter = null;
@@ -10061,23 +10075,96 @@ function startOverviewObserver() {
 }
 
 
+const _rendered = {};
+
+// 批量预加载：每次加载 batchSize 张，间隔 300ms 加载下一批
+function batchPreload(urls, batchSize, onComplete) {
+    let i = 0;
+    function next() {
+        const batch = urls.slice(i, i + batchSize);
+        i += batchSize;
+        if (batch.length === 0) { if (onComplete) onComplete(); return; }
+        batch.forEach(u => { const img = new Image(); img.src = u; });
+        setTimeout(next, 300);
+    }
+    next();
+}
+
+function getTabPreloadUrls(tab) {
+    switch (tab) {
+        case 'overview': return getOverviewPreloadUrls(10);
+        case 'chars':    return getCharsPreloadUrls(10);
+        case 'cards':    return getCardsPreloadUrls(10);
+        case 'scenery':  return getSceneryPreloadUrls(10);
+        default: return [];
+    }
+}
+
+function getOverviewPreloadUrls(n) {
+    const urls = [OverviewAssets.banner];
+    OverviewAssets.guide.rows.forEach(r => {
+        urls.push(r.main.img);
+        if (r.left)  { urls.push(r.left.bottom, r.left.top); }
+        if (r.right) { urls.push(r.right.bottom, r.right.top); }
+    });
+    OverviewAssets.combatIntro.forEach(item => urls.push(item.img));
+    OverviewAssets.battle.forEach(item => urls.push(item.img));
+    if (OverviewAssets.combatHeader) urls.push(OverviewAssets.combatHeader);
+    if (OverviewAssets.equipHeader) urls.push(OverviewAssets.equipHeader);
+    if (OverviewAssets.justiceHeader) urls.push(OverviewAssets.justiceHeader);
+    return urls.slice(0, n);
+}
+
+function getCharsPreloadUrls(n) {
+    const urls = ['images/headers/page_header_char.webp'];
+    const keys = Object.values(lists).flat();
+    const seen = new Set();
+    keys.forEach(k => {
+        if (seen.has(k)) return; seen.add(k);
+        const d = charData[k];
+        if (d && !d.isVacant && d.cardImage) urls.push(d.cardImage);
+    });
+    return urls.slice(0, n);
+}
+
+function getCardsPreloadUrls(n) {
+    const urls = ['images/headers/page_header_card.webp'];
+    const cards = bqCardData.RW || [];
+    cards.slice(0, n - 1).forEach(name => {
+        urls.push('images/BQcards/cards_front/' + name + '.webp');
+    });
+    return urls;
+}
+
+function getSceneryPreloadUrls(n) {
+    const urls = [bqViewData.overview.poster];
+    bqViewData.chapters.forEach(ch => {
+        urls.push('images/BQviews/posters/' + ch.id + '-1.webp');
+        for (let i = 1; i <= Math.min(ch.photos, 3); i++) {
+            const num = i < 10 ? '0' + i : i;
+            urls.push('images/BQviews/photographs/' + ch.id + '-' + num + '.webp');
+        }
+    });
+    return urls.slice(0, n);
+}
+
+function startPreload() {
+    const tabs = ['overview', 'chars', 'cards', 'scenery'];
+    let idx = 0;
+    function next() {
+        if (idx >= tabs.length) return;
+        const urls = getTabPreloadUrls(tabs[idx]);
+        idx++;
+        if (urls.length === 0) { next(); return; }
+        batchPreload(urls, 10, next);
+    }
+    next();
+}
+
 // 1. 只要 HTML 结构准备好，立即启动首页逻辑 (不再等待图片下载)
 document.addEventListener('DOMContentLoaded', () => {
-    // 立即初始化首页的核心交互
-    initHomeLogic(); 
-
-    // 2. 异步渲染其他沉重的页面，不阻塞首页
-    setTimeout(() => {
-        try {
-            renderOverview(); 
-            renderCharPage();   
-            renderBqCards();    
-            renderBqScenery();  
-            renderStory();      
-        } catch (e) {
-            console.error("渲染延迟页面时出错:", e);
-        }
-    }, 50); // 给首页逻辑留出 50ms 的优先启动时间
+    initHomeLogic();
+    startPreload();
 });
 // 将你原本在 setTimeout 里的首页逻辑封装成函数
 function initHomeLogic() {

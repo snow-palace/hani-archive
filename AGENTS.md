@@ -1,54 +1,58 @@
-# AGENTS.md
+# AGENTS.md — 不公正的哈尼资料库
 
 ## 项目概述
 
-"不公正的哈尼-斑丘资料库" - 一个静态HTML网站，用于展示游戏/故事的角色、卡牌、时间线、规则等信息。
+单页面静态站点，用于展示独立游戏《不公正的哈尼-斑丘》的世界观资料。托管于 GitHub Pages。
 
-## 技术栈
+## 核心架构
 
-- 纯静态 HTML/CSS/JavaScript（单文件 `index.html`）
-- Node.js 脚本用于生成卡牌数据
+- **单入口**：`index.html` 包含全部 CSS（内联 `<style>`）和绝大部分 JS（内联 `<script>`），约 10k+ 行
+- **外部依赖**：仅 `marked`（CDN：`cdn.jsdelivr.net/npm/marked/marked.min.js`），用于剧情页 Markdown 渲染
+- **标签页系统**：`home / overview / chars / scenery / cards / story / others`，通过 `switchView()` 切换
+- **所有路径**：相对路径，所有图片均在 `images/` 下
 
-## 关键文件
+## 数据文件
 
-- `index.html` - 主页面（约10256行），包含所有视图和逻辑
-- `cardData.js` - 自动生成的卡牌数据
-- `generate_list.js` - Node.js 脚本，读取 `images/BQcards/cards_front/` 目录下的 `.webp` 文件并重新生成 `cardData.js`
+| 文件 | 作用 | 如何更新 |
+|------|------|----------|
+| `cardData.js` | 卡牌文件名列表（按 RW/JN/WP/JK 分类） | 运行 `node generate_list.js` 自动生成 |
+| `generate_list.js` | Node 脚本，扫描 `images/BQcards/cards_front/` 下的 `.webp` 文件生成 `cardData.js` | — |
+| `charTable_v6.txt` | 角色数据 HTML 表（独立文件，不被主站加载） | — |
+| 角色/场景/总览数据 | 硬编码在 `index.html` 的 JS 对象中（`charData`, `OverviewAssets` 等） | 直接编辑 `index.html` |
+
+## 图片加载（当前问题）
+
+**444 张 WebP 图片**，全量无优化地通过 GitHub Pages 直出：
+
+- 无 `loading="lazy"`，无 `fetchpriority`
+- 无图片 CDN / 图片优化服务
+- 首页同时加载 5+ 背景图（bg_full, bg_left, bg_right, visual, overlay）
+- 角色页一次性渲染全部 40+ 人物卡片及其头像
+- 卡牌页一次性渲染全部 134 张卡牌
+- 弹窗中角色立绘/战斗立绘使用 JS `new Image()` 预加载，有防错位机制
 
 ## 开发命令
 
-```bash
-# 更新卡牌数据（新增卡牌图片后需运行）
-node generate_list.js
-```
+- **更新卡牌数据**：`node generate_list.js`（重新扫描 images/BQcards/cards_front/ 目录）
 
-## 目录结构
+## 工作流注意事项
 
-```
-images/
-  BQcards/cards_front/  # 卡牌图片（RW-, JN-, WP-, JK- 前缀分类）
-  icon/                 # 网站图标
-cardData.js             # 自动生成，勿手动编辑
-generate_list.js        # 卡牌数据生成脚本
-index.html              # 主站页面
-```
+- 无构建步骤，修改后直接部署（GitHub Pages 自动发布 main 分支即可）
+- 所有新图片使用 **WebP** 格式以保持一致性
+- 图片资源路径约定：`images/<category>/<subcategory>/<filename>.webp`
+- 角色字典 key 使用驼峰拼音（如 `yumu`, `xiaobei`, `bu_lian`）
+- CSS 使用 CSS 变量（`--c-yu`, `--bg-card` 等）实现主题化
+- 新视图/页面需在 HTML 中添加 `<div id="view-xxx" class="view-section">` 并在 `switchView()` 中注册
 
-## 卡牌统计
+## 图片加载优化建议（按优先级）
 
-- RW(人物)：48 张
-- JN(技能)：32 张
-- WP(物品)：41 张
-- JK(纪念)：20 张
-- 总计：141 张
+1. 给所有非首屏 `<img>` 加 `loading="lazy"`
+2. 首页关键图片加 `fetchpriority="high"`
+3. 卡牌网格/角色网格改用 IntersectionObserver 懒加载
+4. 接入图片 CDN（如 Cloudflare Images 或 GitHub + jsDelivr）
+5. 用 `squoosh` 或 `sharp` 批量压缩现有 WebP
 
-## 注意事项
+## 无需跟踪的文件
 
-- `cardData.js` 由 `generate_list.js` 自动生成，手动编辑会在下次运行脚本时丢失
-- 卡牌图片命名规则：`{类型}-{编号}-{版本}.webp`（如 `RW-A01a-PGa.webp`）
-- 类型前缀：RW(人物)、JN(技能)、WP(物品)、JK(纪念)
-- 新增卡牌图片后需运行 `node generate_list.js` 更新数据
-
-## AI 行为规范
-
-- 如果发现 AGENTS.md 有任何需要更新或补充的地方，**直接修改，不需要询问用户**
-- 思考和回复统一使用中文
+- `charTable_v6.txt`（独立开发工具文件，非站点依赖）
+- `.vscode/settings.json`（仅编辑器配置）
