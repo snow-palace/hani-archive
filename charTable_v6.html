@@ -245,34 +245,6 @@
 
         // 2. 角色数据
     const charData = {
-        'seat_empty_01': { 
-            name: '[轮空]', 
-            isVacant: true,     // <--- 加上这一句，开启极简样式！
-            clickable: false, // <--- 【关键】加上这句，就变成“只可远观不可亵玩”了
-            color: '#FF1493',   // 文字的颜色
-            chairs:['rose'],
-            // 下面这些属性可以不填，或者留空
-            nickname: '', real: '', gender: '', age: '', 
-            school: '', join: '', society: '', job: '', 
-            hp:0, patk:0, pdef:0, matk:0, mdef:0 },
-        'etc': { 
-            name: '... ...', 
-            isVacant: true,     // <--- 加上这一句，开启极简样式！
-            clickable: false, // <--- 【关键】加上这句，就变成“只可远观不可亵玩”了
-            color: '#ccc',   // 文字的颜色
-            // 下面这些属性可以不填，或者留空
-            nickname: '', real: '', gender: '', age: '', 
-            school: '', join: '', society: '', job: '', 
-            hp:0, patk:0, pdef:0, matk:0, mdef:0 },
-        'secretm': { 
-            name: '秘密成员', 
-            isVacant: true,     // <--- 加上这一句，开启极简样式！
-            clickable: false, // <--- 【关键】加上这句，就变成“只可远观不可亵玩”了
-            color: '#ccc',   // 文字的颜色
-            // 下面这些属性可以不填，或者留空
-            nickname: '', real: '', gender: '', age: '', 
-            school: '', join: '', society: '', job: '', 
-            hp:0, patk:0, pdef:0, matk:0, mdef:0 },
         'yumu': { name:'于沐川', nickname:'于沐川', real:'-', gender:'女', age:'17', 
             school:'西湾区实验中学', join:'S0 (AA2008)', society:'友谊百货', job:'召唤师', color:'#87CEEB', 
             hp:50, patk:50, pdef:50, matk:50, mdef:50, isKing: true, chairs:['yellow'], isChairForbidden: true,
@@ -641,7 +613,7 @@
             attr1: Attrs.MOON, attr2: Attrs.CRYSTAL, 
             bio: '<p>毛毛毛毛毛的DJ</p>曾经很长一段时间都是独行，不知道怎么被说服入伙的，她只是穿着比较张扬，性格倒不是那样' },
         'bu_lian': { name:'步可连', nickname:'步可连', real:'-', gender:'女', age:'15', 
-            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'步可连连', job:'大祭司', color:'#FFFFFF', 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'毛毛毛毛毛', job:'大祭司', color:'#FFFFFF', 
             hp:125, patk:120, pdef:90, matk:170, mdef:100, isKing: true,  
             cardImage: CardImages.BULIAN, 
             portrait: 'images/charData/portraits/art_bulian.webp', 
@@ -651,7 +623,7 @@
             bio: '<p>是个天后歌手</p>以前是小螺号的主唱，后来单飞了，热心正直又刻苦认真，提议了哈尼晋升的系统，曾经是全体哈尼的偶像，死得不明不白的' },
         'totally': { clickable: false,
             name:'托得理', nickname:'托得理', real:'-', gender:'女', age:'15', 
-            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'强盗',color:'#999' , 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'托托飞车党', job:'强盗',color:'#999' , 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOHANI, 
             portrait: '', 
@@ -661,7 +633,7 @@
             bio: '' },
         'towuni': { clickable: false,
             name:'托毋宁', nickname:'托毋宁', real:'-', gender:'女', age:'15', 
-            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'重锤战士',color:'#999' , 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'托托飞车党', job:'重锤战士',color:'#999' , 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOHANI, 
             portrait: '', 
@@ -671,7 +643,7 @@
             bio: '' },
         'meizi': { clickable: false,
             name:'美滋', nickname:'美滋', real:'-', gender:'女', age:'15', 
-            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'爆破师',color:'#999' , 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'苏打四', job:'爆破师',color:'#999' , 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOHANI, 
             portrait: '', 
@@ -681,7 +653,7 @@
             bio: '' },
         'peach': { clickable: false,
             name:'桃汽苏', nickname:'桃汽苏', real:'-', gender:'女', age:'15', 
-            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'船夫',color:'#999' , 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'苏打四', job:'船夫',color:'#999' , 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOHANI, 
             portrait: '', 
@@ -691,7 +663,7 @@
             bio: '' },
         'choco': { clickable: false,
             name:'薄苛力', nickname:'薄苛力', real:'-', gender:'女', age:'15', 
-            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'催眠术师',color:'#999' , 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'苏打四', job:'催眠术师',color:'#999' , 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOHANI, 
             portrait: '', 
@@ -701,7 +673,7 @@
             bio: '' },
         'cream': { clickable: false,
             name:'冰忌廉', nickname:'冰忌廉', real:'-', gender:'女', age:'15', 
-            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'冰魔法师',color:'#999' , 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'苏打四', job:'冰魔法师',color:'#999' , 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOHANI, 
             portrait: '', 
@@ -711,7 +683,7 @@
             bio: '' },
         'sweet': { clickable: false,
             name:'甜锈', nickname:'甜锈', real:'-', gender:'女', age:'15', 
-            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'刺客',color:'#999' , 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'蜂山广播社', job:'刺客',color:'#999' , 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOHANI, 
             portrait: '', 
@@ -721,7 +693,7 @@
             bio: '' },
         'kflower': { clickable: false,
             name:'小K花', nickname:'小K花', real:'-', gender:'女', age:'15', 
-            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'光魔法师',color:'#999' , 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'蜂山广播社', job:'光魔法师',color:'#999' , 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOHANI, 
             portrait: '', 
@@ -731,7 +703,7 @@
             bio: '' },
         'flyh': { clickable: false,
             name:'飞迪高', nickname:'飞迪高', real:'-', gender:'女', age:'15', 
-            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'骑士',color:'#999' , 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'哈尼哈尼', job:'骑士',color:'#999' , 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOHANI, 
             portrait: '', 
@@ -741,7 +713,7 @@
             bio: '' },
         'moji': { clickable: false,
             name:'小蘑叽', nickname:'小蘑叽', real:'-', gender:'女', age:'15', 
-            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'木魔法师',color:'#999' , 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'哈尼哈尼', job:'木魔法师',color:'#999' , 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOHANI, 
             portrait: '', 
@@ -751,7 +723,7 @@
             bio: '' },
         '2loud': { clickable: false,
             name:'两响', nickname:'两响', real:'-', gender:'女', age:'15', 
-            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'友谊百货', job:'烟雾法师',color:'#999' , 
+            school:'哈尼哈尼快乐园中学', join:'S0 第一届', society:'哈尼哈尼', job:'烟雾法师',color:'#999' , 
             hp:0, patk:0, pdef:0, matk:0, mdef:0, 
             cardImage: CardImages.NOHANI, 
             portrait: '', 
@@ -768,6 +740,7 @@
             schoolLogo: Schools.LINZHOU, societyLogo: Societies.WHITE, 
             attr1: '', attr2: '', 
             bio: '<p>不知道是谁</p>个子很小，瘦得像营养不良，别人跟她说话她就像没听见一样，如果你抓到稀有的昆虫，可以送给她' }
+        
         
     };
 
